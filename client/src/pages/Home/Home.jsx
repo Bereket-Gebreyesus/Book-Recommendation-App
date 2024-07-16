@@ -5,6 +5,8 @@ import TEST_ID from "./Home.testid";
 const style = {
   background: "lightblue",
 }
+const a;
+
 const Home = () => {
   return (
     <div data-testid={TEST_ID.container}>
