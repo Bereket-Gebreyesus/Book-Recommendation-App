@@ -1,6 +1,7 @@
 // Load our .env variables
 import dotenv from "dotenv";
 import express from "express";
+import scheduleNotificator from "./util/notification.js";
 dotenv.config();
 
 import app from "./app.js";
@@ -21,6 +22,8 @@ const startServer = async () => {
     await connectDB();
     app.listen(port, () => {
       logInfo(`Server started on port ${port}`);
+      // Launch notification scheduler
+      scheduleNotificator();
     });
   } catch (error) {
     logError(error);
