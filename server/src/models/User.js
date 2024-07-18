@@ -5,6 +5,8 @@ import validateAllowedFields from "../util/validateAllowedFields.js";
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  password: String,
+  profileImage: String,
 });
 
 const User = mongoose.model("users", userSchema);
