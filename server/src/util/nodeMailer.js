@@ -1,4 +1,4 @@
-const nodeMailer = require("nodemailer");
+import nodeMailer from "nodemailer";
 import dotenv from "dotenv";
 import { logInfo, logError } from "./logging.js";
 
