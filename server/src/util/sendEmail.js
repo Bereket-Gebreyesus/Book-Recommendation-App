@@ -2,7 +2,7 @@ import nodeMailer from "nodemailer";
 import dotenv from "dotenv";
 import { logInfo, logError } from "./logging.js";
 
-// sentRecommendedBookEmail function is used to send an email with parameters from, to, subject, html
+// sendEmail function is used to send an email with parameters from, to, subject, html
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ const transporter = nodeMailer.createTransport({
   },
 });
 
-export const sentRecommendedBookEmail = async (from, to, subject, html) => {
+const sendEmail = async (from, to, subject, html) => {
   try {
     const info = await transporter.sendMail({
       from: from, // sender address
@@ -30,3 +30,5 @@ export const sentRecommendedBookEmail = async (from, to, subject, html) => {
     logError("Error sending email: %s", error);
   }
 };
+
+export default sendEmail;
