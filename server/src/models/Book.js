@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema({
-  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
   rating: Number,
   created_at: Date,
   text: String,
@@ -16,8 +16,8 @@ const bookSchema = new mongoose.Schema({
   image: String,
   publisher: String,
   reviews: [reviewSchema],
-  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
-  uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "tags" }],
+  uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
 });
 
 // Dynamic calculation of scores
@@ -32,6 +32,6 @@ bookSchema.virtual("averageRating").get(() => {
   return total / this.reviews.length;
 });
 
-const Book = mongoose.model("Book", bookSchema);
+const Book = mongoose.model("books", bookSchema);
 
 export default Book;
