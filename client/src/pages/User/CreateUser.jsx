@@ -10,14 +10,17 @@ import Alert from "react-bootstrap/Alert";
 const CreateUser = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState(""); // Add state for password
 
   const onSuccess = () => {
     setName("");
     setEmail("");
+    setPassword(""); // Reset password field
   };
+
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     "/user/create",
-    onSuccess,
+    onSuccess
   );
 
   useEffect(() => {
@@ -31,13 +34,13 @@ const CreateUser = () => {
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ user: { name, email } }),
+      body: JSON.stringify({ user: { name, email, password } }), // Include password in the request body
     });
   };
 
   return (
     <Container className="mt-5" style={{ maxWidth: "600px" }}>
-      <h1 className="mb-4">What should the user be?</h1>
+      <h1 className="mb-4">Create a new user</h1>
       <Form onSubmit={handleSubmit}>
         <Input
           id="nameInput"
@@ -54,6 +57,15 @@ const CreateUser = () => {
           onChange={(value) => setEmail(value)}
           placeholder="Email"
           data-testid={TEST_ID.emailInput}
+        />
+        <Input
+          id="passwordInput"
+          name="password"
+          type="password" // Set input type to password
+          value={password}
+          onChange={(value) => setPassword(value)}
+          placeholder="Password"
+          data-testid={TEST_ID.passwordInput}
         />
         <Button
           type="submit"
