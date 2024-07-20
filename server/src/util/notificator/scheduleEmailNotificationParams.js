@@ -1,5 +1,5 @@
 const emailNotificationParams = {
-  scheduleTime: "11 5 * * *",
+  scheduleTime: "33 23 * * *",
   from: "Books recommendations mailer",
   subscribers: ["zubatkinnoname@yandex.com"],
   subject: "Book recommendations",
