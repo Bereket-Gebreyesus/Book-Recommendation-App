@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-
 import Input from "../../components/Input";
 import useFetch from "../../hooks/useFetch";
 import TEST_ID from "./CreateUser.testid";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 
 const CreateUser = () => {
   const [name, setName] = useState("");
@@ -14,7 +17,7 @@ const CreateUser = () => {
   };
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     "/user/create",
-    onSuccess,
+    onSuccess
   );
 
   useEffect(() => {
@@ -32,41 +35,37 @@ const CreateUser = () => {
     });
   };
 
-  let statusComponent = null;
-  if (error != null) {
-    statusComponent = (
-      <div data-testid={TEST_ID.errorContainer}>
-        Error while trying to create user: {error.toString()}
-      </div>
-    );
-  } else if (isLoading) {
-    statusComponent = (
-      <div data-testid={TEST_ID.loadingContainer}>Creating user....</div>
-    );
-  }
-
   return (
-    <div data-testid={TEST_ID.container}>
-      <h1>What should the user be?</h1>
-      <form onSubmit={handleSubmit}>
+    <Container className="mt-5" style={{ maxWidth: "600px" }}>
+      <h1 className="mb-4">What should the user be?</h1>
+      <Form onSubmit={handleSubmit}>
         <Input
+          id="nameInput"
           name="name"
           value={name}
           onChange={(value) => setName(value)}
+          placeholder="Name"
           data-testid={TEST_ID.nameInput}
         />
         <Input
+          id="emailInput"
           name="email"
           value={email}
           onChange={(value) => setEmail(value)}
+          placeholder="Email"
           data-testid={TEST_ID.emailInput}
         />
-        <button type="submit" data-testid={TEST_ID.submitButton}>
+        <Button type="submit" className="btn btn-primary" data-testid={TEST_ID.submitButton}>
           Submit
-        </button>
-      </form>
-      {statusComponent}
-    </div>
+        </Button>
+      </Form>
+      {isLoading && <div className="mt-3">Creating user....</div>}
+      {error && (
+        <Alert variant="danger" className="mt-3" role="alert" data-testid={TEST_ID.errorContainer}>
+          Error while trying to create user: {error.toString()}
+        </Alert>
+      )}
+    </Container>
   );
 };
 

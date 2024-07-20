@@ -1,0 +1,21 @@
+:root {
+  --bs-primary: #ff5733;
+  --bs-primary-hover-bg: #cc4626;
+}
+
+body {
+  margin: 0;
+  /* Remove default margin */
+  padding: 0;
+  /* Remove default padding */
+}
+
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--bs-primary-hover-bg) !important;
+  border-color: var(--bs-primary-hover-bg) !important;
+}
