@@ -40,7 +40,7 @@ const CreateUser = () => {
 
   return (
     <Container className="mt-5" style={{ maxWidth: "600px" }}>
-      <h1 className="mb-4">Create a new user</h1>
+      <h1 className="mb-4">Sign Up</h1>
       <Form onSubmit={handleSubmit}>
         <Input
           id="nameInput"
@@ -72,7 +72,7 @@ const CreateUser = () => {
           className="btn btn-primary"
           data-testid={TEST_ID.submitButton}
         >
-          Submit
+          Sign Up
         </Button>
       </Form>
       {isLoading && <div className="mt-3">Creating user....</div>}
