@@ -17,7 +17,7 @@ const CreateUser = () => {
   };
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     "/user/create",
-    onSuccess
+    onSuccess,
   );
 
   useEffect(() => {
@@ -55,13 +55,22 @@ const CreateUser = () => {
           placeholder="Email"
           data-testid={TEST_ID.emailInput}
         />
-        <Button type="submit" className="btn btn-primary" data-testid={TEST_ID.submitButton}>
+        <Button
+          type="submit"
+          className="btn btn-primary"
+          data-testid={TEST_ID.submitButton}
+        >
           Submit
         </Button>
       </Form>
       {isLoading && <div className="mt-3">Creating user....</div>}
       {error && (
-        <Alert variant="danger" className="mt-3" role="alert" data-testid={TEST_ID.errorContainer}>
+        <Alert
+          variant="danger"
+          className="mt-3"
+          role="alert"
+          data-testid={TEST_ID.errorContainer}
+        >
           Error while trying to create user: {error.toString()}
         </Alert>
       )}

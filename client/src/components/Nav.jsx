@@ -7,7 +7,9 @@ import TEST_ID from "./Nav.testid";
 const NavBar = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
-      <Navbar.Brand href="#" className="m-3">BookRecs</Navbar.Brand>
+      <Navbar.Brand href="#" className="m-3">
+        BookRecs
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
