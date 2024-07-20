@@ -1,12 +1,11 @@
 import Book from "../models/Book.js";
 import upload from "../middleware/multerConfig.js";
-import cloudinary from "../util/cloudinaryConfig.js";
-import mongoose from "mongoose";
+import { logError } from "../util/logging.js";
 
 export const uploadBookAndImage = (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
-      console.error("Upload Error:", err);
+      logError(err);
       return res.status(500).json({
         success: false,
         msg: "Error uploading file.",
@@ -18,24 +17,15 @@ export const uploadBookAndImage = (req, res) => {
     }
 
     try {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "hyfImages",
-      });
-      console.log("result", result);
       const bookData = {
         title: req.body.title,
-        authors: req.body.authors.split(","),
+        authors: req.body.authors,
         description: req.body.description,
         isbn: req.body.isbn,
         publishedDate: req.body.publishedDate,
-        image: result.secure_url,
+        image: req.file.path,
         publisher: req.body.publisher,
-
-        tags: req.body.tags
-          ? req.body.tags
-              .split(",")
-              .map((tag) => new mongoose.Types.ObjectId(tag.trim()))
-          : [],
+        tags: req.body.tags,
         uploadedBy: req.body.uploadedBy,
       };
 
@@ -48,7 +38,7 @@ export const uploadBookAndImage = (req, res) => {
         book: savedBook,
       });
     } catch (error) {
-      console.error("Error: ", error);
+      logError(error);
       res
         .status(500)
         .json({ success: false, msg: "Error processing your request." });

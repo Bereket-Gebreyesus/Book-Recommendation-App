@@ -1,18 +1,18 @@
 import multer from "multer";
-import path from "path";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../util/cloudinaryConfig.js";
 
-const storage = multer.diskStorage({
-  destination: "./uploads/",
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`,
-    );
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "uploads",
+    format: async () => "png",
+    public_id: (file) => `${file.fieldname}-${Date.now()}`,
   },
 });
 
 const upload = multer({
-  storage,
+  storage: storage,
   limits: { fileSize: 1000000 },
 }).single("image");
 
