@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const tagSchema = new mongoose.Schema(
   {
-    tagId: { type: String, required: true, unique: true },
     name: {
       type: String,
       required: true,
