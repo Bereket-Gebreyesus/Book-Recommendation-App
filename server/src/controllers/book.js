@@ -58,7 +58,7 @@ async function checkISBNUniqueness(req, res) {
       return res.status(200).send({ message: "ISBN is unique" });
     }
   } catch (error) {
-    console.error("Error checking ISBN uniqueness:", error);
+    logError("Error checking ISBN uniqueness:", error);
     return res.status(500).send({ message: "Internal Server Error" });
   }
 }
@@ -71,7 +71,7 @@ async function findBookByTitleAndAuthor(bookTitle, authorName) {
     });
     return book;
   } catch (error) {
-    console.error("Error finding book by title and author:", error);
+    logError("Error finding book by title and author:", error);
     throw error;
   }
 }

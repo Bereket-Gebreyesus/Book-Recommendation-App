@@ -1,5 +1,5 @@
 import User, { validateUser } from "../models/User.js";
-import { logError, logInfo } from "../util/logging.js";
+import logError from "../util/logError.js";
 import validationErrorMessage from "../util/validationErrorMessage.js";
 
 export const getUsers = async (req, res) => {
