@@ -1,5 +1,5 @@
 import User, { validateUser } from "../models/User.js";
-import { logError } from "../util/logging.js";
+import { logError, logInfo } from "../util/logging.js";
 import validationErrorMessage from "../util/validationErrorMessage.js";
 
 export const getUsers = async (req, res) => {
@@ -45,5 +45,19 @@ export const createUser = async (req, res) => {
     res
       .status(500)
       .json({ success: false, msg: "Unable to create user, try again later" });
+  }
+};
+
+export const getUser = async (req, res) => {
+  const email = req.query.email;
+  try {
+    const user = await User.findOne({ email: email });
+    if (user) {
+      res.json({ userId: user._id });
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    res.status(500).send("Server error");
   }
 };

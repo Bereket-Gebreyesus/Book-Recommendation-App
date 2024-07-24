@@ -45,3 +45,52 @@ export const uploadBookAndImage = (req, res) => {
     }
   });
 };
+
+async function checkISBNUniqueness(req, res) {
+  const { isbn } = req.query;
+  const isbnString = String(isbn);
+
+  try {
+    const bookExists = await Book.exists({ isbn: isbnString });
+    if (bookExists) {
+      return res.status(409).send({ message: "ISBN already exists" });
+    } else {
+      return res.status(200).send({ message: "ISBN is unique" });
+    }
+  } catch (error) {
+    console.error("Error checking ISBN uniqueness:", error);
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+}
+
+async function findBookByTitleAndAuthor(bookTitle, authorName) {
+  try {
+    const book = await Book.findOne({
+      title: bookTitle,
+      authors: { $in: [authorName] },
+    });
+    return book;
+  } catch (error) {
+    console.error("Error finding book by title and author:", error);
+    throw error;
+  }
+}
+
+async function checkBookAndAuthorUniqueness(req, res) {
+  const { bookTitle, authorName } = req.query;
+
+  const existingBookByTitleAndAuthor = await findBookByTitleAndAuthor(
+    bookTitle,
+    authorName,
+  );
+
+  if (existingBookByTitleAndAuthor) {
+    res.status(409).send({
+      message: "Book with the same title and author or ISBN already exists",
+    });
+    return;
+  }
+  res.status(200).send({ message: "Book is unique" });
+}
+
+export { checkBookAndAuthorUniqueness, checkISBNUniqueness };
