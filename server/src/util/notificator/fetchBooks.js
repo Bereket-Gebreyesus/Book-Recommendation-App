@@ -1,6 +1,7 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { logError } from "../logging.js";
+import Book from "../../models/Book.js";
 
 dotenv.config();
 
@@ -9,25 +10,19 @@ dotenv.config();
 async function fetchBooks() {
   const uri = process.env.MONGODB_URL;
 
-  let client;
   try {
-    client = new MongoClient(uri, {});
-    await client.connect();
-    const db = client.db("book_recommendation");
-    const books = await db
-      .collection("books")
-      .find()
-      .skip(1) // the first book in our db has an indecent cover, so we skip it :)
-      .limit(5)
-      .toArray();
+    await mongoose.connect(uri, {});
 
-    await client.close();
+    const books = await Book.find().limit(5).skip(1); // the first book in our db has an indecent cover, so we skip it :)
+
     return books;
   } catch (error) {
-    logError("Failed to fetch books:", error);
-    if (client && client.topology.isConnected()) {
-      await client.close();
+    logError("Couldn't fetch books data:", error);
+
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.disconnect();
     }
+
     throw error;
   }
 }
