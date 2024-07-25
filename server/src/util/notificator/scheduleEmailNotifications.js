@@ -1,7 +1,7 @@
 import cron from "node-cron";
 
 import sendEmail from "../sendEmail.js";
-import fetchBooks from "./fetchBooks.js";
+import fetchBooks from "../fetchBooks.js";
 import generateEmailContent from "./generateEmailContent.js";
 import { logInfo, logError } from "../logging.js";
 

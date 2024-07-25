@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { logError } from "../logging.js";
-import Book from "../../models/Book.js";
+import { logError } from "./logging.js";
+import Book from "../models/Book.js";
 
 dotenv.config();
 
