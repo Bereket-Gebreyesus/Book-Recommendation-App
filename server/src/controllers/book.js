@@ -53,13 +53,17 @@ async function checkISBNUniqueness(req, res) {
   try {
     const bookExists = await Book.exists({ isbn: isbnString });
     if (bookExists) {
-      return res.status(409).send({ message: "ISBN already exists" });
-    } else {
-      return res.status(200).send({ message: "ISBN is unique" });
+      return res
+        .status(200)
+        .send({ success: true, message: "ISBN already exists" });
     }
+
+    return res.status(200).send({ success: false });
   } catch (error) {
     logError("Error checking ISBN uniqueness:", error);
-    return res.status(500).send({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .send({ success: false, message: "Internal Server Error" });
   }
 }
 
@@ -79,18 +83,24 @@ async function findBookByTitleAndAuthor(bookTitle, authorName) {
 async function checkBookAndAuthorUniqueness(req, res) {
   const { bookTitle, authorName } = req.query;
 
-  const existingBookByTitleAndAuthor = await findBookByTitleAndAuthor(
-    bookTitle,
-    authorName,
-  );
-
-  if (existingBookByTitleAndAuthor) {
-    res.status(409).send({
-      message: "Book with the same title and author or ISBN already exists",
-    });
-    return;
+  try {
+    const existingBookByTitleAndAuthor = await findBookByTitleAndAuthor(
+      bookTitle,
+      authorName,
+    );
+    if (existingBookByTitleAndAuthor) {
+      return res.status(200).send({
+        success: true,
+        message: "Book with the same title and author already exists",
+      });
+    }
+    return res.status(200).send({ success: false });
+  } catch (error) {
+    logError("Error checking book and author uniqueness:", error);
+    return res
+      .status(500)
+      .send({ success: false, message: "Internal Server Error" });
   }
-  res.status(200).send({ message: "Book is unique" });
 }
 
 export { checkBookAndAuthorUniqueness, checkISBNUniqueness };
