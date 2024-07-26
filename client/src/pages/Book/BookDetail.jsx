@@ -118,16 +118,22 @@ const BookDetail = () => {
                   maxWidth: "100%",
                   height: "500px",
                   objectFit: "cover",
+                  display: "flex",
                   borderRadius: "8px",
                   zIndex: 10,
                   transition: "transform 0.3s ease-in-out",
                 }}
-                className="book-image"
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               />
             ) : (
               <div
                 style={{
-                  width: "100%",
+                  maxWidth: "100%",
                   height: "500px",
                   backgroundColor: "#ccc",
                   borderRadius: "8px",
@@ -136,15 +142,24 @@ const BookDetail = () => {
                   justifyContent: "center",
                   fontSize: "1.5rem",
                   color: "#666",
+                  transition: "transform 0.3s ease-in-out",
                 }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               >
                 No Image Available
               </div>
             )}
           </Col>
           <Col md={8}>
-            <h1>{book.title}</h1>
-            <h4>By {book.authors.join(", ")}</h4>
+            <h1 style={{ fontFamily: "'Georgia', serif", fontSize: "2.5rem" }}>
+              {book.title}
+            </h1>
+            <h4 style={{ color: "#888" }}>By {book.authors.join(", ")}</h4>
             {average && (
               <p>
                 <strong>Average Rating:</strong> {average}{" "}
@@ -175,16 +190,22 @@ const BookDetail = () => {
             totalReviews={book.reviews.length}
           />
         )}
-        <h3>Reviews</h3>
-        <ListGroup>
-          {currentReviews.map((review) => (
-            <ReviewItem
-              key={review._id}
-              review={review}
-              reviewer={reviewers[review.ownerId]}
-            />
-          ))}
-        </ListGroup>
+        {currentReviews.length > 0 ? (
+          <>
+            <h3>Reviews</h3>
+            <ListGroup>
+              {currentReviews.map((review) => (
+                <ReviewItem
+                  key={review._id}
+                  review={review}
+                  reviewer={reviewers[review.ownerId]}
+                />
+              ))}
+            </ListGroup>
+          </>
+        ) : (
+          <p>No reviews yet</p>
+        )}
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
