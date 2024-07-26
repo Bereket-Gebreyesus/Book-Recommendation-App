@@ -55,10 +55,10 @@ async function checkISBNUniqueness(req, res) {
     if (bookExists) {
       return res
         .status(200)
-        .send({ success: true, message: "ISBN already exists" });
+        .send({ exists: true, message: "ISBN already exists" });
     }
 
-    return res.status(200).send({ success: false });
+    return res.status(200).send({ exists: false, message: "ISBN is unique" });
   } catch (error) {
     logError("Error checking ISBN uniqueness:", error);
     return res
@@ -76,10 +76,9 @@ async function findBookByTitleAndAuthor(bookTitle, authorName) {
     return book;
   } catch (error) {
     logError("Error finding book by title and author:", error);
-    throw error;
+    return null;
   }
 }
-
 async function checkBookAndAuthorUniqueness(req, res) {
   const { bookTitle, authorName } = req.query;
 
@@ -90,16 +89,19 @@ async function checkBookAndAuthorUniqueness(req, res) {
     );
     if (existingBookByTitleAndAuthor) {
       return res.status(200).send({
-        success: true,
+        exists: true,
         message: "Book with the same title and author already exists",
       });
     }
-    return res.status(200).send({ success: false });
+    return res.status(200).send({
+      exists: false,
+      message: "Book with the same title and author does not exist",
+    });
   } catch (error) {
     logError("Error checking book and author uniqueness:", error);
-    return res
-      .status(500)
-      .send({ success: false, message: "Internal Server Error" });
+    return res.status(500).send({
+      message: "Internal Server Error",
+    });
   }
 }
 

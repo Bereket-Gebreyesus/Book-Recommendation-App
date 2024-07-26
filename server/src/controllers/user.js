@@ -53,7 +53,7 @@ export const getUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: email });
     if (user) {
-      res.json({ userId: user._id });
+      res.status(200).json({ userId: user._id });
     } else {
       res.status(404).send("User not found");
     }
