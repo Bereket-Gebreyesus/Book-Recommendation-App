@@ -28,7 +28,9 @@ const BookDetail = () => {
     (response) => {
       setBook(response.result);
       setTotalReviews(response.result.reviews.length);
-      const reviewerIds = response.result.reviews.map((review) => review.ownerId);
+      const reviewerIds = response.result.reviews.map(
+        (review) => review.ownerId,
+      );
       if (reviewerIds.length > 0) {
         performFetchUsers(reviewerIds);
       }
@@ -36,7 +38,7 @@ const BookDetail = () => {
       if (tagIds.length > 0) {
         performFetchTags(tagIds);
       }
-    }
+    },
   );
 
   const { performFetch: performFetchUsers } = useFetch("/user", (response) => {
@@ -64,8 +66,12 @@ const BookDetail = () => {
   }, [id]);
 
   const calculateAverageRating = (reviews) => {
-    if (!reviews || reviews.length === 0) return { average: null, distribution: {} };
-    const total = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
+    if (!reviews || reviews.length === 0)
+      return { average: null, distribution: {} };
+    const total = reviews.reduce(
+      (acc, review) => acc + (review.rating || 0),
+      0,
+    );
     const average = (total / reviews.length).toFixed(1);
 
     const distribution = reviews.reduce((acc, review) => {
@@ -82,7 +88,8 @@ const BookDetail = () => {
   // Calculate pagination slice
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = book?.reviews.slice(indexOfFirstReview, indexOfLastReview) || [];
+  const currentReviews =
+    book?.reviews.slice(indexOfFirstReview, indexOfLastReview) || [];
 
   const totalPages = Math.ceil(totalReviews / reviewsPerPage);
 
@@ -140,7 +147,8 @@ const BookDetail = () => {
             <h4>By {book.authors.join(", ")}</h4>
             {average && (
               <p>
-                <strong>Average Rating:</strong> {average} <StarRating rating={parseFloat(average)} />
+                <strong>Average Rating:</strong> {average}{" "}
+                <StarRating rating={parseFloat(average)} />
               </p>
             )}
             <p>{book.description}</p>
@@ -148,13 +156,15 @@ const BookDetail = () => {
               <strong>ISBN:</strong> {book.isbn}
             </p>
             <p>
-              <strong>Published Date:</strong> {new Date(book.publishedDate).toDateString()}
+              <strong>Published Date:</strong>{" "}
+              {new Date(book.publishedDate).toDateString()}
             </p>
             <p>
               <strong>Publisher:</strong> {book.publisher}
             </p>
             <div>
-              <strong>Tags:</strong> {book.tags.map((tagId) => tags[tagId] || "No tags").join(", ")}
+              <strong>Tags:</strong>{" "}
+              {book.tags.map((tagId) => tags[tagId] || "No tags").join(", ")}
             </div>
           </Col>
         </Row>
@@ -168,7 +178,11 @@ const BookDetail = () => {
         <h3>Reviews</h3>
         <ListGroup>
           {currentReviews.map((review) => (
-            <ReviewItem key={review._id} review={review} reviewer={reviewers[review.ownerId]} />
+            <ReviewItem
+              key={review._id}
+              review={review}
+              reviewer={reviewers[review.ownerId]}
+            />
           ))}
         </ListGroup>
         <Pagination
@@ -190,7 +204,9 @@ const ReviewItem = ({ review, reviewer }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const displayText = isExpanded ? review.text : `${review.text.substring(0, 200)}...`;
+  const displayText = isExpanded
+    ? review.text
+    : `${review.text.substring(0, 200)}...`;
 
   return (
     <ListGroup.Item>
@@ -204,13 +220,17 @@ const ReviewItem = ({ review, reviewer }) => {
         )}
         <div>
           <strong>{reviewer?.name || "Unknown"}</strong>
-          <div><StarRating rating={review.rating} /></div>
+          <div>
+            <StarRating rating={review.rating} />
+          </div>
           <small>{new Date(review.created_at).toLocaleDateString()}</small>
         </div>
       </div>
       <p>{displayText}</p>
       {review.text.length > 100 && (
-        <Button variant="link" onClick={toggleReadMore}
+        <Button
+          variant="link"
+          onClick={toggleReadMore}
           style={{
             color: "#00FF00",
           }}

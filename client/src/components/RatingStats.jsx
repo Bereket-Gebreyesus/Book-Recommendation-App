@@ -27,7 +27,8 @@ const RatingStats = ({ averageRating, distribution, totalReviews }) => {
     <div className="mb-4 mt-4" style={{ width: "70%" }}>
       <h4>Rating Stats</h4>
       <div className="mb-2">
-        <strong>Overall Rating:</strong> {averageRating} <StarRating rating={parseFloat(averageRating)} />
+        <strong>Overall Rating:</strong> {averageRating}{" "}
+        <StarRating rating={parseFloat(averageRating)} />
       </div>
       {Array.from({ length: 5 }, (_, i) => 5 - i).map(renderProgressBar)}
     </div>

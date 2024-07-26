@@ -1,10 +1,10 @@
 .custom-pagination .page-item {
   margin: 0 5px;
-  color: #FFD700 !important;
+  color: #ffd700 !important;
 }
 
 .custom-pagination .page-item.active .page-link {
-  background-color: #FFD700 !important;
+  background-color: #ffd700 !important;
   color: rgb(202, 200, 200);
   border-color: rgb(196, 196, 196);
 }

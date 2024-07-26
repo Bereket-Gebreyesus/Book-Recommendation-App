@@ -10,13 +10,29 @@ const StarRating = ({ rating }) => {
   const stars = Array.from({ length: totalStars }, (_, index) => {
     if (index < fullStars) {
       return (
-        <FaStar key={index} className="text-warning" style={{ fontSize: "1.0rem" }} />
+        <FaStar
+          key={index}
+          className="text-warning"
+          style={{ fontSize: "1.0rem" }}
+        />
       );
     }
     if (index === fullStars && fractional > 0) {
       return (
-        <div key={index} className="position-relative" style={{ width: "1.0em", height: "1em", display: "inline-block", fontSize: "1.0rem" }}>
-          <FaStar className="text-muted" style={{ position: "absolute", top: 0, left: 0 }} />
+        <div
+          key={index}
+          className="position-relative"
+          style={{
+            width: "1.0em",
+            height: "1em",
+            display: "inline-block",
+            fontSize: "1.0rem",
+          }}
+        >
+          <FaStar
+            className="text-muted"
+            style={{ position: "absolute", top: 0, left: 0 }}
+          />
           <div
             style={{
               position: "absolute",
@@ -25,24 +41,27 @@ const StarRating = ({ rating }) => {
               width: `${fractional * 100}%`,
               overflow: "hidden",
               color: "#FFD700",
-              height: "100%"
+              height: "100%",
             }}
           >
-            <FaStar className="text-warning" style={{ position: "absolute", top: 0, left: 0 }} />
+            <FaStar
+              className="text-warning"
+              style={{ position: "absolute", top: 0, left: 0 }}
+            />
           </div>
         </div>
       );
     }
     return (
-      <FaStar key={index} className="text-muted" style={{ fontSize: "1.0rem" }} />
+      <FaStar
+        key={index}
+        className="text-muted"
+        style={{ fontSize: "1.0rem" }}
+      />
     );
   });
 
-  return (
-    <div className="d-flex align-items-center">
-      {stars}
-    </div>
-  );
+  return <div className="d-flex align-items-center">{stars}</div>;
 };
 
 StarRating.propTypes = {

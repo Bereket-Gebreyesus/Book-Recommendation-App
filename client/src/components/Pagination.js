@@ -4,10 +4,16 @@ import { Pagination as BootstrapPagination } from "react-bootstrap";
 import "./Pagination.css"; //to overwrite some BS styles
 
 const Pagination = ({ totalPages, currentPage, onPageChange }) => {
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const pageNumbers = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1,
+  );
 
   return (
-    <div className="custom-pagination" style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+    <div
+      className="custom-pagination"
+      style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+    >
       <BootstrapPagination>
         <BootstrapPagination.Prev
           onClick={() => onPageChange(currentPage - 1)}
