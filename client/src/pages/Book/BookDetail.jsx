@@ -65,26 +65,6 @@ const BookDetail = () => {
     };
   }, [id]);
 
-  const calculateAverageRating = (reviews) => {
-    if (!reviews || reviews.length === 0)
-      return { average: null, distribution: {} };
-    const total = reviews.reduce(
-      (acc, review) => acc + (review.rating || 0),
-      0,
-    );
-    const average = (total / reviews.length).toFixed(1);
-
-    const distribution = reviews.reduce((acc, review) => {
-      const rating = review.rating || 0;
-      acc[rating] = (acc[rating] || 0) + 1;
-      return acc;
-    }, {});
-
-    return { average, distribution };
-  };
-
-  const { average, distribution } = calculateAverageRating(book?.reviews || []);
-
   // Calculate pagination slice
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
@@ -106,6 +86,15 @@ const BookDetail = () => {
   } else if (!book) {
     content = <p>No book details available.</p>;
   } else {
+    // Safe handling for undefined or null averageRating
+    const averageRating = book.averageRating
+      ? book.averageRating.toFixed(1)
+      : "N/A";
+    const distribution = book.reviews.reduce((acc, review) => {
+      acc[review.rating] = (acc[review.rating] || 0) + 1;
+      return acc;
+    }, {});
+
     content = (
       <Container>
         <Row className="align-items-start mt-5">
@@ -160,10 +149,10 @@ const BookDetail = () => {
               {book.title}
             </h1>
             <h4 style={{ color: "#888" }}>By {book.authors.join(", ")}</h4>
-            {average && (
+            {averageRating !== "N/A" && (
               <p>
-                <strong>Average Rating:</strong> {average}{" "}
-                <StarRating rating={parseFloat(average)} />
+                <strong>Average Rating:</strong> {averageRating}{" "}
+                <StarRating rating={parseFloat(averageRating)} />
               </p>
             )}
             <p>{book.description}</p>
@@ -183,9 +172,9 @@ const BookDetail = () => {
             </div>
           </Col>
         </Row>
-        {average && (
+        {averageRating !== "N/A" && (
           <RatingStats
-            averageRating={average}
+            averageRating={averageRating}
             distribution={distribution}
             totalReviews={book.reviews.length}
           />

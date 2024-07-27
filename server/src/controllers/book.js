@@ -62,11 +62,14 @@ export const getBooks = async (req, res) => {
 export const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
-    const book = await Book.findById(id).lean({ virtuals: true });
+    const book = await Book.findById(id).lean();
 
     if (!book) {
       return res.status(404).json({ success: false, msg: "Book not found" });
     }
+
+    // virtual added here
+    book.averageRating = (await Book.findById(id)).averageRating;
 
     res.status(200).json({ success: true, result: book });
   } catch (error) {
