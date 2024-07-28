@@ -1,5 +1,4 @@
 import Tag from "../models/Tag.js";
-//import { logError } from "../util/logging.js";
 
 export const getAllTags = async (req, res) => {
   try {

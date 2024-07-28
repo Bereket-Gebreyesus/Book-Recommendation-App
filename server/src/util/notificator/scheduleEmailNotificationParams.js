@@ -1,9 +1,8 @@
 const emailNotificationParams = {
   scheduleTime: "0 9 * * 5",
   from: "Books recommendations mailer",
-  subscribers: ["zubatkinnoname@yandex.com"],
+  subscribers: ["shaliruna4@gmail.com, zubatkinnoname@yandex.ru"],
   subject: "Book recommendations",
-  htmlContent: "This is book recommendations for you",
 };
 
 export default emailNotificationParams;

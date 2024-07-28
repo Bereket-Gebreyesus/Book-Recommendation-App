@@ -1,25 +1,33 @@
-import cron from "node-cron"; // utility to run scheduled tasks
+import cron from "node-cron";
+
 import sendEmail from "../sendEmail.js";
+import fetchBooks from "../fetchBooks.js";
+import generateEmailContent from "./generateEmailContent.js";
 import { logInfo, logError } from "../logging.js";
 
-// Setting a schedule for mailing using node-cron
-function scheduleEmailNotifications({
+async function scheduleEmailNotifications({
   scheduleTime,
   from,
   subscribers,
   subject,
-  htmlContent,
 }) {
   cron.schedule(
     scheduleTime,
     async () => {
-      for (const subscriber of subscribers) {
-        try {
-          await sendEmail(from, subscriber, subject, htmlContent);
-          logInfo(`Email sent to ${subscriber}`);
-        } catch (error) {
-          logError("Failed to send email", error);
+      try {
+        const books = await fetchBooks();
+        const htmlContent = generateEmailContent(books);
+
+        for (const subscriber of subscribers) {
+          try {
+            await sendEmail(from, subscriber, subject, htmlContent);
+            logInfo(`Email sent to ${subscriber}`);
+          } catch (error) {
+            logError("Failed to send email", error);
+          }
         }
+      } catch (error) {
+        logError("Failed to fetch books or generate email content", error);
       }
     },
     {
