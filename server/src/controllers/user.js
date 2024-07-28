@@ -47,3 +47,17 @@ export const createUser = async (req, res) => {
       .json({ success: false, msg: "Unable to create user, try again later" });
   }
 };
+
+export const getUser = async (req, res) => {
+  const email = req.query.email;
+  try {
+    const user = await User.findOne({ email: email });
+    if (user) {
+      res.status(200).json({ userId: user._id });
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+};
