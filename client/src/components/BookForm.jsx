@@ -18,15 +18,17 @@ const BookForm = ({
   };
 
   return (
-    <Form onSubmit={(event) => modifiedHandleSubmit(event)}>
-      <Container
-        style={{
-          backgroundColor: "#f8f9fa",
-          padding: "20px",
-          borderRadius: "8px",
-        }}
-      >
-        <h1>Upload a Book</h1>
+    <Container
+      style={{
+        backgroundColor: "#f8f9fa",
+        padding: "20px",
+        borderRadius: "10px",
+        marginTop: "20px",
+        marginBottom: "20px",
+      }}
+    >
+      <Form onSubmit={(event) => modifiedHandleSubmit(event)}>
+        <h2>Upload a Book</h2>
         <Row className="mb-3">
           <Col>
             <Input
@@ -98,7 +100,7 @@ const BookForm = ({
         <Row className="mb-3">
           <Col>
             <Form.Group controlId="tags" className="mb-4">
-              <Form.Label>Tags</Form.Label>
+              Tags
               <TagSelection
                 options={tagsOptions}
                 selectedTags={bookData.tags}
@@ -130,8 +132,8 @@ const BookForm = ({
             </Button>
           </Col>
         </Row>
-      </Container>
-    </Form>
+      </Form>
+    </Container>
   );
 };
 
