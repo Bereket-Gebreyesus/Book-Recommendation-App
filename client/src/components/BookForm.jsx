@@ -125,6 +125,9 @@ const BookForm = ({
             <Button type="submit" variant="secondary">
               Upload Book
             </Button>
+            <Button type="button" variant="warning">
+              Cancel
+            </Button>
           </Col>
         </Row>
       </Container>

@@ -21,9 +21,10 @@ export async function checkBookUniqueness(bookData, setError) {
 
   try {
     const bookAuthorCheckResponse = await axios.get(
-      `${process.env.BASE_SERVER_URL}/api/books/unique`,
+      `${process.env.BASE_SERVER_URL}/api/books/check`,
       { params: { bookTitle: bookData.title, authorName: bookData.authors } },
     );
+
     if (bookAuthorCheckResponse.data.exists) {
       return {
         unique: false,

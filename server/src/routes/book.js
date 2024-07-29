@@ -11,10 +11,10 @@ import {
 
 const bookRouter = express.Router();
 
-bookRouter.post("/upload", uploadBookAndImage);
 bookRouter.get("/", getBooks);
+bookRouter.get("/check", checkBookAndAuthorUniqueness);
+bookRouter.post("/upload", uploadBookAndImage);
 bookRouter.get("/:id", getBookById);
 bookRouter.get("/find/isbn", checkISBNUniqueness);
-bookRouter.get("/unique", checkBookAndAuthorUniqueness);
 
 export default bookRouter;

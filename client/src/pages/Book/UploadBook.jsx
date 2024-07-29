@@ -48,7 +48,7 @@ const UploadBookPage = () => {
         const response = await axios.get(
           `${process.env.BASE_SERVER_URL}/api/tags`,
         );
-        setTagsOptions(response.data);
+        setTagsOptions(response.data.result);
       } catch (err) {
         setError(err.message || "An error occurred while fetching tags");
       }
