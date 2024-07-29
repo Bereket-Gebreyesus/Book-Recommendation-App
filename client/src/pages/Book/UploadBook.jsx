@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import BookForm from "../../components/BookForm";
+import BookForm from "../../components/Book/BookForm";
 import { checkBookUniqueness } from "../../util/checkBookUniqueness";
 import { useNavigate } from "react-router-dom";
 

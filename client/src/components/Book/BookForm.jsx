@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
-import Input from "./Input";
-import TagSelection from "./TagSelection";
+import Input from "../Input";
+import TagSelection from "../TagSelection";
 import PropTypes from "prop-types";
 
 const BookForm = ({
