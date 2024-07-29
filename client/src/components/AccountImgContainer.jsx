@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from "react-bootstrap";
 
-const AccountImgContainer = ({ imageUrl }) => {
+const AccountImgContainer = () => {
   return (
     <div className="account-img-container">
       <Image
