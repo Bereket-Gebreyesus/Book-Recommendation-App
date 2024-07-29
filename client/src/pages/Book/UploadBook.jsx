@@ -34,7 +34,7 @@ const UploadBookPage = () => {
         uploadedBy: response.data.userId,
       }));
     } catch (error) {
-      setError("Error fetching user ID"); // Handling error without console
+      setError("Error fetching user ID");
     }
   };
 

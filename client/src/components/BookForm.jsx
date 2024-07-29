@@ -17,6 +17,10 @@ const BookForm = ({
     handleSubmit();
   };
 
+  const handleCancel = () => {
+    window.location.href = "/";
+  };
+
   return (
     <Container
       style={{
@@ -127,7 +131,7 @@ const BookForm = ({
             <Button type="submit" variant="secondary">
               Upload Book
             </Button>
-            <Button type="button" variant="warning">
+            <Button type="button" variant="warning" onClick={handleCancel}>
               Cancel
             </Button>
           </Col>
