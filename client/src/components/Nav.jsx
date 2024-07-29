@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import UserActions from "../components/UserActions";
 
 import TEST_ID from "./Nav.testid";
 
@@ -20,6 +21,7 @@ const NavBar = () => {
             <Nav.Link>Users</Nav.Link>
           </LinkContainer>
         </Nav>
+        <UserActions />
       </Navbar.Collapse>
     </Navbar>
   );
