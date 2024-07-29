@@ -6,18 +6,26 @@ import sendEmail from "./emails/sendEmail.js";
 import { SUBJECT, FROM } from "./constants.js";
 
 const recommendBooks = async (users, limit) => {
-  for (const user of users) {
-    const topTags = await getUsersTopTags(user, 5);
-    for (const tag of topTags) {
-      const books = await getBooksByTagSortedByRating(tag, limit);
+  try {
+    for (const user of users) {
+      const topTags = await getUsersTopTags(user, 5);
+      const books = [];
+      for (const tag of topTags) {
+        await getBooksByTagSortedByRating(tag, limit).then((data) => {
+          books.unshift(...data);
+        });
+      }
       const emailContent = await generateEmailContent(books);
       try {
-        logInfo(`Sending email to ${user.email}`);
         await sendEmail(FROM, user.email, SUBJECT, emailContent);
       } catch (error) {
-        logError("Failed to send email", error);
+        logError(`Failed to send email: ${error} `);
       }
     }
+  } catch (error) {
+    logError(`Failed to recommend books: ${error}`);
+  } finally {
+    logInfo(`recommendation emails have been sent to ${users.length} users`);
   }
 };
 
