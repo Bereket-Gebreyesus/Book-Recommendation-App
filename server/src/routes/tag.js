@@ -1,8 +1,9 @@
 import express from "express";
-import { getAllTags } from "../controllers/tag.js";
+import { getAllTags, getTagById } from "../controllers/tag.js";
 
 const tagRouter = express.Router();
 
 tagRouter.get("/", getAllTags);
+tagRouter.get("/:id", getTagById);
 
 export default tagRouter;

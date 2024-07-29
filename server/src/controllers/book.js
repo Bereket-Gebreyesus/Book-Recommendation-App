@@ -46,6 +46,39 @@ export const uploadBookAndImage = (req, res) => {
   });
 };
 
+export const getBooks = async (req, res) => {
+  try {
+    const books = await Book.find();
+    res.status(200).json({ success: true, result: books });
+  } catch (error) {
+    logError("Error fetching books:", error);
+    logError(error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Unable to get books, try again later" });
+  }
+};
+
+export const getBookById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await Book.findById(id).lean();
+
+    if (!book) {
+      return res.status(404).json({ success: false, msg: "Book not found" });
+    }
+
+    // virtual added here
+    book.averageRating = (await Book.findById(id)).averageRating;
+
+    res.status(200).json({ success: true, result: book });
+  } catch (error) {
+    logError(error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Unable to get book, try again later" });
+  }
+};
 async function checkISBNUniqueness(req, res) {
   const { isbn } = req.query;
   const isbnString = String(isbn);

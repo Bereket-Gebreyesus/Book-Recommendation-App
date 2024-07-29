@@ -1,0 +1,14 @@
+.custom-pagination .page-item {
+  margin: 0 5px;
+  color: #ffd700 !important;
+}
+
+.custom-pagination .page-item.active .page-link {
+  background-color: #ffd700 !important;
+  color: rgb(202, 200, 200);
+  border-color: rgb(196, 196, 196);
+}
+
+.custom-pagination .page-link {
+  color: #2a2924 !important;
+}
