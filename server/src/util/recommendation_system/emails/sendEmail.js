@@ -1,6 +1,6 @@
 import nodeMailer from "nodemailer";
 import dotenv from "dotenv";
-import { logInfo, logError } from "./logging.js";
+import { logInfo, logError } from "../../logging.js";
 
 // sendEmail function is used to send an email with parameters from, to, subject, html
 
@@ -24,10 +24,9 @@ const sendEmail = async (from, to, subject, html) => {
       subject: subject, // Subject line
       html: html, // html body
     });
-    logInfo("Message sent: %s", info.messageId);
-    // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
+    logInfo("Message sent: ", info.messageId);
   } catch (error) {
-    logError("Error sending email: %s", error);
+    logError("Error sending email: ", error);
   }
 };
 
