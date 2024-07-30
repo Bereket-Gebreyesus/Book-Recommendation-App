@@ -3,6 +3,7 @@ import cors from "cors";
 
 import userRouter from "./routes/user.js";
 import bookRouter from "./routes/book.js";
+import tagRouter from "./routes/tag.js";
 
 // Create an express server
 const app = express();
@@ -19,4 +20,5 @@ app.use(cors());
  */
 app.use("/api/user", userRouter);
 app.use("/api/books", bookRouter);
+app.use("/api/tags", tagRouter);
 export default app;

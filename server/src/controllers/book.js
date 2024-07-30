@@ -45,3 +45,97 @@ export const uploadBookAndImage = (req, res) => {
     }
   });
 };
+
+export const getBooks = async (req, res) => {
+  try {
+    const books = await Book.find();
+    res.status(200).json({ success: true, result: books });
+  } catch (error) {
+    logError("Error fetching books:", error);
+    logError(error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Unable to get books, try again later" });
+  }
+};
+
+export const getBookById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await Book.findById(id).lean();
+
+    if (!book) {
+      return res.status(404).json({ success: false, msg: "Book not found" });
+    }
+
+    // virtual added here
+    book.averageRating = (await Book.findById(id)).averageRating;
+
+    res.status(200).json({ success: true, result: book });
+  } catch (error) {
+    logError(error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Unable to get book, try again later" });
+  }
+};
+async function checkISBNUniqueness(req, res) {
+  const { isbn } = req.query;
+  const isbnString = String(isbn);
+
+  try {
+    const bookExists = await Book.exists({ isbn: isbnString });
+    if (bookExists) {
+      return res
+        .status(200)
+        .send({ exists: true, message: "ISBN already exists" });
+    }
+
+    return res.status(200).send({ exists: false, message: "ISBN is unique" });
+  } catch (error) {
+    logError("Error checking ISBN uniqueness:", error);
+    return res
+      .status(500)
+      .send({ success: false, message: "Internal Server Error" });
+  }
+}
+
+async function findBookByTitleAndAuthor(bookTitle, authorName) {
+  try {
+    const book = await Book.findOne({
+      title: bookTitle,
+      authors: { $in: [authorName] },
+    });
+    return book;
+  } catch (error) {
+    logError("Error finding book by title and author:", error);
+    return null;
+  }
+}
+async function checkBookAndAuthorUniqueness(req, res) {
+  const { bookTitle, authorName } = req.query;
+
+  try {
+    const existingBookByTitleAndAuthor = await findBookByTitleAndAuthor(
+      bookTitle,
+      authorName,
+    );
+    if (existingBookByTitleAndAuthor) {
+      return res.status(200).send({
+        exists: true,
+        message: "Book with the same title and author already exists",
+      });
+    }
+    return res.status(200).send({
+      exists: false,
+      message: "Book with the same title and author does not exist",
+    });
+  } catch (error) {
+    logError("Error checking book and author uniqueness:", error);
+    return res.status(500).send({
+      message: "Internal Server Error",
+    });
+  }
+}
+
+export { checkBookAndAuthorUniqueness, checkISBNUniqueness };

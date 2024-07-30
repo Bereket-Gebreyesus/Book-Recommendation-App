@@ -1,13 +1,12 @@
 :root {
-  --bs-primary: #ff5733;
-  --bs-primary-hover-bg: #cc4626;
+  --bs-primary: #ffd700;
+  --bs-primary-hover-bg: #33b864;
 }
 
 body {
   margin: 0;
-  /* Remove default margin */
+
   padding: 0;
-  /* Remove default padding */
 }
 
 .btn-primary {
