@@ -1,8 +1,7 @@
 // Load our .env variables
 import dotenv from "dotenv";
 import express from "express";
-import scheduleEmailNotifications from "./util/notificator/scheduleEmailNotifications.js";
-import emailNotificationParams from "./util/notificator/scheduleEmailNotificationParams.js";
+import scheduleEmailNotifications from "./util/recommendation_system/schedule/scheduleEmailNotifications.js";
 dotenv.config();
 
 import app from "./app.js";
@@ -24,7 +23,7 @@ const startServer = async () => {
     app.listen(port, () => {
       logInfo(`Server started on port ${port}`);
       // Launch notification scheduler
-      scheduleEmailNotifications(emailNotificationParams);
+      scheduleEmailNotifications();
     });
   } catch (error) {
     logError(error);

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Book from "./Book.js"; // Ensure Book model is imported
 
 import validateAllowedFields from "../util/validateAllowedFields.js";
 
@@ -12,7 +13,8 @@ const userSchema = new mongoose.Schema({
   }, // Added validation for 'email' format.
   password: { type: String, required: true }, // We can add validation for 'password' (eg., minimum length).
   profileImage: String,
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: Book }],
+  weeklyEmail: { type: Boolean, default: false },
 });
 
 const User = mongoose.model("users", userSchema);
