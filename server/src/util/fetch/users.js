@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { logError } from "../logging.js";
 import User from "../../models/User.js";
 import { getBooksById } from "./books.js";
@@ -10,16 +9,13 @@ export const getSubscribers = async () => {
     return await User.find({ weeklyEmail: true });
   } catch (error) {
     logError("Couldn't fetch users data:", error);
-    if (mongoose.connection.readyState === 1) {
-      await mongoose.disconnect();
-    }
     throw error;
   }
 };
 
 // get single users top "limit" tags.
 export const getUsersTopTags = async (user, limit) => {
-  const favoriteBooks = await getBooksById(user.favoritesList);
+  const favoriteBooks = await getBooksById(user.favorites);
 
   const flattenedTags = favoriteBooks.flatMap((book) => book.tags);
   // Count each tag occurrence

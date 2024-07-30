@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { logError } from "../logging.js";
 import Book from "../../models/Book.js";
 
@@ -8,9 +7,6 @@ export const getBooksById = async (ids) => {
     return await Book.find({ _id: { $in: ids } });
   } catch (error) {
     logError("Couldn't fetch books data:", error);
-    if (mongoose.connection.readyState === 1) {
-      await mongoose.disconnect();
-    }
     throw error;
   }
 };

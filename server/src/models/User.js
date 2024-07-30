@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   }, // Added validation for 'email' format.
   password: { type: String, required: true }, // We can add validation for 'password' (eg., minimum length).
   profileImage: String,
-  favoritesList: [{ type: mongoose.Schema.Types.ObjectId, ref: Book }],
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: Book }],
   weeklyEmail: { type: Boolean, default: false },
 });
 
@@ -21,7 +21,7 @@ const User = mongoose.model("users", userSchema);
 
 export const validateUser = (userObject) => {
   const errorList = [];
-  const allowedKeys = ["name", "email", "password", "favoritesList"];
+  const allowedKeys = ["name", "email", "password"];
 
   const validatedKeysMessage = validateAllowedFields(userObject, allowedKeys);
 
