@@ -106,7 +106,10 @@ const BookForm = ({
             <Form.Group controlId="tags" className="mb-4">
               Tags
               <TagSelection
-                options={tagsOptions}
+                id="tags"
+                options={tagsOptions.sort((a, b) =>
+                  a.name.localeCompare(b.name),
+                )}
                 selectedTags={bookData.tags}
                 onTagClick={handleTagClick}
               />
