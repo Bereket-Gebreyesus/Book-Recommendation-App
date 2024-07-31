@@ -79,7 +79,7 @@ export const getBookById = async (req, res) => {
       .json({ success: false, msg: "Unable to get book, try again later" });
   }
 };
-async function checkISBNUniqueness(req, res) {
+export const checkISBNUniqueness = async (req, res) => {
   const { isbn } = req.query;
   const isbnString = String(isbn);
 
@@ -98,9 +98,9 @@ async function checkISBNUniqueness(req, res) {
       .status(500)
       .send({ success: false, message: "Internal Server Error" });
   }
-}
+};
 
-async function findBookByTitleAndAuthor(bookTitle, authorName) {
+const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
   try {
     const book = await Book.findOne({
       title: bookTitle,
@@ -111,8 +111,8 @@ async function findBookByTitleAndAuthor(bookTitle, authorName) {
     logError("Error finding book by title and author:", error);
     return null;
   }
-}
-async function checkBookAndAuthorUniqueness(req, res) {
+};
+export const checkBookAndAuthorUniqueness = async (req, res) => {
   const { bookTitle, authorName } = req.query;
 
   try {
@@ -136,6 +136,4 @@ async function checkBookAndAuthorUniqueness(req, res) {
       message: "Internal Server Error",
     });
   }
-}
-
-export { checkBookAndAuthorUniqueness, checkISBNUniqueness };
+};
