@@ -63,6 +63,9 @@ const BookList = () => {
             <p className="book-description">
               Description: {book.description || "No description"}
             </p>
+            <p className="book-rating">
+              Rating: {book.averageRating || "No rating"}
+            </p>
           </li>
         ))}
       </ul>

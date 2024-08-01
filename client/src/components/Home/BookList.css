@@ -34,18 +34,14 @@
   width: 150px;
 }
 
-.book-rating,
 .book-authors,
 .book-isbn,
 .book-publisher,
-.book-description {
+.book-description,
+.book-rating {
   margin: 5px 0;
   font-size: 0.9em;
   color: #555;
-}
-
-.book-authors {
-  font-style: italic;
 }
 
 .show-more {
