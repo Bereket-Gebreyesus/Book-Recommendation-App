@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import BookList from "../../components/book/BookList";
+import BookList from "../../components/Home/BookList";
 import TEST_ID from "./Home.testid";
 
 const Home = () => {

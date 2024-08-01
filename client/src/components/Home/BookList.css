@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.book-list-container a {
+  text-decoration: none;
+}
+
 .book-list-title {
   color: #444;
   margin-bottom: 20px;

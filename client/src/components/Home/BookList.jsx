@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import defaultCover from "../../assets/default-cover.jpeg";
 import "./BookList.css";
@@ -43,15 +44,15 @@ const BookList = () => {
       <ul className="book-list-container">
         {books.map((book) => (
           <li key={book._id}>
-            <h3 className="book-title">{book.title || "No title"}</h3>
+            <Link to={`/books/${book._id}`}>
+              <h3 className="book-title">{book.title}</h3>
+            </Link>
+
             <img
               className="book-cover"
               src={book.image || defaultCover}
               alt={book.title}
             />
-            <p className="book-rating">
-              Rating: {book.averageRating || "No rating"}
-            </p>
             <p className="book-authors">
               Authors: {book.authors.join(", ") || "No authors"}
             </p>
@@ -60,7 +61,7 @@ const BookList = () => {
               Publisher: {book.publisher || "No publisher"}
             </p>
             <p className="book-description">
-              Description: {book.description || "No decription"}
+              Description: {book.description || "No description"}
             </p>
           </li>
         ))}
