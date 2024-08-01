@@ -5,6 +5,7 @@ import {
   getBookById,
   checkBookAndAuthorUniqueness,
   checkISBNUniqueness,
+  getSortedBooks,
 } from "../controllers/book.js";
 
 // Now you can use these functions here
@@ -12,6 +13,7 @@ import {
 const bookRouter = express.Router();
 
 bookRouter.post("/upload", uploadBookAndImage);
+bookRouter.get("/all", getSortedBooks);
 bookRouter.get("/", getBooks);
 bookRouter.get("/:id", getBookById);
 bookRouter.get("/find/isbn", checkISBNUniqueness);

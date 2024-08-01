@@ -138,4 +138,49 @@ async function checkBookAndAuthorUniqueness(req, res) {
   }
 }
 
-export { checkBookAndAuthorUniqueness, checkISBNUniqueness };
+// Fetching sorted and paginated books for the main page
+async function getSortedBooks(req, res) {
+  // Query parameters: page number and limit (for pagination)
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const books = await Book.aggregate([
+      {
+        $addFields: {
+          // Calculate the average rating of each book
+          averageRating: {
+            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+          },
+        },
+      },
+      {
+        $sort: {
+          // Sort by (top reviewed + date added)
+          averageRating: -1,
+          createdAt: -1,
+        },
+      },
+      {
+        $skip: (page - 1) * limit,
+      },
+      {
+        $limit: parseInt(limit, 10),
+      },
+    ]);
+
+    const count = await Book.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      books,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error retrieving books", error });
+  }
+}
+
+export { checkBookAndAuthorUniqueness, checkISBNUniqueness, getSortedBooks };
