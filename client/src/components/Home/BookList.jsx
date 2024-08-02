@@ -46,7 +46,7 @@ const BookList = () => {
         {books.map((book) => (
           <li key={book._id} className="border rounded p-3 mb-4 shadow-sm">
             <Link to={`/books/${book._id}`} className="text-decoration-none">
-              <h3 className="h5 text-dark font-weight-bold">{book.title}</h3>
+              <h3 className="h5 text-dark fw-bold">{book.title}</h3>
             </Link>
 
             <img
