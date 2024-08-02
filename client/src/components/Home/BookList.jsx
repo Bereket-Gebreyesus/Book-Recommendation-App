@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import defaultCover from "../../assets/default-cover.jpeg";
+
 import "./BookList.css";
 
 const BookList = () => {
@@ -38,48 +39,51 @@ const BookList = () => {
   };
 
   return (
-    <div>
-      <h4 className="book-list-title">Recommendations list</h4>
+    <div className="container">
+      <h4 className="mb-4">Recommendations list</h4>
 
-      <ul className="book-list-container">
+      <ul className="list-unstyled">
         {books.map((book) => (
-          <li key={book._id}>
-            <Link to={`/books/${book._id}`}>
-              <h3 className="book-title">{book.title}</h3>
+          <li key={book._id} className="border rounded p-3 mb-4 shadow-sm">
+            <Link to={`/books/${book._id}`} className="text-decoration-none">
+              <h3 className="h5 text-dark font-weight-bold">{book.title}</h3>
             </Link>
 
             <img
-              className="book-cover"
+              className="d-block my-3 rounded"
               src={book.image || defaultCover}
               alt={book.title}
+              style={{ width: "150px" }}
             />
-            <p className="book-authors">
-              Authors: {book.authors.join(", ") || "No authors"}
+            <p className="mb-1">
+              by {book.authors.join(", ") || "Author is unknown"}
             </p>
-            <p className="book-isbn">ISBN: {book.isbn || "No ISBN"}</p>
-            <p className="book-publisher">
-              Publisher: {book.publisher || "No publisher"}
+            <p className="text-muted mb-1">
+              ISBN: {book.isbn || "ISBN is unknown"}
             </p>
-            <p className="book-description">
+            <p className="text-muted mb-1">
+              Publisher: {book.publisher || "Publisher is unknown"}
+            </p>
+            <p className="text-muted mb-1">
               Description: {book.description || "No description"}
             </p>
-            <p className="book-rating">
+            <p className="text-muted mb-1">
               Rating: {book.averageRating || "No rating"}
             </p>
           </li>
         ))}
       </ul>
 
-      {isLoading && <p className="loading-bar">Loading...</p>}
+      {isLoading && <p className="text-center">Loading...</p>}
 
       {error && (
-        <p className="error-message">
+        <p className="text-danger text-center">
           Error: {error.message || "An unexpected error occurred"}
         </p>
       )}
 
       {currentPage < totalPages && (
-        <div className="show-more" onClick={handleShowMore}>
+        <div className="text-center cursor-pointer" onClick={handleShowMore}>
           Show more...
         </div>
       )}

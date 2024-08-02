@@ -177,9 +177,9 @@ async function getSortedBooks(req, res) {
       currentPage: page,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Error retrieving books", error });
+    const errMessage = "Error loading books";
+    logError(errMessage, error);
+    res.status(500).json({ success: false, message: errMessage });
   }
 }
 
