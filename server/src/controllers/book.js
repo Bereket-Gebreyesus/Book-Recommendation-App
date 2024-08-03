@@ -79,6 +79,7 @@ export const getBookById = async (req, res) => {
       .json({ success: false, msg: "Unable to get book, try again later" });
   }
 };
+
 export const checkISBNUniqueness = async (req, res) => {
   const { isbn } = req.query;
   const isbnString = String(isbn);
@@ -112,6 +113,7 @@ const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
     return null;
   }
 };
+
 export const checkBookAndAuthorUniqueness = async (req, res) => {
   const { bookTitle, authorName } = req.query;
 
@@ -137,3 +139,38 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
     });
   }
 };
+
+// Search books by title, author or tag
+export async function searchBooks(req, res) {
+  const { query } = req.query;
+
+  if (!query) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Query is required" });
+  }
+
+  try {
+    const books = await Book.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { authors: { $regex: query, $options: "i" } },
+        { "tags.name": { $regex: query, $options: "i" } }, // Update this line
+      ],
+    });
+
+    if (books.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No books found" });
+    }
+
+    return res.status(200).json({ success: true, books });
+  } catch (error) {
+    logError("Error searching books:", error);
+    console.error("Detailed error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Cannot get books, try again later" });
+  }
+}

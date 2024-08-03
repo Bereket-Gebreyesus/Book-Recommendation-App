@@ -7,6 +7,7 @@ import CreateUser from "./pages/User/CreateUser";
 import UserList from "./pages/User/UserList";
 import UploadBookPage from "./pages/Book/UploadBook";
 import BookDetail from "./pages/Book/BookDetail";
+import Search from "./pages/Search";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/user" element={<UserList />} />
         <Route path="/user/create" element={<CreateUser />} />
         <Route path="/book/upload" element={<UploadBookPage />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/books/:id" element={<BookDetail />} />
       </Routes>
     </>
