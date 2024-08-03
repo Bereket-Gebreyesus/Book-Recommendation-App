@@ -5,6 +5,8 @@ import {
   getBookById,
   checkBookAndAuthorUniqueness,
   checkISBNUniqueness,
+  getBookReviews,
+  addReview,
 } from "../controllers/book.js";
 
 // Now you can use these functions here
@@ -15,6 +17,8 @@ bookRouter.get("/", getBooks);
 bookRouter.get("/check", checkBookAndAuthorUniqueness);
 bookRouter.post("/upload", uploadBookAndImage);
 bookRouter.get("/:id", getBookById);
+bookRouter.get("/:id/reviews", getBookReviews);
+bookRouter.post("/:id/reviews/add", addReview);
 bookRouter.get("/find/isbn", checkISBNUniqueness);
 
 export default bookRouter;
