@@ -36,10 +36,16 @@ const Search = () => {
     };
   }, [query]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="container">
+        <p className="m-4">Loading...</p>
+      </div>
+    );
+
   if (error)
     return (
-      <div>
+      <div className="container">
         <h4 className="mb-4">{`Search Results: "${query}". Error: ${error}`}</h4>
       </div>
     );
