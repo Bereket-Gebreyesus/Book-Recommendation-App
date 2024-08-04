@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
+import defaultCover from "../assets/default-cover.jpeg";
+import "./Search.css";
 
 const Search = () => {
   const [books, setBooks] = useState([]);
@@ -36,19 +38,21 @@ const Search = () => {
     };
   }, [query]);
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="container">
         <p className="m-4">Loading...</p>
       </div>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <div className="container">
         <h4 className="mb-4">{`Search Results: "${query}". Error: ${error}`}</h4>
       </div>
     );
+  }
 
   return (
     <div className="container">
@@ -60,6 +64,11 @@ const Search = () => {
               <Link to={`/books/${book._id}`} className="text-decoration-none">
                 <div>
                   <h3 className="h5 text-dark fw-bold">{book.title}</h3>
+                  <img
+                    src={book.image || defaultCover}
+                    alt={`${book.title}`}
+                    className="mb-2 book-cover-img"
+                  />
                   <p className="mb-1 text-muted ">
                     by {book.authors.join(", ") || "Author is unknown"}
                   </p>
