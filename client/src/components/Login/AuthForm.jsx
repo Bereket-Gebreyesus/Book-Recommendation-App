@@ -63,7 +63,10 @@ const AuthForm = () => {
       setPassword("");
       navigate("/");
     } catch (error) {
-      setMessage(error.response.data.error);
+      setMessage(
+        "Registration failed: " +
+          (error.response?.data?.message || error.message),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -85,16 +88,17 @@ const AuthForm = () => {
     setIsLoading(true);
     try {
       const user = await googleSignIn();
-      const { displayName, email } = user;
+      const { displayName, email, idToken } = user;
 
       let userId = await fetchUserIdByEmail(email);
+
       if (!userId) {
         const response = await axios.post(
           `${process.env.BASE_SERVER_URL}/api/user/create`,
           {
             name: displayName,
             email,
-            password: "defaultPassword", // You might want to handle this differently
+            password: idToken,
           },
         );
         register(response.data.token, email);
@@ -105,7 +109,7 @@ const AuthForm = () => {
           `${process.env.BASE_SERVER_URL}/api/user/login`,
           {
             email,
-            password: "defaultPassword", // You might want to handle this differently
+            password: idToken,
           },
         );
 
@@ -114,9 +118,7 @@ const AuthForm = () => {
         navigate("/");
       }
     } catch (error) {
-      setMessage("Google Sign-In failed: " + error.message);
-    } finally {
-      setIsLoading(false);
+      setMessage("An error occurred during Google Sign-In");
     }
   };
 
@@ -124,7 +126,7 @@ const AuthForm = () => {
     setIsLoading(true);
     try {
       const user = await githubSignIn();
-      const { displayName, email } = user;
+      const { displayName, email, idToken } = user;
 
       let userId = await fetchUserIdByEmail(email);
       if (!userId) {
@@ -133,7 +135,7 @@ const AuthForm = () => {
           {
             name: displayName,
             email,
-            password: "defaultPassword", // You might want to handle this differently
+            password: idToken, // You might want to handle this differently
           },
         );
         register(response.data.token, email);
@@ -144,7 +146,7 @@ const AuthForm = () => {
           `${process.env.BASE_SERVER_URL}/api/user/login`,
           {
             email,
-            password: "defaultPassword", // You might want to handle this differently
+            password: idToken, // You might want to handle this differently
           },
         );
 

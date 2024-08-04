@@ -61,7 +61,9 @@ export const AuthProvider = ({ children }) => {
       const token = await result.user.getIdToken();
       const email = result.user.email;
       const displayName = result.user.displayName;
+
       const photoURL = result.user.photoURL;
+      const idToken = await result.user.getIdToken();
 
       localStorage.setItem("token", token);
       setUserEmail(email);
@@ -72,6 +74,7 @@ export const AuthProvider = ({ children }) => {
       return {
         displayName,
         email,
+        idToken,
       };
     } catch (error) {
       setMessage("Failed to Sign In with Google: " + error.message);
@@ -85,6 +88,7 @@ export const AuthProvider = ({ children }) => {
       const email = result.user.email;
       const displayName = result.user.displayName;
       const photoURL = result.user.photoURL;
+      const idToken = await result.user.getIdToken();
 
       localStorage.setItem("token", token);
       setUserEmail(email);
@@ -95,6 +99,7 @@ export const AuthProvider = ({ children }) => {
       return {
         displayName,
         email,
+        idToken,
       };
     } catch (error) {
       setMessage("GitHub Sign-In Error: " + error.message);
