@@ -7,7 +7,6 @@ import tagRouter from "./routes/tag.js";
 
 // Create an express server
 const app = express();
-
 // Tell express to use the json middleware
 app.use(express.json());
 // Allow everyone to access our API. In a real application, we would need to restrict this!

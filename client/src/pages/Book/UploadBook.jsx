@@ -3,9 +3,11 @@ import axios from "axios";
 import BookForm from "../../components/Book/BookForm";
 import { checkBookUniqueness } from "../../util/checkBookUniqueness";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/AuthContext";
 
 const UploadBookPage = () => {
-  const email = "dgnahmt22@gmail.com";
+  const { userEmail } = useAuth();
+  const email = userEmail;
   const [bookData, setBookData] = useState({
     title: "",
     authors: [],
