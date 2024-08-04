@@ -105,7 +105,6 @@ export const loginUser = async (req, res) => {
     res.status(200).json({ success: true, token: token });
   } catch (error) {
     logError(error);
-    console.error("Error during login:", error); // Detailed logging
     res
       .status(500)
       .json({ success: false, msg: "Unable to login, try again later" });
