@@ -37,20 +37,25 @@ const Search = () => {
   }, [query]);
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error)
+    return (
+      <div>
+        <h4 className="mb-4">{`Search Results: "${query}". Error: ${error}`}</h4>
+      </div>
+    );
 
   return (
-    <div>
-      <h4 className="mb-4">Search Results</h4>
+    <div className="container">
+      <h4 className="mb-4 mt-3">{`Search Results: ${query}`}</h4>
       {books.length > 0 ? (
         <ul className="list-unstyled">
           {books.map((book) => (
-            <li key={book._id} className="border p-3 mb-4 shadow-sm">
+            <li key={book._id} className="border rounded p-3 mb-4 shadow-sm">
               <Link to={`/books/${book._id}`} className="text-decoration-none">
                 <div>
                   <h3 className="h5 text-dark fw-bold">{book.title}</h3>
                   <p className="mb-1 text-muted ">
-                    by {book.authors || "Author is unknown"}
+                    by {book.authors.join(", ") || "Author is unknown"}
                   </p>
                   <p className="text-muted mb-1">
                     Description:{" "}

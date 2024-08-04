@@ -155,15 +155,9 @@ export async function searchBooks(req, res) {
       $or: [
         { title: { $regex: query, $options: "i" } },
         { authors: { $regex: query, $options: "i" } },
-        { "tags.name": { $regex: query, $options: "i" } }, // Update this line
+        { "tags.name": { $regex: query, $options: "i" } },
       ],
     });
-
-    if (books.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No books found" });
-    }
 
     return res.status(200).json({ success: true, books });
   } catch (error) {
