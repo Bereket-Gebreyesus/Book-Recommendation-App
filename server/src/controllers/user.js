@@ -3,6 +3,7 @@ import { logError } from "../util/logging.js";
 import validationErrorMessage from "../util/validationErrorMessage.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import admin from "firebase-admin";
 
 export const getUsers = async (req, res) => {
   try {
@@ -108,5 +109,70 @@ export const loginUser = async (req, res) => {
     res
       .status(500)
       .json({ success: false, msg: "Unable to login, try again later" });
+  }
+};
+
+export const googleSignIn = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const { email, name, picture } = decodedToken;
+
+    let user = await User.findOne({ email: email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        profileImage: picture,
+        password: "defaultPassword", // Set a default password
+      });
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ success: true, token: jwtToken });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "Google sign-in failed",
+      error: error.message,
+    });
+  }
+};
+export const githubSignIn = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const { email, name, picture } = decodedToken;
+
+    let user = await User.findOne({ email: email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        profileImage: picture,
+        password: "defaultPassword", // Set a default password
+      });
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ success: true, token: jwtToken });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "GitHub sign-in failed",
+      error: error.message,
+    });
   }
 };

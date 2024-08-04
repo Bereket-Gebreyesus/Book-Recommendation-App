@@ -72,99 +72,12 @@ const AuthForm = () => {
     }
   };
 
-  const fetchUserIdByEmail = async (email) => {
-    try {
-      const response = await axios.get(
-        `${process.env.BASE_SERVER_URL}/api/user/id`,
-        { params: { email } },
-      );
-      return response.data.userId;
-    } catch (error) {
-      setMessage("Failed to fetch user ID: " + error.message);
-    }
-  };
-
   const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      const user = await googleSignIn();
-      const { displayName, email, idToken } = user;
-
-      let userId = await fetchUserIdByEmail(email);
-
-      if (!userId) {
-        const response = await axios.post(
-          `${process.env.BASE_SERVER_URL}/api/user/create`,
-          {
-            name: displayName,
-            email,
-            password: idToken,
-          },
-        );
-        register(response.data.token, email);
-        setMessage("Registration successful");
-        navigate("/");
-      } else {
-        const response = await axios.post(
-          `${process.env.BASE_SERVER_URL}/api/user/login`,
-          {
-            email,
-            password: idToken,
-          },
-        );
-
-        login(response.data.token, email);
-        setMessage("Google Sign-In successful");
-        navigate("/");
-      }
-    } catch (error) {
-      setMessage("An error occurred during Google Sign-In");
-    }
+    await googleSignIn();
   };
 
-  const handleGitHubSignIn = async () => {
-    setIsLoading(true);
-    try {
-      const user = await githubSignIn();
-      const { displayName, email, idToken } = user;
-
-      let userId = await fetchUserIdByEmail(email);
-      if (!userId) {
-        const response = await axios.post(
-          `${process.env.BASE_SERVER_URL}/api/user/create`,
-          {
-            name: displayName,
-            email,
-            password: idToken, // You might want to handle this differently
-          },
-        );
-        register(response.data.token, email);
-        setMessage("Registration successful");
-        navigate("/");
-      } else {
-        const response = await axios.post(
-          `${process.env.BASE_SERVER_URL}/api/user/login`,
-          {
-            email,
-            password: idToken, // You might want to handle this differently
-          },
-        );
-
-        login(response.data.token, email);
-        setMessage("GitHub Sign-In successful");
-        navigate("/");
-      }
-    } catch (error) {
-      if (error.code === "auth/account-exists-with-different-credential") {
-        setMessage(
-          "An account already exists with the same email address but different sign-in credentials. Please use the existing sign-in method.",
-        );
-      } else {
-        setMessage("GitHub Sign-In failed: " + error.message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+  const handleGithubSignIn = async () => {
+    await githubSignIn();
   };
 
   return (
@@ -234,7 +147,7 @@ const AuthForm = () => {
                   </Button>
                   <Button
                     variant="outline-dark"
-                    onClick={handleGitHubSignIn}
+                    onClick={handleGithubSignIn}
                     className="github-auth-button"
                   >
                     <FaGithub style={{ marginRight: "8px" }} /> Sign in with

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { initializeApp } from "firebase/app";
 import PropTypes from "prop-types";
+import axios from "axios";
 import {
   getAuth,
   signInWithPopup,
@@ -59,23 +60,32 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      const email = result.user.email;
-      const displayName = result.user.displayName;
 
-      const photoURL = result.user.photoURL;
-      const idToken = await result.user.getIdToken();
+      const response = await axios.post(
+        `${process.env.BASE_SERVER_URL}/api/user/google-sign-in`,
+        { token },
+      );
 
-      localStorage.setItem("token", token);
-      setUserEmail(email);
-      setIsAuthenticated(true);
-      setPhotoURL(photoURL);
+      if (response.data.success) {
+        const { token: jwtToken } = response.data;
+        const email = result.user.email;
+        const displayName = result.user.displayName;
+        const photoURL = result.user.photoURL;
 
-      // Return the user object with displayName and email
-      return {
-        displayName,
-        email,
-        idToken,
-      };
+        localStorage.setItem("token", jwtToken);
+        setUserEmail(email);
+        setIsAuthenticated(true);
+        setPhotoURL(photoURL);
+
+        // Return the user object with displayName and email
+        return {
+          displayName,
+          email,
+          jwtToken,
+        };
+      } else {
+        setMessage("Failed to Sign In with Google: " + response.data.msg);
+      }
     } catch (error) {
       setMessage("Failed to Sign In with Google: " + error.message);
     }
@@ -85,22 +95,32 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await signInWithPopup(auth, githubProvider);
       const token = await result.user.getIdToken();
-      const email = result.user.email;
-      const displayName = result.user.displayName;
-      const photoURL = result.user.photoURL;
-      const idToken = await result.user.getIdToken();
 
-      localStorage.setItem("token", token);
-      setUserEmail(email);
-      setIsAuthenticated(true);
-      setPhotoURL(photoURL);
+      const response = await axios.post(
+        `${process.env.BASE_SERVER_URL}/api/user/github-sign-in`,
+        { token },
+      );
 
-      // Return the user object with displayName and email
-      return {
-        displayName,
-        email,
-        idToken,
-      };
+      if (response.data.success) {
+        const { token: jwtToken } = response.data;
+        const email = result.user.email;
+        const displayName = result.user.displayName;
+        const photoURL = result.user.photoURL;
+
+        localStorage.setItem("token", jwtToken);
+        setUserEmail(email);
+        setIsAuthenticated(true);
+        setPhotoURL(photoURL);
+
+        // Return the user object with displayName and email
+        return {
+          displayName,
+          email,
+          jwtToken,
+        };
+      } else {
+        setMessage("GitHub Sign-In failed: " + response.data.msg);
+      }
     } catch (error) {
       setMessage("GitHub Sign-In Error: " + error.message);
     }
@@ -121,7 +141,7 @@ export const AuthProvider = ({ children }) => {
       }}
     >
       {children}
-      {message && <div className="error">{message}</div>}{" "}
+      {message && <div className="error">{message}</div>}
     </AuthContext.Provider>
   );
 };

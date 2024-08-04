@@ -17,7 +17,10 @@ const App = () => {
     <>
       {isAuthenticated && <Nav />}
       <Routes>
-        <Route path="/login" element={<AuthForm />} />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <AuthForm />}
+        />
         {isAuthenticated ? (
           <>
             <Route path="/" element={<ProtectedRoute element={Home} />} />
