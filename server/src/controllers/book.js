@@ -167,10 +167,8 @@ export async function searchBooks(req, res) {
 
     return res.status(200).json({ success: true, books });
   } catch (error) {
-    logError("Error searching books:", error);
-    console.error("Detailed error:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Cannot get books, try again later" });
+    const errMessage = "Error loading books";
+    logError(errMessage, error);
+    return res.status(500).json({ success: false, message: errMessage });
   }
 }
