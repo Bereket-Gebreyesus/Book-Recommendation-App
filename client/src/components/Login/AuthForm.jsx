@@ -91,7 +91,7 @@ const AuthForm = () => {
                 required
                 autoComplete="off"
                 size="lg"
-                placeholder="Enter your name for registration"
+                placeholder="Enter your name to register"
                 className="placeholder-style"
               />
             </Form.Group>
