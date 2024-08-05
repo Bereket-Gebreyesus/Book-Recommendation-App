@@ -35,10 +35,7 @@ const AuthForm = () => {
       setPassword("");
       navigate("/");
     } catch (error) {
-      setMessage(
-        "Registration failed: " +
-          (error.response?.data?.message || error.message),
-      );
+      setMessage("Registration failed: " + error.response?.data?.msg);
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +91,8 @@ const AuthForm = () => {
                 required
                 autoComplete="off"
                 size="lg"
+                placeholder="Enter your name for registration"
+                className="placeholder-style"
               />
             </Form.Group>
             <Form.Group controlId="email">

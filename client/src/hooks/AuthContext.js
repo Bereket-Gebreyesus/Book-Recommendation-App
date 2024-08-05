@@ -65,24 +65,15 @@ export const AuthProvider = ({ children }) => {
         `${process.env.BASE_SERVER_URL}/api/user/google-sign-in`,
         { token },
       );
-
       if (response.data.success) {
         const { token: jwtToken } = response.data;
         const email = result.user.email;
-        const displayName = result.user.displayName;
         const photoURL = result.user.photoURL;
 
         localStorage.setItem("token", jwtToken);
         setUserEmail(email);
         setIsAuthenticated(true);
         setPhotoURL(photoURL);
-
-        // Return the user object with displayName and email
-        return {
-          displayName,
-          email,
-          jwtToken,
-        };
       } else {
         setMessage("Failed to Sign In with Google: " + response.data.msg);
       }
@@ -104,20 +95,12 @@ export const AuthProvider = ({ children }) => {
       if (response.data.success) {
         const { token: jwtToken } = response.data;
         const email = result.user.email;
-        const displayName = result.user.displayName;
         const photoURL = result.user.photoURL;
 
         localStorage.setItem("token", jwtToken);
         setUserEmail(email);
         setIsAuthenticated(true);
         setPhotoURL(photoURL);
-
-        // Return the user object with displayName and email
-        return {
-          displayName,
-          email,
-          jwtToken,
-        };
       } else {
         setMessage("GitHub Sign-In failed: " + response.data.msg);
       }
