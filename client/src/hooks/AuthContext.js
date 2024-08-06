@@ -29,11 +29,15 @@ const githubProvider = new GithubAuthProvider();
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState(
+    localStorage.getItem("userEmail") || "",
+  );
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => localStorage.getItem("isAuthenticated") === "true",
   );
-  const [photoURL, setPhotoURL] = useState("");
+  const [photoURL, setPhotoURL] = useState(
+    localStorage.getItem("photoURL") || "",
+  );
   const [message, setMessage] = useState("");
 
   useEffect(() => {
