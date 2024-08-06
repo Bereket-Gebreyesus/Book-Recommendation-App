@@ -64,20 +64,36 @@ const Search = () => {
               <Link to={`/books/${book._id}`} className="text-decoration-none">
                 <div>
                   <h3 className="h5 text-dark fw-bold">{book.title}</h3>
+
                   <img
+                    className="mb-2 book-cover-img"
                     src={book.image || defaultCover}
                     alt={`${book.title}`}
-                    className="mb-2 book-cover-img"
                   />
+
                   <p className="mb-1 text-muted ">
                     by {book.authors.join(", ") || "Author is unknown"}
                   </p>
+
+                  <p className="text-muted mb-1">
+                    ISBN: {book.isbn || "ISBN is unknown"}
+                  </p>
+
+                  <p className="text-muted mb-1">
+                    Publisher: {book.publisher || "Publisher is unknown"}
+                  </p>
+
                   <p className="text-muted mb-1">
                     Description:{" "}
                     {book.description
                       ? `${book.description.slice(0, 100)}...`
                       : "No description"}
                   </p>
+
+                  <p className="text-muted mb-1">
+                    Rating: {book.averageRating || "No rating"}
+                  </p>
+
                   <p className="text-muted mb-1">
                     Tags:{" "}
                     {book.tags && book.tags.length > 0

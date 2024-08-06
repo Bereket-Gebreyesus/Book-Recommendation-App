@@ -142,7 +142,7 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
 
 // Search books by title, author or tag
 export async function searchBooks(req, res) {
-  const { query } = req.query;
+  const { query, page = 1, limit = 10 } = req.query;
 
   if (!query) {
     return res
@@ -151,7 +151,31 @@ export async function searchBooks(req, res) {
   }
 
   try {
-    const books = await Book.find({
+    const books = await Book.aggregate([
+      {
+        $match: {
+          $or: [
+            { title: { $regex: query, $options: "i" } },
+            { authors: { $regex: query, $options: "i" } },
+            { "tags.name": { $regex: query, $options: "i" } },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+          },
+        },
+      },
+      {
+        $sort: {
+          averageRating: -1,
+        },
+      },
+    ]);
+
+    const count = await Book.countDocuments({
       $or: [
         { title: { $regex: query, $options: "i" } },
         { authors: { $regex: query, $options: "i" } },
@@ -159,7 +183,12 @@ export async function searchBooks(req, res) {
       ],
     });
 
-    return res.status(200).json({ success: true, books });
+    return res.status(200).json({
+      success: true,
+      books,
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page, 10),
+    });
   } catch (error) {
     const errMessage = "Error loading books";
     logError(errMessage, error);
