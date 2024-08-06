@@ -40,3 +40,13 @@ export const getAllSubscribersTopTags = async (limit) => {
     logError(`Top tags for ${subscriber.email}: ${topTags}`);
   });
 };
+
+// get user by id
+export const getUserById = async (id) => {
+  try {
+    return await User.findById(id);
+  } catch (error) {
+    logError("Couldn't fetch user data:", error);
+    throw error;
+  }
+};
