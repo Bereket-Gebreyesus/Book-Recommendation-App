@@ -11,8 +11,14 @@ import BookInfo from "../../components/Book/BookInfo";
 import Reviews from "../../components/Review/Reviews";
 import RatingStats from "../../components/RatingStats";
 import FavoriteButton from "../../components/favorite_button/FavoriteButton";
+import axios from "axios";
+import { useAuth } from "../../hooks/AuthContext";
+import { logError } from "../../../../server/src/util/logging";
 
 const BookDetail = () => {
+  const { userEmail } = useAuth();
+  const email = userEmail;
+  const [userId, setUserId] = useState("");
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [reviewers, setReviewers] = useState({});
@@ -39,6 +45,18 @@ const BookDetail = () => {
     },
   );
 
+  const fetchUserIdByEmail = async (email) => {
+    try {
+      const response = await axios.get(
+        `${process.env.BASE_SERVER_URL}/api/user/id`,
+        { params: { email } },
+      );
+      setUserId(response.data.userId);
+    } catch (error) {
+      logError(error);
+    }
+  };
+
   const { performFetch: performFetchUsers } = useFetch("/user", (response) => {
     const userMap = response.result.reduce((acc, user) => {
       acc[user._id] = { name: user.name, profileImage: user.profileImage };
@@ -61,7 +79,11 @@ const BookDetail = () => {
     return () => {
       cancelFetch();
     };
-  }, [id]);
+  }, [id, email]);
+
+  useEffect(() => {
+    fetchUserIdByEmail(email);
+  }, []);
 
   // Calculate pagination slice
   const indexOfLastReview = currentPage * reviewsPerPage;
@@ -100,10 +122,7 @@ const BookDetail = () => {
           </Col>
           <Col md={8}>
             <BookInfo book={book} tags={tags} />
-            <FavoriteButton
-              userId={"66a51f1c13a656eb06075edf"}
-              bookId={book._id}
-            />
+            <FavoriteButton userId={userId} bookId={book._id} />
           </Col>
         </Row>
         {averageRating !== "N/A" && (
