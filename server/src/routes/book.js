@@ -5,6 +5,7 @@ import {
   getBookById,
   checkBookAndAuthorUniqueness,
   checkISBNUniqueness,
+  getSortedBooks,
   getBookReviews,
   addReview,
 } from "../controllers/book.js";
@@ -13,6 +14,8 @@ import {
 
 const bookRouter = express.Router();
 
+bookRouter.post("/upload", uploadBookAndImage);
+bookRouter.get("/all", getSortedBooks);
 bookRouter.get("/", getBooks);
 bookRouter.get("/check", checkBookAndAuthorUniqueness);
 bookRouter.post("/upload", uploadBookAndImage);

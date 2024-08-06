@@ -168,7 +168,7 @@ export const checkISBNUniqueness = async (req, res) => {
   }
 };
 
-const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
+export const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
   try {
     const book = await Book.findOne({
       title: bookTitle,
@@ -180,6 +180,7 @@ const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
     return null;
   }
 };
+
 export const checkBookAndAuthorUniqueness = async (req, res) => {
   const { bookTitle, authorName } = req.query;
 
@@ -205,3 +206,48 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
     });
   }
 };
+
+// Fetching sorted and paginated books for the main page
+export async function getSortedBooks(req, res) {
+  // Query parameters: page number and limit (for pagination)
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const books = await Book.aggregate([
+      {
+        $addFields: {
+          // Calculate the average rating of each book
+          averageRating: {
+            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+          },
+        },
+      },
+      {
+        $sort: {
+          // Sort by (top reviewed + date added)
+          averageRating: -1,
+          createdAt: -1,
+        },
+      },
+      {
+        $skip: (page - 1) * limit,
+      },
+      {
+        $limit: parseInt(limit, 10),
+      },
+    ]);
+
+    const count = await Book.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      books,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
+  } catch (error) {
+    const errMessage = "Error loading books";
+    logError(errMessage, error);
+    res.status(500).json({ success: false, message: errMessage });
+  }
+}
