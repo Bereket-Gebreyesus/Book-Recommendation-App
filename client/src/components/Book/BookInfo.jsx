@@ -7,17 +7,21 @@ const BookInfo = ({ book, tags }) => {
     ? book.averageRating.toFixed(1)
     : "N/A";
 
+  const authors = book.authors.length > 0 ? book.authors.join(", ") : "Unknown";
+
   return (
     <div>
       <h1 style={{ fontFamily: "'Georgia', serif", fontSize: "2.5rem" }}>
         {book.title}
       </h1>
-      <h4 style={{ color: "#888" }}>By {book.authors.join(", ")}</h4>
+      <h4 style={{ color: "#888" }}>{authors}</h4>
       {averageRating !== "N/A" && (
-        <p>
+        <div style={{ marginBottom: "1.0rem" }}>
           <strong>Average Rating:</strong> {averageRating}{" "}
-          <StarRating rating={parseFloat(averageRating)} />
-        </p>
+          <div style={{ marginTop: "0.5rem" }}>
+            <StarRating rating={parseFloat(averageRating)} />
+          </div>
+        </div>
       )}
       <p>{book.description}</p>
       <p>
@@ -39,8 +43,17 @@ const BookInfo = ({ book, tags }) => {
 };
 
 BookInfo.propTypes = {
-  book: PropTypes.object.isRequired,
-  tags: PropTypes.object.isRequired,
+  book: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.arrayOf(PropTypes.string).isRequired,
+    averageRating: PropTypes.number,
+    description: PropTypes.string.isRequired,
+    isbn: PropTypes.string.isRequired,
+    publishedDate: PropTypes.string.isRequired,
+    publisher: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
+  tags: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default BookInfo;
