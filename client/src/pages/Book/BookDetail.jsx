@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
-import Container from "react-bootstrap/Container";
-import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Container, Spinner, Alert, Row, Col, Modal } from "react-bootstrap";
 import BookImage from "../../components/Book/BookImage";
 import BookInfo from "../../components/Book/BookInfo";
 import Reviews from "../../components/Review/Reviews";
+import AddReviewForm from "../../components/Review/AddReviewForm";
 import RatingStats from "../../components/RatingStats";
 
 const BookDetail = () => {
@@ -19,6 +16,8 @@ const BookDetail = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewsPerPage] = useState(5);
   const [totalReviews, setTotalReviews] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     `/books/${id}`,
@@ -67,18 +66,22 @@ const BookDetail = () => {
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
   const currentReviews =
     book?.reviews.slice(indexOfFirstReview, indexOfLastReview) || [];
-
   const totalPages = Math.ceil(totalReviews / reviewsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  const handleReviewAdded = () => {
+    // Fetch the updated reviews list from the server
+    performFetch();
+  };
+
   let content = null;
 
   if (isLoading) {
     content = <Spinner animation="border" />;
-  } else if (error != null) {
+  } else if (error) {
     content = <Alert variant="danger">{error.toString()}</Alert>;
   } else if (!book) {
     content = <p>No book details available.</p>;
@@ -114,12 +117,37 @@ const BookDetail = () => {
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
+          onAddReviewClick={() => setShowModal(true)}
         />
       </Container>
     );
   }
 
-  return <div>{content}</div>;
+  return (
+    <div>
+      {content}
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+          setModalMessage("");
+        }}
+        backdropClassName="custom-modal-backdrop"
+        style={{
+          backdropFilter: "blur(5px)",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Review</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <AddReviewForm id={id} onReviewAdded={handleReviewAdded} />
+          {modalMessage && <Alert variant="info">{modalMessage}</Alert>}
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
 };
 
 export default BookDetail;
