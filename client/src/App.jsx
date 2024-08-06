@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import Nav from "./components/Nav";
 import Home from "./pages/Home/Home";
-import CreateUser from "./pages/User/CreateUser";
 import UploadBookPage from "./pages/Book/UploadBook";
 import BookDetail from "./pages/Book/BookDetail";
 import AuthForm from "../src/components/Login/AuthForm";
@@ -27,10 +26,6 @@ const App = () => {
             <Route
               path="/books/:id"
               element={<ProtectedRoute element={BookDetail} />}
-            />
-            <Route
-              path="/user/create"
-              element={<ProtectedRoute element={CreateUser} />}
             />
             <Route
               path="/book/upload"

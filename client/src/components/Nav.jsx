@@ -35,9 +35,6 @@ const NavBar = () => {
           <LinkContainer to="/" data-testid={TEST_ID.linkToHome}>
             <Nav.Link>Home</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/user" data-testid={TEST_ID.linkToUsers}>
-            <Nav.Link>Users</Nav.Link>
-          </LinkContainer>
         </Nav>
         <UserActions />
         <Button
