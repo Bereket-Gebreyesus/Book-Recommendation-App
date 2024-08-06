@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import ListGroup from "react-bootstrap/ListGroup";
-import Image from "react-bootstrap/Image";
-import Button from "react-bootstrap/Button";
+import { ListGroup, Image, Button } from "react-bootstrap";
 import StarRating from "../StarRating";
 import "./ReviewItem.css";
 
@@ -15,7 +13,9 @@ const ReviewItem = ({ review, reviewer }) => {
 
   const displayText = isExpanded
     ? review.text
-    : `${review.text.substring(0, 200)}...`;
+    : review.text && review.text.length > 500
+      ? `${review.text.substring(0, 500)}...`
+      : review.text;
 
   return (
     <ListGroup.Item>
@@ -36,7 +36,7 @@ const ReviewItem = ({ review, reviewer }) => {
         </div>
       </div>
       <p>{displayText}</p>
-      {review.text.length > 100 && (
+      {review.text && review.text.length > 500 && (
         <Button
           variant="link"
           onClick={toggleReadMore}
@@ -52,7 +52,7 @@ const ReviewItem = ({ review, reviewer }) => {
 ReviewItem.propTypes = {
   review: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
+    text: PropTypes.string,
     rating: PropTypes.number.isRequired,
     created_at: PropTypes.string.isRequired,
   }).isRequired,

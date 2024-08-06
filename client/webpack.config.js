@@ -41,8 +41,14 @@ module.exports = {
     }),
     // All variables in our .env should be mentioned here
     new webpack.EnvironmentPlugin({
-      // Default is '' because on our heroku servers we want to have it default to our current URL
       BASE_SERVER_URL: "",
+      REACT_APP_FIREBASE_API_KEY: "",
+      REACT_APP_FIREBASE_AUTH_DOMAIN: "",
+      REACT_APP_FIREBASE_PROJECT_ID: "",
+      REACT_APP_FIREBASE_STORAGE_BUCKET: "",
+      REACT_APP_FIREBASE_MESSAGING_SENDER_ID: "",
+      REACT_APP_FIREBASE_APP_ID: "",
+      REACT_APP_FIREBASE_MEASUREMENT_ID: "",
     }),
   ],
   // To tell the dev server that everything should go back to index.html

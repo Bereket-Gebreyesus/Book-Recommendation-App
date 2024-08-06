@@ -80,7 +80,74 @@ export const getBookById = async (req, res) => {
   }
 };
 
-export async function checkISBNUniqueness(req, res) {
+// Get reviews for a specific book
+export const getBookReviews = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const book = await Book.findById(id).lean();
+
+    if (!book) {
+      return res.status(404).json({ success: false, msg: "Book not found" });
+    }
+
+    const reviews = book.reviews || [];
+    res.status(200).json({ success: true, reviews });
+  } catch (error) {
+    logError("Error fetching reviews:", error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Unable to get reviews, try again later" });
+  }
+};
+
+// Add Review
+export const addReview = async (req, res) => {
+  const { id } = req.params;
+  const { ownerId, rating, text } = req.body;
+
+  try {
+    const book = await Book.findById(id);
+    if (!book) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Book not found" });
+    }
+
+    const hasReviewed = book.reviews.some(
+      (review) => review.ownerId.toString() === ownerId,
+    );
+    if (hasReviewed) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already submitted a review for this book.",
+      });
+    }
+
+    if (!text.trim()) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Review text cannot be empty." });
+    }
+
+    const newReview = { ownerId, rating, text, created_at: new Date() };
+    book.reviews.push(newReview);
+    await book.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Review added successfully",
+      result: { book },
+    });
+  } catch (error) {
+    logError(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+export const checkISBNUniqueness = async (req, res) => {
   const { isbn } = req.query;
   const isbnString = String(isbn);
 
@@ -99,9 +166,9 @@ export async function checkISBNUniqueness(req, res) {
       .status(500)
       .send({ success: false, message: "Internal Server Error" });
   }
-}
+};
 
-async function findBookByTitleAndAuthor(bookTitle, authorName) {
+export const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
   try {
     const book = await Book.findOne({
       title: bookTitle,
@@ -112,9 +179,9 @@ async function findBookByTitleAndAuthor(bookTitle, authorName) {
     logError("Error finding book by title and author:", error);
     return null;
   }
-}
+};
 
-export async function checkBookAndAuthorUniqueness(req, res) {
+export const checkBookAndAuthorUniqueness = async (req, res) => {
   const { bookTitle, authorName } = req.query;
 
   try {
@@ -138,7 +205,7 @@ export async function checkBookAndAuthorUniqueness(req, res) {
       message: "Internal Server Error",
     });
   }
-}
+};
 
 // Fetching sorted and paginated books for the main page
 export async function getSortedBooks(req, res) {

@@ -19,7 +19,7 @@ const StarRating = ({ rating }) => {
     }
     if (index === fullStars && fractional > 0) {
       return (
-        <div
+        <span
           key={index}
           className="position-relative"
           style={{
@@ -33,7 +33,7 @@ const StarRating = ({ rating }) => {
             className="text-muted"
             style={{ position: "absolute", top: 0, left: 0 }}
           />
-          <div
+          <span
             style={{
               position: "absolute",
               top: 0,
@@ -48,8 +48,8 @@ const StarRating = ({ rating }) => {
               className="text-warning"
               style={{ position: "absolute", top: 0, left: 0 }}
             />
-          </div>
-        </div>
+          </span>
+        </span>
       );
     }
     return (
@@ -61,7 +61,7 @@ const StarRating = ({ rating }) => {
     );
   });
 
-  return <div className="d-flex align-items-center">{stars}</div>;
+  return <span className="d-flex align-items-center">{stars}</span>;
 };
 
 StarRating.propTypes = {
