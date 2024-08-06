@@ -176,3 +176,66 @@ export const githubSignIn = async (req, res) => {
     });
   }
 };
+
+// GET user by id, return user object
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+// Add a book to user's favorites array
+export const addFavorite = async (req, res) => {
+  const { userId, bookId } = req.body;
+  if (!userId || !bookId) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "User ID and Book ID are required" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+    if (user.favorites.includes(bookId)) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "Book already in favorites" });
+    }
+    user.favorites.push(bookId);
+    await user.save();
+    res.status(200).json({ success: true, msg: "Book added to favorites" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+// Remove a book from user's favorites array
+export const removeFavorite = async (req, res) => {
+  const { userId, bookId } = req.body;
+  if (!userId || !bookId) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "User ID and Book ID are required" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+    user.favorites = user.favorites.filter((fav) => fav.toString() !== bookId);
+
+    await user.save();
+
+    res.status(200).json({ success: true, msg: "Book removed from favorites" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
