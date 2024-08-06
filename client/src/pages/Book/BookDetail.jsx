@@ -10,6 +10,7 @@ import BookImage from "../../components/Book/BookImage";
 import BookInfo from "../../components/Book/BookInfo";
 import Reviews from "../../components/Review/Reviews";
 import RatingStats from "../../components/RatingStats";
+import FavoriteButton from "../../components/favorite_button/FavoriteButton";
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -99,6 +100,10 @@ const BookDetail = () => {
           </Col>
           <Col md={8}>
             <BookInfo book={book} tags={tags} />
+            <FavoriteButton
+              userId={"66a51f1c13a656eb06075edf"}
+              bookId={book._id}
+            />
           </Col>
         </Row>
         {averageRating !== "N/A" && (
