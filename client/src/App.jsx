@@ -8,6 +8,7 @@ import UserList from "./pages/User/UserList";
 import UploadBookPage from "./pages/Book/UploadBook";
 import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Search";
+import TagsPage from "./pages/TagsPage";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/book/upload" element={<UploadBookPage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/books/:id" element={<BookDetail />} />
+        <Route path="/tags" element={<TagsPage />} />
       </Routes>
     </>
   );

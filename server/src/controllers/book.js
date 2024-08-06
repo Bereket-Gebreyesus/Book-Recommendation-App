@@ -166,3 +166,17 @@ export async function searchBooks(req, res) {
     return res.status(500).json({ success: false, message: errMessage });
   }
 }
+
+// Gets books by tags
+export const getBooksByTag = async (req, res) => {
+  const { tagName } = req.params;
+
+  try {
+    const books = await Book.find({ "tags.name": tagName }).populate("tags");
+    res.status(200).json({ success: true, books });
+  } catch (error) {
+    const errMessage = "Error loading books";
+    logError(errMessage, error);
+    res.status(500).json({ success: false, message: errMessage });
+  }
+};

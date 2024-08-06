@@ -6,6 +6,7 @@ import {
   checkBookAndAuthorUniqueness,
   checkISBNUniqueness,
   searchBooks,
+  getBooksByTag,
 } from "../controllers/book.js";
 
 // Now you can use these functions here
@@ -16,6 +17,7 @@ bookRouter.get("/", getBooks);
 bookRouter.get("/search", searchBooks);
 bookRouter.get("/check", checkBookAndAuthorUniqueness);
 bookRouter.post("/upload", uploadBookAndImage);
+bookRouter.post("/tag/:tagName", getBooksByTag);
 bookRouter.get("/:id", getBookById);
 bookRouter.get("/find/isbn", checkISBNUniqueness);
 
