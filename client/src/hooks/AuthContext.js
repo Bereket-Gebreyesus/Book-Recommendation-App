@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -30,9 +30,17 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => localStorage.getItem("isAuthenticated") === "true",
+  );
   const [photoURL, setPhotoURL] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("userEmail", userEmail);
+    localStorage.setItem("isAuthenticated", isAuthenticated);
+    localStorage.setItem("photoURL", photoURL);
+  }, [userEmail, isAuthenticated, photoURL]);
 
   const login = (token, email) => {
     localStorage.setItem("token", token);
