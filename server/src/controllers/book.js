@@ -79,7 +79,8 @@ export const getBookById = async (req, res) => {
       .json({ success: false, msg: "Unable to get book, try again later" });
   }
 };
-async function checkISBNUniqueness(req, res) {
+
+export async function checkISBNUniqueness(req, res) {
   const { isbn } = req.query;
   const isbnString = String(isbn);
 
@@ -112,7 +113,8 @@ async function findBookByTitleAndAuthor(bookTitle, authorName) {
     return null;
   }
 }
-async function checkBookAndAuthorUniqueness(req, res) {
+
+export async function checkBookAndAuthorUniqueness(req, res) {
   const { bookTitle, authorName } = req.query;
 
   try {
@@ -139,7 +141,7 @@ async function checkBookAndAuthorUniqueness(req, res) {
 }
 
 // Fetching sorted and paginated books for the main page
-async function getSortedBooks(req, res) {
+export async function getSortedBooks(req, res) {
   // Query parameters: page number and limit (for pagination)
   const { page = 1, limit = 10 } = req.query;
 
@@ -182,5 +184,3 @@ async function getSortedBooks(req, res) {
     res.status(500).json({ success: false, message: errMessage });
   }
 }
-
-export { checkBookAndAuthorUniqueness, checkISBNUniqueness, getSortedBooks };
