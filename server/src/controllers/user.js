@@ -7,7 +7,7 @@ import admin from "firebase-admin";
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     res.status(200).json({ success: true, result: users });
   } catch (error) {
     logError(error);
@@ -177,11 +177,11 @@ export const githubSignIn = async (req, res) => {
   }
 };
 
-// GET user by id, return user object
+// GET user by id, return user object without password
 export const getUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).select("-password");
     if (!user) {
       return res.status(404).json({ success: false, msg: "User not found" });
     }
@@ -235,6 +235,27 @@ export const removeFavorite = async (req, res) => {
     await user.save();
 
     res.status(200).json({ success: true, msg: "Book removed from favorites" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+// Send userID and boolean to set weeklyEmail status
+export const setWeeklyEmail = async (req, res) => {
+  const { userId, weeklyEmail } = req.body;
+  if (!userId || weeklyEmail === undefined) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "User ID and weeklyEmail are required" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+    user.weeklyEmail = weeklyEmail;
+    await user.save();
+    res.status(200).json({ success: true, msg: "Weekly email status updated" });
   } catch (error) {
     res.status(500).json({ success: false, msg: "Server error" });
   }
