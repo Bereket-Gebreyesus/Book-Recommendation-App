@@ -80,6 +80,74 @@ export const getBookById = async (req, res) => {
   }
 };
 
+// Get reviews for a specific book
+export const getBookReviews = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const book = await Book.findById(id).lean();
+
+    if (!book) {
+      return res.status(404).json({ success: false, msg: "Book not found" });
+    }
+
+    const reviews = book.reviews || [];
+    res.status(200).json({ success: true, reviews });
+  } catch (error) {
+    logError("Error fetching reviews:", error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Unable to get reviews, try again later" });
+  }
+};
+
+// Add Review
+export const addReview = async (req, res) => {
+  const { id } = req.params;
+  const { ownerId, rating, text } = req.body;
+
+  try {
+    const book = await Book.findById(id);
+    if (!book) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Book not found" });
+    }
+
+    const hasReviewed = book.reviews.some((review) => {
+      return review.ownerId && review.ownerId.toString() === ownerId;
+    });
+
+    if (hasReviewed) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already submitted a review for this book.",
+      });
+    }
+
+    if (!text.trim()) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Review text cannot be empty." });
+    }
+
+    const newReview = { ownerId, rating, text, created_at: new Date() };
+    book.reviews.push(newReview);
+    await book.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Review added successfully",
+      result: { book },
+    });
+  } catch (error) {
+    logError(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 export const checkISBNUniqueness = async (req, res) => {
   const { isbn } = req.query;
   const isbnString = String(isbn);
@@ -101,7 +169,7 @@ export const checkISBNUniqueness = async (req, res) => {
   }
 };
 
-const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
+export const findBookByTitleAndAuthor = async (bookTitle, authorName) => {
   try {
     const book = await Book.findOne({
       title: bookTitle,
@@ -140,9 +208,54 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
   }
 };
 
-// Search books by title, author or tag
+// Fetching sorted and paginated books for the main page
+export async function getSortedBooks(req, res) {
+  // Query parameters: page number and limit (for pagination)
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const books = await Book.aggregate([
+      {
+        $addFields: {
+          // Calculate the average rating of each book
+          averageRating: {
+            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+          },
+        },
+      },
+      {
+        $sort: {
+          // Sort by (top reviewed + date added)
+          averageRating: -1,
+          createdAt: -1,
+        },
+      },
+      {
+        $skip: (page - 1) * limit,
+      },
+      {
+        $limit: parseInt(limit, 10),
+      },
+    ]);
+
+    const count = await Book.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      books,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
+  } catch (error) {
+    const errMessage = "Error loading books";
+    logError(errMessage, error);
+    res.status(500).json({ success: false, message: errMessage });
+  }
+}
+
+// Search books by title, author or tag with pagination and sorting
 export async function searchBooks(req, res) {
-  const { query } = req.query;
+  const { query, page = 1, limit = 10 } = req.query;
 
   if (!query) {
     return res
@@ -150,20 +263,51 @@ export async function searchBooks(req, res) {
       .json({ success: false, message: "Query is required" });
   }
 
-  try {
-    const books = await Book.find({
-      $or: [
-        { title: { $regex: query, $options: "i" } },
-        { authors: { $regex: query, $options: "i" } },
-        { "tags.name": { $regex: query, $options: "i" } },
-      ],
-    });
+  const searchCondition = {
+    $or: [
+      { title: { $regex: query, $options: "i" } },
+      { authors: { $regex: query, $options: "i" } },
+      { "tags.name": { $regex: query, $options: "i" } },
+    ],
+  };
 
-    return res.status(200).json({ success: true, books });
+  try {
+    const books = await Book.aggregate([
+      { $match: searchCondition },
+      {
+        $addFields: {
+          // Calculate the average rating of each book
+          averageRating: {
+            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+          },
+        },
+      },
+      {
+        $sort: {
+          // Sort by average rating
+          averageRating: -1,
+        },
+      },
+      {
+        $skip: (page - 1) * parseInt(limit, 10),
+      },
+      {
+        $limit: parseInt(limit, 10),
+      },
+    ]);
+
+    const count = await Book.countDocuments(searchCondition);
+
+    res.status(200).json({
+      success: true,
+      books,
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page, 10),
+    });
   } catch (error) {
     const errMessage = "Error loading books";
     logError(errMessage, error);
-    return res.status(500).json({ success: false, message: errMessage });
+    res.status(500).json({ success: false, message: errMessage });
   }
 }
 
