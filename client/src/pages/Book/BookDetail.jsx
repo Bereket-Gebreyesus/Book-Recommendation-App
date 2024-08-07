@@ -34,6 +34,7 @@ const BookDetail = () => {
       const reviewerIds = response.result.reviews.map(
         (review) => review.ownerId,
       );
+
       if (reviewerIds.length > 0) {
         performFetchUsers(reviewerIds);
       }
@@ -166,7 +167,11 @@ const BookDetail = () => {
           <Modal.Title>Add Review</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <AddReviewForm id={id} onReviewAdded={handleReviewAdded} />
+          <AddReviewForm
+            id={id}
+            userId={userId}
+            onReviewAdded={handleReviewAdded}
+          />
           {modalMessage && <Alert variant="info">{modalMessage}</Alert>}
         </Modal.Body>
       </Modal>

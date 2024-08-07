@@ -114,9 +114,12 @@ export const addReview = async (req, res) => {
         .json({ success: false, message: "Book not found" });
     }
 
-    const hasReviewed = book.reviews.some(
-      (review) => review.ownerId.toString() === ownerId,
-    );
+    const hasReviewed = book.reviews.some((review) => {
+      if (review.ownerId) {
+        review.ownerId.toString() === ownerId;
+      }
+    });
+
     if (hasReviewed) {
       return res.status(400).json({
         success: false,

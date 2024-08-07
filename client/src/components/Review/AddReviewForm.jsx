@@ -4,9 +4,7 @@ import PropTypes from "prop-types";
 import Input from "../Input";
 import useFetch from "../../hooks/useFetch";
 
-const MOCK_USER_ID = "6697ee04a1a0487218400da7";
-
-const AddReviewForm = ({ id, onReviewAdded }) => {
+const AddReviewForm = ({ id, onReviewAdded, userId }) => {
   const [rating, setRating] = useState(1);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -40,7 +38,7 @@ const AddReviewForm = ({ id, onReviewAdded }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const ownerId = MOCK_USER_ID;
+    const ownerId = userId;
 
     if (!text.trim()) {
       setError("Review text cannot be empty. Write a review!");
@@ -100,6 +98,7 @@ const AddReviewForm = ({ id, onReviewAdded }) => {
 AddReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
   onReviewAdded: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 export default AddReviewForm;
