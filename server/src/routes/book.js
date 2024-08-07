@@ -5,6 +5,7 @@ import {
   getBookById,
   checkBookAndAuthorUniqueness,
   checkISBNUniqueness,
+  searchBooks,
   getSortedBooks,
   getBookReviews,
   addReview,
@@ -17,6 +18,7 @@ const bookRouter = express.Router();
 bookRouter.post("/upload", uploadBookAndImage);
 bookRouter.get("/all", getSortedBooks);
 bookRouter.get("/", getBooks);
+bookRouter.get("/search", searchBooks);
 bookRouter.get("/check", checkBookAndAuthorUniqueness);
 bookRouter.post("/upload", uploadBookAndImage);
 bookRouter.get("/:id", getBookById);

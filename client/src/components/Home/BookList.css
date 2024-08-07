@@ -1,3 +1,7 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.book-cover-img {
+  width: 150px;
+}
