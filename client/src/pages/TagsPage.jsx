@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+//import { useLocation, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import defaultCover from "../assets/default-cover.jpeg";
 
@@ -6,9 +7,15 @@ const TagsPage = () => {
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState("");
   const [books, setBooks] = useState([]);
+  const [tagsMap, setTagsMap] = useState({});
 
   const { performFetch: fetchTags } = useFetch("/tags", (response) => {
     setTags(response.result);
+    const tagMap = response.result.reduce((acc, tag) => {
+      acc[tag._id] = tag.name;
+      return acc;
+    }, {});
+    setTagsMap(tagMap);
   });
 
   const { performFetch: fetchBooksByTag } = useFetch(
@@ -30,6 +37,12 @@ const TagsPage = () => {
 
   const handleTagChange = (e) => {
     setSelectedTag(e.target.value);
+  };
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return "No rating";
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
   };
 
   return (
@@ -61,10 +74,29 @@ const TagsPage = () => {
                 </p>
 
                 <p className="text-muted mb-1">
+                  ISBN: {book.isbn || "ISBN is unknown"}
+                </p>
+
+                <p className="text-muted mb-1">
+                  Publisher: {book.publisher || "Publisher is unknown"}
+                </p>
+
+                <p className="text-muted mb-1">
                   Description:{" "}
                   {book.description
                     ? `${book.description.slice(0, 100)}...`
                     : "No description"}
+                </p>
+
+                <p className="text-muted mb-1">
+                  Rating: {calculateAverageRating(book.reviews)}
+                </p>
+
+                <p className="text-muted mb-1">
+                  Tags:{" "}
+                  {book.tags && book.tags.length > 0
+                    ? book.tags.map((tag) => tagsMap[tag._id]).join(", ")
+                    : "No tags"}
                 </p>
               </div>
             </li>

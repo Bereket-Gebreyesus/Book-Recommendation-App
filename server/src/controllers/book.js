@@ -1,4 +1,5 @@
 import Book from "../models/Book.js";
+import Tag from "../models/Tag.js";
 import upload from "../middleware/multerConfig.js";
 import { logError } from "../util/logging.js";
 
@@ -311,16 +312,44 @@ export async function searchBooks(req, res) {
   }
 }
 
-// Gets books by tags
-export const getBooksByTag = async (req, res) => {
+// Gets books by tags with pagination and sorting
+export const getBookListByTag = async (req, res) => {
   const { tagName } = req.params;
+  const { page = 1, limit = 10, sort = "rating" } = req.query;
 
   try {
-    const books = await Book.find({ "tags.name": tagName }).populate("tags");
-    res.status(200).json({ success: true, books });
+    const tag = await Tag.findOne({ name: tagName });
+    if (!tag) {
+      return res.status(404).json({ success: false, message: "Tag not found" });
+    }
+
+    const sortOptions = {
+      rating: { averageRating: -1 },
+      date: { createdAt: -1 },
+    };
+
+    const books = await Book.find({ tags: tag._id })
+      .populate("tags")
+      .sort(sortOptions[sort] || sortOptions.rating)
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    const totalBooks = await Book.countDocuments({ tags: tag._id });
+    const totalPages = Math.ceil(totalBooks / limit);
+
+    res.status(200).json({
+      success: true,
+      books,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalBooks,
+      },
+    });
   } catch (error) {
-    const errMessage = "Error loading books";
-    logError(errMessage, error);
-    res.status(500).json({ success: false, message: errMessage });
+    console.error("Error fetching books by tag:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching books by tag", error });
   }
 };
