@@ -252,9 +252,9 @@ export async function getSortedBooks(req, res) {
   }
 }
 
-// Search books by title, author or tag
+// Search books by title, author or tag with pagination and sorting
 export async function searchBooks(req, res) {
-  const { query } = req.query;
+  const { query, page = 1, limit = 10 } = req.query;
 
   if (!query) {
     return res
@@ -262,19 +262,50 @@ export async function searchBooks(req, res) {
       .json({ success: false, message: "Query is required" });
   }
 
-  try {
-    const books = await Book.find({
-      $or: [
-        { title: { $regex: query, $options: "i" } },
-        { authors: { $regex: query, $options: "i" } },
-        { "tags.name": { $regex: query, $options: "i" } },
-      ],
-    });
+  const searchCondition = {
+    $or: [
+      { title: { $regex: query, $options: "i" } },
+      { authors: { $regex: query, $options: "i" } },
+      { "tags.name": { $regex: query, $options: "i" } },
+    ],
+  };
 
-    return res.status(200).json({ success: true, books });
+  try {
+    const books = await Book.aggregate([
+      { $match: searchCondition },
+      {
+        $addFields: {
+          // Calculate the average rating of each book
+          averageRating: {
+            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+          },
+        },
+      },
+      {
+        $sort: {
+          // Sort by average rating
+          averageRating: -1,
+        },
+      },
+      {
+        $skip: (page - 1) * parseInt(limit, 10),
+      },
+      {
+        $limit: parseInt(limit, 10),
+      },
+    ]);
+
+    const count = await Book.countDocuments(searchCondition);
+
+    res.status(200).json({
+      success: true,
+      books,
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page, 10),
+    });
   } catch (error) {
     const errMessage = "Error loading books";
     logError(errMessage, error);
-    return res.status(500).json({ success: false, message: errMessage });
+    res.status(500).json({ success: false, message: errMessage });
   }
 }

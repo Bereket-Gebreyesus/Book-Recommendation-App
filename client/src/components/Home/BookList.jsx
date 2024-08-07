@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import defaultCover from "../../assets/default-cover.jpeg";
+import handleShowMore from "../../util/handleShowMore.js";
 
 import "./BookList.css";
 
@@ -31,13 +32,6 @@ const BookList = () => {
     performFetch();
   }, [currentPage]);
 
-  // Function to handle the "Show more..." button click
-  const handleShowMore = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
   return (
     <div className="container">
       <h4 className="mb-4">Recommendations list</h4>
@@ -50,23 +44,27 @@ const BookList = () => {
             </Link>
 
             <img
-              className="d-block my-3 rounded"
+              className="d-block my-3 rounded book-cover-img"
               src={book.image || defaultCover}
               alt={book.title}
-              style={{ width: "150px" }}
             />
-            <p className="mb-1">
+
+            <p className="text-muted mb-1">
               by {book.authors.join(", ") || "Author is unknown"}
             </p>
+
             <p className="text-muted mb-1">
               ISBN: {book.isbn || "ISBN is unknown"}
             </p>
+
             <p className="text-muted mb-1">
               Publisher: {book.publisher || "Publisher is unknown"}
             </p>
+
             <p className="text-muted mb-1">
               Description: {book.description || "No description"}
             </p>
+
             <p className="text-muted mb-1">
               Rating: {book.averageRating || "No rating"}
             </p>
@@ -83,7 +81,12 @@ const BookList = () => {
       )}
 
       {currentPage < totalPages && (
-        <div className="text-center cursor-pointer" onClick={handleShowMore}>
+        <div
+          className="text-center cursor-pointer"
+          onClick={() =>
+            handleShowMore(currentPage, totalPages, setCurrentPage)
+          }
+        >
           Show more...
         </div>
       )}
