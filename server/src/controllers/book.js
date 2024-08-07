@@ -115,9 +115,7 @@ export const addReview = async (req, res) => {
     }
 
     const hasReviewed = book.reviews.some((review) => {
-      if (review.ownerId) {
-        review.ownerId.toString() === ownerId;
-      }
+      return review.ownerId && review.ownerId.toString() === ownerId;
     });
 
     if (hasReviewed) {
