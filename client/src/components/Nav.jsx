@@ -48,7 +48,6 @@ const NavBar = () => {
           <LinkContainer to="/" data-testid={TEST_ID.linkToHome}>
             <Nav.Link>Home</Nav.Link>
           </LinkContainer>
-
           <Form className="d-flex" onSubmit={handleSearchSubmit}>
             <FormControl
               type="search"
@@ -63,7 +62,6 @@ const NavBar = () => {
             </Button>
           </Form>
         </Nav>
-
         <UserActions />
         <Button
           variant="outline-light"
