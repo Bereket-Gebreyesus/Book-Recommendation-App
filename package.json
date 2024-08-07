@@ -47,6 +47,9 @@
     "husky": "^7.0.0"
   },
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "firebase": "^10.12.5",
+    "firebase-admin": "^12.3.0",
+    "react-icons": "^5.2.1"
   }
 }
