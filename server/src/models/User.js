@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true }, // We can add validation for 'password' (eg., minimum length).
   profileImage: String,
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: Book }],
-  weeklyEmail: { type: Boolean, default: false },
+  weeklyEmail: { type: Boolean, default: true },
 });
 
 const User = mongoose.model("users", userSchema);
