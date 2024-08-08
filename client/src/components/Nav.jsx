@@ -27,7 +27,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/welcome");
   };
 
   const userName = userEmail ? userEmail.split("@")[0] : "";

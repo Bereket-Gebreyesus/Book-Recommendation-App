@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthContext";
 import { Form, Button, Alert, Container, Row, Col } from "react-bootstrap";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa"; // Import GitHub icon
+import { FaGithub } from "react-icons/fa";
 import CenteredSpinner from "../CenteredSpinner";
 
 const AuthForm = () => {
@@ -12,6 +12,7 @@ const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [formMode, setFormMode] = useState("login"); // 'login' or 'register'
   const navigate = useNavigate();
   const { login, register, googleSignIn, githubSignIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -78,23 +79,25 @@ const AuthForm = () => {
   };
 
   return (
-    <Container className="authform-container">
+    <Container className="auth-form-container">
       <Row className="justify-content-md-center">
-        <Col md={6} lg={4}>
+        <Col lg={8} md={3}>
           <Form className="auth-form" autoComplete="off">
-            <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                autoComplete="off"
-                size="lg"
-                placeholder="Enter your name to register"
-                className="placeholder-style"
-              />
-            </Form.Group>
+            {formMode === "register" && (
+              <Form.Group controlId="name">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  autoComplete="off"
+                  size="lg"
+                  placeholder="Enter your name to register"
+                  className="placeholder-style"
+                />
+              </Form.Group>
+            )}
             <Form.Group controlId="email">
               <Form.Label>Email</Form.Label>
               <Form.Control
@@ -126,6 +129,7 @@ const AuthForm = () => {
                     variant="primary"
                     onClick={handleRegister}
                     className="auth-button"
+                    onMouseEnter={() => setFormMode("register")}
                   >
                     Register
                   </Button>
@@ -133,6 +137,7 @@ const AuthForm = () => {
                     variant="secondary"
                     onClick={handleLogin}
                     className="auth-button"
+                    onMouseEnter={() => setFormMode("login")}
                   >
                     Login
                   </Button>

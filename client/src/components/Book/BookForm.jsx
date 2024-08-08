@@ -108,7 +108,7 @@ const BookForm = ({
               <TagSelection
                 id="tags"
                 options={tagsOptions.sort((a, b) =>
-                  a.name.localeCompare(b.name),
+                  (a.name || "").localeCompare(b.name || ""),
                 )}
                 selectedTags={bookData.tags}
                 onTagClick={handleTagClick}

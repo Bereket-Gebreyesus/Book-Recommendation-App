@@ -138,7 +138,7 @@ const UploadBookPage = () => {
         });
         setFile(null);
 
-        navigate("/books");
+        navigate("/");
       } else {
         setError(response.data.msg || "An error occurred");
       }
