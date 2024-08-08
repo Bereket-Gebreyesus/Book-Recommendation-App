@@ -23,7 +23,7 @@ const NavBar = () => {
     }
   };
 
-  const { logout, userEmail } = useAuth();
+  const { isLoggedIn, logout, userEmail } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -71,6 +71,7 @@ const NavBar = () => {
         >
           <BsBoxArrowRight />
         </Button>
+        {isLoggedIn && <UserActions />}
       </Navbar.Collapse>
     </Navbar>
   );

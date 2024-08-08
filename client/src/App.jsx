@@ -9,6 +9,7 @@ import Search from "./pages/Search";
 import AuthForm from "../src/components/Login/AuthForm";
 import { useAuth } from "../src/hooks/AuthContext";
 import ProtectedRoute from "../src/components/Login/PrivateRoute"; // Import the ProtectedRoute component
+import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -36,6 +37,10 @@ const App = () => {
             <Route
               path="/book/upload"
               element={<ProtectedRoute element={UploadBookPage} />}
+            />
+            <Route
+              path="/user/profile"
+              element={<ProtectedRoute element={ProfilePage} />}
             />
           </>
         ) : (

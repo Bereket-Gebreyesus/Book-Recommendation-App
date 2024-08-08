@@ -1,4 +1,5 @@
 import User, { validateUser } from "../models/User.js";
+import Book from "../models/Book.js";
 import { logError } from "../util/logging.js";
 import validationErrorMessage from "../util/validationErrorMessage.js";
 import bcrypt from "bcrypt";
@@ -258,5 +259,77 @@ export const setWeeklyEmail = async (req, res) => {
     res.status(200).json({ success: true, msg: "Weekly email status updated" });
   } catch (error) {
     res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+export const authMiddleware = (req, res, next) => {
+  const token = req.header("Authorization").replace("Bearer ", "");
+
+  if (!token) {
+    return res.status(400).json({ error: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch (error) {
+    res.status(401).send({ message: "Unauthorized" });
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: "No user id provided" });
+  }
+
+  try {
+    // Fetch user details
+    const user = await User.findById(userId).populate("favorites").exec();
+
+    // Fetch books uploaded by the user
+    const uploadedBooks = await Book.find({ uploadedBy: userId }).exec();
+
+    // Fetch books reviewed by the user
+    const reviewedBooks = await Book.find({
+      reviews: {
+        $elemMatch: { ownerId: userId },
+      },
+    }).exec();
+
+    // Filter out deleted books from favorites
+    const favoritedBooks = await Book.find({
+      _id: { $in: user.favorites },
+    }).exec();
+
+    // Helper function to add averageRating to each book
+    const addAverageRating = (books) => {
+      return books.map((book) => ({
+        ...book.toObject(),
+        averageRating: book.averageRating, // virtual field from Mongoose
+      }));
+    };
+
+    const uploadedBooksWithRating = addAverageRating(uploadedBooks);
+    const favoritedBooksWithRating = addAverageRating(favoritedBooks);
+    const reviewedBooksWithRating = addAverageRating(reviewedBooks);
+
+    const profileData = {
+      uploadedBooks: uploadedBooksWithRating,
+      favoritedBooks: favoritedBooksWithRating,
+      reviewedBooks: reviewedBooksWithRating,
+    };
+
+    res.status(200).json({
+      success: true,
+      user,
+      favorites: profileData.favoritedBooks,
+      uploadedBooks: profileData.uploadedBooks,
+      reviews: profileData.reviewedBooks,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
