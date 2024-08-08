@@ -35,7 +35,8 @@ const TagsPage = () => {
     isLoading,
     error,
     performFetch: fetchBooksByTag,
-  } = useFetch(`/books/tag/${selectedTag}`, (response) => {
+    // encodeURIComponent is for encode such symbols like "/" in the URL
+  } = useFetch(`/books/tag/${encodeURIComponent(selectedTag)}`, (response) => {
     setBooks(response.books);
   });
 
