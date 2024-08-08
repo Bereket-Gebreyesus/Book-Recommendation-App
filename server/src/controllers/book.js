@@ -220,7 +220,7 @@ export async function getSortedBooks(req, res) {
         $addFields: {
           // Calculate the average rating of each book
           averageRating: {
-            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
         },
       },
@@ -279,7 +279,7 @@ export async function searchBooks(req, res) {
         $addFields: {
           // Calculate the average rating of each book
           averageRating: {
-            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
         },
       },
@@ -315,7 +315,6 @@ export async function searchBooks(req, res) {
 // Gets books by tags with pagination and sorting
 export const getBookListByTag = async (req, res) => {
   const { tagName } = req.params;
-  const { page = 1, limit = 10, sort = "rating" } = req.query;
 
   try {
     const tag = await Tag.findOne({ name: tagName });
@@ -323,33 +322,15 @@ export const getBookListByTag = async (req, res) => {
       return res.status(404).json({ success: false, message: "Tag not found" });
     }
 
-    const sortOptions = {
-      rating: { averageRating: -1 },
-      date: { createdAt: -1 },
-    };
-
-    const books = await Book.find({ tags: tag._id })
-      .populate("tags")
-      .sort(sortOptions[sort] || sortOptions.rating)
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit));
-
-    const totalBooks = await Book.countDocuments({ tags: tag._id });
-    const totalPages = Math.ceil(totalBooks / limit);
+    const books = await Book.find({ tags: tag._id }).populate("tags");
 
     res.status(200).json({
       success: true,
       books,
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages,
-        totalBooks,
-      },
     });
   } catch (error) {
-    console.error("Error fetching books by tag:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error fetching books by tag", error });
+    const errMessage = "Error loading books by tag";
+    logError(errMessage, error);
+    res.status(500).json({ success: false, message: errMessage });
   }
 };
