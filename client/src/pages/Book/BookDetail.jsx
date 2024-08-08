@@ -24,7 +24,6 @@ const BookDetail = () => {
   const [reviewsPerPage] = useState(5);
   const [totalReviews, setTotalReviews] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
 
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     `/books/${id}`,
@@ -155,7 +154,6 @@ const BookDetail = () => {
         show={showModal}
         onHide={() => {
           setShowModal(false);
-          setModalMessage("");
         }}
         backdropClassName="custom-modal-backdrop"
         style={{
@@ -172,7 +170,6 @@ const BookDetail = () => {
             userId={userId}
             onReviewAdded={handleReviewAdded}
           />
-          {modalMessage && <Alert variant="info">{modalMessage}</Alert>}
         </Modal.Body>
       </Modal>
     </div>

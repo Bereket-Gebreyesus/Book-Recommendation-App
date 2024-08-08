@@ -2,28 +2,58 @@ import React, { useState, useEffect } from "react";
 import { Button, Alert, Form, Spinner } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Input from "../Input";
-import useFetch from "../../hooks/useFetch";
+import axios from "axios";
 
 const AddReviewForm = ({ id, onReviewAdded, userId }) => {
   const [rating, setRating] = useState(1);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { performFetch, isLoading } = useFetch(
-    `/books/${id}/reviews/add`,
-    (response) => {
-      if (response.success) {
-        onReviewAdded(response.result.book);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!text.trim()) {
+      setError("Review text cannot be empty. Write a review!");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await axios.post(
+        `${process.env.BASE_SERVER_URL}/api/books/${id}/reviews/add`,
+        { rating, text, ownerId: userId },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+
+      if (response.data.success) {
+        onReviewAdded(response.data.result.book);
         setRating(1);
         setText("");
-        setError("");
-        setSuccess(response.message);
+        setSuccess(response.data.message);
       } else {
-        setError(response.message);
+        setError(response.data.message || "An error occurred.");
       }
-    },
-  );
+    } catch (error) {
+      if (error.response) {
+        setError(
+          error.response.data.message || `Error: ${error.response.status}`,
+        );
+      } else if (error.request) {
+        setError("No response from server. Please try again.");
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (error || success) {
@@ -35,22 +65,6 @@ const AddReviewForm = ({ id, onReviewAdded, userId }) => {
       return () => clearTimeout(timer);
     }
   }, [error, success]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const ownerId = userId;
-
-    if (!text.trim()) {
-      setError("Review text cannot be empty. Write a review!");
-      return;
-    }
-
-    performFetch({
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, text, ownerId }),
-    });
-  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -94,7 +108,7 @@ const AddReviewForm = ({ id, onReviewAdded, userId }) => {
     </Form>
   );
 };
-//
+
 AddReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
   onReviewAdded: PropTypes.func.isRequired,
