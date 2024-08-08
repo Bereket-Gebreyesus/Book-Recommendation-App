@@ -322,7 +322,25 @@ export const getBookListByTag = async (req, res) => {
       return res.status(404).json({ success: false, message: "Tag not found" });
     }
 
-    const books = await Book.find({ tags: tag._id }).populate("tags");
+    const books = await Book.aggregate([
+      { $match: { tags: tag._id } },
+      {
+        $addFields: {
+          averageRating: {
+            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
+          },
+        },
+      },
+      { $sort: { averageRating: -1 } },
+      {
+        $lookup: {
+          from: "tags",
+          localField: "tags",
+          foreignField: "_id",
+          as: "tags",
+        },
+      },
+    ]);
 
     res.status(200).json({
       success: true,

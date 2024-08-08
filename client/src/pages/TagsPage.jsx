@@ -51,44 +51,13 @@ const TagsPage = () => {
     setSelectedTag(e.target.value);
   };
 
-  // Calculate the average rating of a book (couldn't implement it in the backend)
-  const calculateAverageRating = (reviews) => {
-    if (reviews.length === 0) {
-      return "No rating";
-    }
-
-    let totalRating = 0;
-    for (const review of reviews) {
-      totalRating += review.rating;
-    }
-
-    return (totalRating / reviews.length).toFixed(1);
-  };
-
-  // Loading bar
-  if (isLoading) {
-    return (
-      <div className="container">
-        <p className="m-4">Loading...</p>
-      </div>
-    );
-  }
-
-  // Error message
-  if (error) {
-    return (
-      <div className="container">
-        <h4 className="mb-4">Error: ${error}`</h4>
-      </div>
-    );
-  }
-
   return (
     <div className="container">
       <h4 className="mb-4 mt-3">Select a Tag</h4>
 
       <select onChange={handleTagChange} value={selectedTag}>
         <option value="">Select a tag</option>
+
         {tags.map((tag) => (
           <option key={tag._id} value={tag.name}>
             {tag.name}
@@ -97,7 +66,17 @@ const TagsPage = () => {
       </select>
 
       {selectedTag ? (
-        books.length > 0 ? (
+        // Error message
+        error ? (
+          <div className="container">
+            <h4 className="mb-4">Error: {error}</h4>
+          </div>
+        ) : // Loading bar
+        isLoading ? (
+          <div className="container">
+            <p className="m-4">Loading...</p>
+          </div>
+        ) : books.length > 0 ? (
           <ul className="list-unstyled mt-4">
             {books.map((book) => (
               <li key={book._id} className="border rounded p-3 mb-4 shadow-sm">
@@ -134,7 +113,7 @@ const TagsPage = () => {
                     </p>
 
                     <p className="text-muted mb-1">
-                      Rating: {calculateAverageRating(book.reviews)}
+                      Rating: {book.averageRating || "No rating"}
                     </p>
 
                     <p className="text-muted mb-1">
@@ -149,10 +128,10 @@ const TagsPage = () => {
             ))}
           </ul>
         ) : (
-          <p>No books found</p>
+          <p className="mt-4">No books found</p>
         )
       ) : (
-        <p>Choose tag</p>
+        <p className="mt-4">Choose tag</p>
       )}
     </div>
   );
