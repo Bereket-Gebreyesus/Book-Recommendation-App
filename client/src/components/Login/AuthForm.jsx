@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import axios from "axios";
+import PropTypes from "prop-types";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthContext";
-import { Form, Button, Alert, Container, Row, Col } from "react-bootstrap";
+import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import CenteredSpinner from "../CenteredSpinner";
 
-const AuthForm = () => {
+const AuthForm = ({ showName }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [formMode, setFormMode] = useState("login"); // 'login' or 'register'
   const navigate = useNavigate();
   const { login, register, googleSignIn, githubSignIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +83,7 @@ const AuthForm = () => {
       <Row className="justify-content-md-center">
         <Col lg={8} md={3}>
           <Form className="auth-form" autoComplete="off">
-            {formMode === "register" && (
+            {showName && (
               <Form.Group controlId="name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
@@ -125,22 +125,23 @@ const AuthForm = () => {
             ) : (
               <>
                 <Row>
-                  <Button
-                    variant="primary"
-                    onClick={handleRegister}
-                    className="auth-button"
-                    onMouseEnter={() => setFormMode("register")}
-                  >
-                    Register
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={handleLogin}
-                    className="auth-button"
-                    onMouseEnter={() => setFormMode("login")}
-                  >
-                    Login
-                  </Button>
+                  {showName ? (
+                    <Button
+                      variant="primary"
+                      onClick={handleRegister}
+                      className="auth-button"
+                    >
+                      Register
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      onClick={handleLogin}
+                      className="auth-button"
+                    >
+                      Login
+                    </Button>
+                  )}
                   <Button
                     variant="outline-primary"
                     onClick={handleGoogleSignIn}
@@ -167,5 +168,7 @@ const AuthForm = () => {
     </Container>
   );
 };
-
+AuthForm.propTypes = {
+  showName: PropTypes.bool.isRequired,
+};
 export default AuthForm;

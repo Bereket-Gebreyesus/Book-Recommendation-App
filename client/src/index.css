@@ -9,14 +9,13 @@ body {
 }
 
 .welcome-page {
-  height: 100vh;
   background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure content and footer are spaced correctly */
 }
 .btn-primary {
   background-color: var(--bs-primary) !important;
@@ -173,9 +172,11 @@ body {
 }
 
 .footer {
-  background-color: #e2e9ef;
-}
+  width: 100%;
+  background-color: #f8f9fa;
 
+  z-index: 1000;
+}
 .footer-card {
   border: none;
   background-color: #e6ebf0;
