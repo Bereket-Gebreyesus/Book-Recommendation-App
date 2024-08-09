@@ -98,7 +98,7 @@ const BookDetail = () => {
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
 
   const sortedReviews = book ? sortReviews(book.reviews) : [];
-  const currentReviews = sortedReviews.slice(
+  const paginatedReviews = sortedReviews.slice(
     indexOfFirstReview,
     indexOfLastReview,
   );
@@ -149,7 +149,8 @@ const BookDetail = () => {
           />
         )}
         <Reviews
-          reviews={currentReviews}
+          reviews={book.reviews}
+          paginatedReviews={paginatedReviews}
           reviewers={reviewers}
           totalPages={totalPages}
           currentPage={currentPage}

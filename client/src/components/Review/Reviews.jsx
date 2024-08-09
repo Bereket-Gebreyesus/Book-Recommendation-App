@@ -7,6 +7,7 @@ import { Button } from "react-bootstrap";
 
 const Reviews = ({
   reviews,
+  paginatedReviews,
   reviewers,
   totalPages,
   currentPage,
@@ -20,8 +21,8 @@ const Reviews = ({
     <div style={{ marginTop: "20px" }}>
       <h3>Reviews</h3>
       <ListGroup>
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
+        {paginatedReviews.length > 0 ? (
+          paginatedReviews.map((review) => (
             <ReviewItem
               key={review._id}
               review={review}
@@ -52,6 +53,15 @@ const Reviews = ({
 
 Reviews.propTypes = {
   reviews: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+      rating: PropTypes.number.isRequired,
+      created_at: PropTypes.string.isRequired,
+      ownerId: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  paginatedReviews: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
