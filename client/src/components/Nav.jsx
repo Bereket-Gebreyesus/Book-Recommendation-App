@@ -48,6 +48,11 @@ const NavBar = () => {
           <LinkContainer to="/" data-testid={TEST_ID.linkToHome}>
             <Nav.Link>Home</Nav.Link>
           </LinkContainer>
+
+          <LinkContainer to="/tags">
+            <Nav.Link>Categories</Nav.Link>
+          </LinkContainer>
+
           <Form className="d-flex" onSubmit={handleSearchSubmit}>
             <FormControl
               type="search"

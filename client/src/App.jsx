@@ -6,6 +6,7 @@ import Home from "./pages/Home/Home";
 import UploadBookPage from "./pages/Book/UploadBook";
 import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Search";
+import TagsPage from "./pages/TagsPage";
 import { useAuth } from "../src/hooks/AuthContext";
 import ProtectedRoute from "../src/components/Login/PrivateRoute";
 import WelcomePage from "./pages/WelcomePage";
@@ -36,6 +37,10 @@ const App = () => {
             <Route
               path="/book/upload"
               element={<ProtectedRoute element={UploadBookPage} />}
+            />
+            <Route
+              path="/tags"
+              element={<ProtectedRoute element={TagsPage} />}
             />
           </>
         ) : (

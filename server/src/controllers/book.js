@@ -1,4 +1,5 @@
 import Book from "../models/Book.js";
+import Tag from "../models/Tag.js";
 import upload from "../middleware/multerConfig.js";
 import { logError } from "../util/logging.js";
 
@@ -219,7 +220,7 @@ export async function getSortedBooks(req, res) {
         $addFields: {
           // Calculate the average rating of each book
           averageRating: {
-            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
         },
       },
@@ -278,7 +279,7 @@ export async function searchBooks(req, res) {
         $addFields: {
           // Calculate the average rating of each book
           averageRating: {
-            $ifNull: [{ $avg: "$reviews.rating" }, 0],
+            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
         },
       },
@@ -310,3 +311,44 @@ export async function searchBooks(req, res) {
     res.status(500).json({ success: false, message: errMessage });
   }
 }
+
+// Gets sorting books by tags
+export const getBookListByTag = async (req, res) => {
+  const { tagName } = req.params;
+
+  try {
+    const tag = await Tag.findOne({ name: tagName });
+    if (!tag) {
+      return res.status(404).json({ success: false, message: "Tag not found" });
+    }
+
+    const books = await Book.aggregate([
+      { $match: { tags: tag._id } },
+      {
+        $addFields: {
+          averageRating: {
+            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
+          },
+        },
+      },
+      { $sort: { averageRating: -1 } },
+      {
+        $lookup: {
+          from: "tags",
+          localField: "tags",
+          foreignField: "_id",
+          as: "tags",
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      books,
+    });
+  } catch (error) {
+    const errMessage = "Error loading books by tag";
+    logError(errMessage, error);
+    res.status(500).json({ success: false, message: errMessage });
+  }
+};
