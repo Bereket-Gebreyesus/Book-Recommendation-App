@@ -6,9 +6,10 @@ import Home from "./pages/Home/Home";
 import UploadBookPage from "./pages/Book/UploadBook";
 import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Search";
-import AuthForm from "../src/components/Login/AuthForm";
 import { useAuth } from "../src/hooks/AuthContext";
-import ProtectedRoute from "../src/components/Login/PrivateRoute"; // Import the ProtectedRoute component
+import ProtectedRoute from "../src/components/Login/PrivateRoute";
+import WelcomePage from "./pages/WelcomePage";
+import Footer from "./components/Footer";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -18,13 +19,12 @@ const App = () => {
       {isAuthenticated && <Nav />}
       <Routes>
         <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <AuthForm />}
+          path="/welcome"
+          element={isAuthenticated ? <Navigate to="/" /> : <WelcomePage />}
         />
         {isAuthenticated ? (
           <>
             <Route path="/" element={<ProtectedRoute element={Home} />} />
-
             <Route
               path="/books/:id"
               element={<ProtectedRoute element={BookDetail} />}
@@ -39,9 +39,10 @@ const App = () => {
             />
           </>
         ) : (
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/welcome" />} />
         )}
       </Routes>
+      <Footer />
     </>
   );
 };
