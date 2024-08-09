@@ -3,6 +3,7 @@ import { Button, Alert, Form, Spinner } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Input from "../Input";
 import useFetch from "../../hooks/useFetch";
+import StarRatingInput from "../StarRatingInput";
 
 const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
   const [rating, setRating] = useState(1);
@@ -62,18 +63,9 @@ const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
     <Form onSubmit={handleSubmit}>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
-      <Input
-        id="rating"
-        name="rating"
-        type="number"
-        value={rating.toString()}
-        onChange={(value) =>
-          setRating(Math.min(5, Math.max(1, parseInt(value, 10))))
-        }
-        placeholder="Rating"
-        min={1}
-        max={5}
-      />
+      <div className="mb-3">
+        <StarRatingInput rating={rating} onRatingChange={setRating} />
+      </div>
       <Input
         id="text"
         name="text"
