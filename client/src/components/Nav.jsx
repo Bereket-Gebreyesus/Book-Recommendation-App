@@ -50,7 +50,7 @@ const NavBar = () => {
           </LinkContainer>
 
           <LinkContainer to="/tags">
-            <Nav.Link>Tags</Nav.Link>
+            <Nav.Link>Categories</Nav.Link>
           </LinkContainer>
 
           <Form className="d-flex" onSubmit={handleSearchSubmit}>

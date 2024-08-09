@@ -312,7 +312,7 @@ export async function searchBooks(req, res) {
   }
 }
 
-// Gets books by tags with pagination and sorting
+// Gets sorting books by tags
 export const getBookListByTag = async (req, res) => {
   const { tagName } = req.params;
 
