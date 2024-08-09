@@ -12,34 +12,43 @@ const Reviews = ({
   currentPage,
   onPageChange,
   onAddReviewClick,
-}) => (
-  <div style={{ marginTop: "20px" }}>
-    <h3>Reviews</h3>
-    <ListGroup>
-      {reviews.length > 0 ? (
-        reviews.map((review) => (
-          <ReviewItem
-            key={review._id}
-            review={review}
-            reviewer={reviewers[review.ownerId] || {}}
-          />
-        ))
-      ) : (
-        <ListGroup.Item>No reviews available</ListGroup.Item>
-      )}
-    </ListGroup>
-    <div className="d-flex justify-content-between align-items-center my-3">
-      <Button variant="primary" onClick={onAddReviewClick}>
-        Add Review
-      </Button>
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-      />
+  userId,
+}) => {
+  const hasUserReviewed = reviews.some((review) => review.ownerId === userId);
+
+  return (
+    <div style={{ marginTop: "20px" }}>
+      <h3>Reviews</h3>
+      <ListGroup>
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
+            <ReviewItem
+              key={review._id}
+              review={review}
+              reviewer={reviewers[review.ownerId] || {}}
+            />
+          ))
+        ) : (
+          <ListGroup.Item>No reviews available</ListGroup.Item>
+        )}
+      </ListGroup>
+      <div className="d-flex justify-content-between align-items-center my-3">
+        <Button
+          variant={hasUserReviewed ? "secondary" : "primary"}
+          onClick={!hasUserReviewed ? onAddReviewClick : null}
+          disabled={hasUserReviewed}
+        >
+          {hasUserReviewed ? "Review Added" : "Add Review"}
+        </Button>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 Reviews.propTypes = {
   reviews: PropTypes.arrayOf(
@@ -61,6 +70,7 @@ Reviews.propTypes = {
   currentPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   onAddReviewClick: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 export default Reviews;

@@ -84,11 +84,24 @@ const BookDetail = () => {
     fetchUserIdByEmail(email);
   }, []);
 
+  // Sort reviews to place user's review at the top and newest reviews below
+  const sortReviews = (reviews) => {
+    return reviews.sort((a, b) => {
+      if (a.ownerId === userId) return -1;
+      if (b.ownerId === userId) return 1;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+  };
+
   // Calculate pagination slice
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews =
-    book?.reviews.slice(indexOfFirstReview, indexOfLastReview) || [];
+
+  const sortedReviews = book ? sortReviews(book.reviews) : [];
+  const currentReviews = sortedReviews.slice(
+    indexOfFirstReview,
+    indexOfLastReview,
+  );
   const totalPages = Math.ceil(totalReviews / reviewsPerPage);
 
   const handlePageChange = (pageNumber) => {
@@ -142,6 +155,7 @@ const BookDetail = () => {
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onAddReviewClick={() => setShowModal(true)}
+          userId={userId}
         />
       </Container>
     );
@@ -169,6 +183,7 @@ const BookDetail = () => {
             id={id}
             userId={userId}
             onReviewAdded={handleReviewAdded}
+            onClose={() => setShowModal(false)}
           />
         </Modal.Body>
       </Modal>
