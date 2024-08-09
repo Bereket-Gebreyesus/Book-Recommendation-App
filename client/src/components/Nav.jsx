@@ -58,7 +58,11 @@ const NavBar = () => {
               value={searchQuery}
               onChange={handleSearchChange}
             />
-            <Button variant="outline-success" type="submit">
+            <Button
+              className="search-button"
+              variant="outline-success"
+              type="submit"
+            >
               Search
             </Button>
           </Form>
