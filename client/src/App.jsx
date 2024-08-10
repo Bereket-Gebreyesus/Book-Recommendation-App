@@ -8,7 +8,7 @@ import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Search";
 import AuthForm from "../src/components/Login/AuthForm";
 import { useAuth } from "../src/hooks/AuthContext";
-import ProtectedRoute from "../src/components/Login/PrivateRoute"; // Import the ProtectedRoute component
+import ProtectedRoute from "../src/components/Login/PrivateRoute";
 import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {

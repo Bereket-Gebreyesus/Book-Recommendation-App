@@ -14,7 +14,12 @@ const BookCard = ({ book = {} }) => {
   };
 
   return (
-    <Card className="mb-4 book-card" key={book._id} onClick={handleCardClick}>
+    <Card
+      className="book-card"
+      key={book._id}
+      onClick={handleCardClick}
+      style={{ height: "100%", cursor: "pointer" }}
+    >
       <Card.Img variant="top" src={book.image || "placeholder.jpg"} />
       <Card.Body>
         <Card.Title>{book.title}</Card.Title>
