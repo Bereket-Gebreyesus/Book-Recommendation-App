@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/AuthContext";
 import { BsBoxArrowRight } from "react-icons/bs";
 
 import TEST_ID from "./Nav.testid";
+import "./Nav.css";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -27,28 +28,28 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/welcome");
   };
 
   const userName = userEmail ? userEmail.split("@")[0] : "";
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
-      {userName && (
-        <Navbar.Text className="me-3">
-          Welcome: <span data-testid={TEST_ID.userName}>{userName}</span>
-        </Navbar.Text>
-      )}
-      <Navbar.Brand href="#" className="m-3">
-        BookRecs
-      </Navbar.Brand>
+      <Navbar.Brand className="navbar-brand m-3">BookRecs</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <LinkContainer to="/" data-testid={TEST_ID.linkToHome}>
-            <Nav.Link>Home</Nav.Link>
-          </LinkContainer>
-          <Form className="d-flex" onSubmit={handleSearchSubmit}>
+          <div className="nav-links-container">
+            <LinkContainer to="/" data-testid={TEST_ID.linkToHome}>
+              <Nav.Link className="home-link">Home</Nav.Link>
+            </LinkContainer>
+
+            <LinkContainer to="/tags">
+              <Nav.Link className="categories-link me-3">Categories</Nav.Link>
+            </LinkContainer>
+          </div>
+
+          <Form className="search-form d-flex" onSubmit={handleSearchSubmit}>
             <FormControl
               type="search"
               placeholder="Enter title, author or genre"
@@ -57,21 +58,34 @@ const NavBar = () => {
               value={searchQuery}
               onChange={handleSearchChange}
             />
-            <Button variant="outline-success" type="submit">
+            <Button
+              className="search-button"
+              variant="outline-success"
+              type="submit"
+            >
               Search
             </Button>
           </Form>
         </Nav>
-        <UserActions />
-        <Button
-          variant="outline-light"
-          data-testid={TEST_ID.logoutButton}
-          onClick={handleLogout}
-          className="log-out"
-        >
-          <BsBoxArrowRight />
-        </Button>
-        {isLoggedIn && <UserActions />}
+        <div className="user-panel-container">
+          <UserActions />
+          <div className="log-out-container">
+            <Button
+              variant="outline-light"
+              data-testid={TEST_ID.logoutButton}
+              onClick={handleLogout}
+              className="log-out"
+            >
+              <BsBoxArrowRight />
+            </Button>
+          </div>
+
+          {userName && (
+            <Navbar.Text className="welcome-element me-3">
+              Welcome: <span data-testid={TEST_ID.userName}>{userName}</span>
+            </Navbar.Text>
+          )}
+        </div>
       </Navbar.Collapse>
     </Navbar>
   );

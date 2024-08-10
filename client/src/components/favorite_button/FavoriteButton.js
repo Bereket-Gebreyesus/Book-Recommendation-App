@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import useFetch from "../../hooks/useFetch";
+import { Button } from "react-bootstrap";
 
 const FavoriteButton = ({ userId, bookId }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const onSuccess = () => {
-    return true;
-  };
-
   const { isLoading, performFetch, cancelFetch } = useFetch(
     `/user/id/${userId}`,
-    onSuccess,
+    (res) => {
+      if (res.user.favorites.includes(bookId)) setIsFavorite(true);
+    },
   );
 
-  const { performFetch: performAddFavoriteFetch } = useFetch(
-    "/user/favorites",
-    onSuccess,
-  );
-  const { performFetch: performRemoveFavoriteFetch } = useFetch(
-    "/user/favorites",
-    onSuccess,
-  );
+  const { performFetch: performAddFavFetch } = useFetch("/user/favorites");
+  const { performFetch: performRemoveFavFetch } = useFetch("/user/favorites");
 
   useEffect(() => {
     performFetch();
@@ -30,8 +23,7 @@ const FavoriteButton = ({ userId, bookId }) => {
 
   const handleAddFavorite = (e) => {
     e.preventDefault();
-
-    performAddFavoriteFetch({
+    performAddFavFetch({
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -43,25 +35,25 @@ const FavoriteButton = ({ userId, bookId }) => {
 
   const handleRemoveFavorite = (e) => {
     e.preventDefault();
-
-    performRemoveFavoriteFetch({
+    performRemoveFavFetch({
       method: "DELETE",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({ userId, bookId }),
     });
-
     setIsFavorite((prev) => !prev);
   };
 
   return (
-    <button
+    <Button
+      variant={isFavorite ? "danger" : "primary"}
+      className="mt-3"
       onClick={isFavorite ? handleRemoveFavorite : handleAddFavorite}
       disabled={isLoading}
     >
       {isFavorite ? "Remove from favorites" : "Add to favorites"}
-    </button>
+    </Button>
   );
 };
 

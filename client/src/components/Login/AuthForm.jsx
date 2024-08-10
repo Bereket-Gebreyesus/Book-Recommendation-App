@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios";
+import PropTypes from "prop-types";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthContext";
-import { Form, Button, Alert, Container, Row, Col } from "react-bootstrap";
+import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa"; // Import GitHub icon
+import { FaGithub } from "react-icons/fa";
 import CenteredSpinner from "../CenteredSpinner";
 
-const AuthForm = () => {
+const AuthForm = ({ showName }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -78,23 +79,25 @@ const AuthForm = () => {
   };
 
   return (
-    <Container className="authform-container">
+    <Container className="auth-form-container">
       <Row className="justify-content-md-center">
-        <Col md={6} lg={4}>
+        <Col lg={8} md={3}>
           <Form className="auth-form" autoComplete="off">
-            <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                autoComplete="off"
-                size="lg"
-                placeholder="Enter your name to register"
-                className="placeholder-style"
-              />
-            </Form.Group>
+            {showName && (
+              <Form.Group controlId="name">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  autoComplete="off"
+                  size="lg"
+                  placeholder="Enter your name to register"
+                  className="placeholder-style"
+                />
+              </Form.Group>
+            )}
             <Form.Group controlId="email">
               <Form.Label>Email</Form.Label>
               <Form.Control
@@ -122,20 +125,23 @@ const AuthForm = () => {
             ) : (
               <>
                 <Row>
-                  <Button
-                    variant="primary"
-                    onClick={handleRegister}
-                    className="auth-button"
-                  >
-                    Register
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={handleLogin}
-                    className="auth-button"
-                  >
-                    Login
-                  </Button>
+                  {showName ? (
+                    <Button
+                      variant="primary"
+                      onClick={handleRegister}
+                      className="auth-button"
+                    >
+                      Register
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      onClick={handleLogin}
+                      className="auth-button"
+                    >
+                      Login
+                    </Button>
+                  )}
                   <Button
                     variant="outline-primary"
                     onClick={handleGoogleSignIn}
@@ -162,5 +168,7 @@ const AuthForm = () => {
     </Container>
   );
 };
-
+AuthForm.propTypes = {
+  showName: PropTypes.bool.isRequired,
+};
 export default AuthForm;

@@ -48,7 +48,7 @@ const BookForm = ({
             <Input
               id="authors"
               name="authors"
-              value={bookData.authors.join(", ")} // Join the array into a string
+              value={bookData.authors.join(", ")} // Joins the array into a string
               onChange={(value) => handleChange("authors", value)}
               placeholder="Authors"
               required
@@ -107,8 +107,8 @@ const BookForm = ({
               Tags
               <TagSelection
                 id="tags"
-                options={tagsOptions.sort((a, b) =>
-                  a.name.localeCompare(b.name),
+                options={tagsOptions.sort(
+                  (a, b) => (a.name || "").localeCompare(b.name || ""), //sorts the tags alphabetically
                 )}
                 selectedTags={bookData.tags}
                 onTagClick={handleTagClick}
