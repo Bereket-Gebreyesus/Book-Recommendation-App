@@ -1,7 +1,7 @@
 import Book from "../models/Book.js";
 import Tag from "../models/Tag.js";
 import upload from "../middleware/multerConfig.js";
-import { logError } from "../util/logging.js";
+import { logError, logInfo } from "../util/logging.js";
 
 export const uploadBookAndImage = (req, res) => {
   upload(req, res, async (err) => {
@@ -120,29 +120,25 @@ export const addReview = async (req, res) => {
     });
 
     if (hasReviewed) {
+      logInfo("Review already submitted:", { ownerId, bookId: id });
       return res.status(400).json({
         success: false,
         message: "You have already submitted a review for this book.",
       });
     }
 
-    if (!text.trim()) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Review text cannot be empty." });
-    }
-
     const newReview = { ownerId, rating, text, created_at: new Date() };
     book.reviews.push(newReview);
     await book.save();
 
+    logInfo("Review added successfully:", { ownerId, bookId: id });
     return res.status(201).json({
       success: true,
       message: "Review added successfully",
       result: { book },
     });
   } catch (error) {
-    logError(error);
+    logError("Internal Server Error:", { error });
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });

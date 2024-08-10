@@ -3,8 +3,9 @@ import { Button, Alert, Form, Spinner } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Input from "../Input";
 import useFetch from "../../hooks/useFetch";
+import StarRatingInput from "../StarRatingInput";
 
-const AddReviewForm = ({ id, onReviewAdded, userId }) => {
+const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
   const [rating, setRating] = useState(1);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -19,6 +20,12 @@ const AddReviewForm = ({ id, onReviewAdded, userId }) => {
         setText("");
         setError("");
         setSuccess(response.message);
+
+        if (typeof onClose === "function") {
+          setTimeout(() => {
+            onClose();
+          }, 3000);
+        }
       } else {
         setError(response.message);
       }
@@ -41,7 +48,7 @@ const AddReviewForm = ({ id, onReviewAdded, userId }) => {
     const ownerId = userId;
 
     if (!text.trim()) {
-      setError("Review text cannot be empty. Write a review!");
+      setError("Review text cannot be empty. Please Write a review!");
       return;
     }
 
@@ -56,18 +63,9 @@ const AddReviewForm = ({ id, onReviewAdded, userId }) => {
     <Form onSubmit={handleSubmit}>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
-      <Input
-        id="rating"
-        name="rating"
-        type="number"
-        value={rating.toString()}
-        onChange={(value) =>
-          setRating(Math.min(5, Math.max(1, parseInt(value, 10))))
-        }
-        placeholder="Rating"
-        min={1}
-        max={5}
-      />
+      <div className="mb-3">
+        <StarRatingInput rating={rating} onRatingChange={setRating} />
+      </div>
       <Input
         id="text"
         name="text"
@@ -94,11 +92,11 @@ const AddReviewForm = ({ id, onReviewAdded, userId }) => {
     </Form>
   );
 };
-//
 AddReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
   onReviewAdded: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default AddReviewForm;

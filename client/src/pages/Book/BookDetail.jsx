@@ -24,7 +24,6 @@ const BookDetail = () => {
   const [reviewsPerPage] = useState(5);
   const [totalReviews, setTotalReviews] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
 
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     `/books/${id}`,
@@ -85,11 +84,24 @@ const BookDetail = () => {
     fetchUserIdByEmail(email);
   }, []);
 
+  // Sort reviews to place user's review at the top and newest reviews below
+  const sortReviews = (reviews) => {
+    return reviews.sort((a, b) => {
+      if (a.ownerId === userId) return -1;
+      if (b.ownerId === userId) return 1;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+  };
+
   // Calculate pagination slice
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews =
-    book?.reviews.slice(indexOfFirstReview, indexOfLastReview) || [];
+
+  const sortedReviews = book ? sortReviews(book.reviews) : [];
+  const paginatedReviews = sortedReviews.slice(
+    indexOfFirstReview,
+    indexOfLastReview,
+  );
   const totalPages = Math.ceil(totalReviews / reviewsPerPage);
 
   const handlePageChange = (pageNumber) => {
@@ -137,12 +149,14 @@ const BookDetail = () => {
           />
         )}
         <Reviews
-          reviews={currentReviews}
+          reviews={book.reviews}
+          paginatedReviews={paginatedReviews}
           reviewers={reviewers}
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onAddReviewClick={() => setShowModal(true)}
+          userId={userId}
         />
       </Container>
     );
@@ -155,7 +169,6 @@ const BookDetail = () => {
         show={showModal}
         onHide={() => {
           setShowModal(false);
-          setModalMessage("");
         }}
         backdropClassName="custom-modal-backdrop"
         style={{
@@ -171,8 +184,8 @@ const BookDetail = () => {
             id={id}
             userId={userId}
             onReviewAdded={handleReviewAdded}
+            onClose={() => setShowModal(false)}
           />
-          {modalMessage && <Alert variant="info">{modalMessage}</Alert>}
         </Modal.Body>
       </Modal>
     </div>
