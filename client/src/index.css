@@ -8,6 +8,11 @@ body {
   padding: 0;
 }
 
+.spinner {
+  display: block;
+  margin: 50px auto;
+}
+
 .welcome-page {
   background-size: cover;
   background-repeat: no-repeat;

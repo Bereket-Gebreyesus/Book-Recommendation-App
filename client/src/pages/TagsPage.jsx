@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import defaultCover from "../assets/default-cover.jpeg";
+import { Spinner } from "react-bootstrap";
 
 const TagsPage = () => {
   const [tags, setTags] = useState([]);
@@ -74,7 +75,9 @@ const TagsPage = () => {
         ) : // Loading bar
         isLoading ? (
           <div className="container">
-            <p className="m-4">Loading...</p>
+            <p className="m-4">
+              <Spinner className="spinner" animation="border" />
+            </p>
           </div>
         ) : books.length > 0 ? (
           <ul className="list-unstyled mt-4">
