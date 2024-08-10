@@ -9,6 +9,7 @@ import Search from "./pages/Search";
 import TagsPage from "./pages/TagsPage";
 import { useAuth } from "../src/hooks/AuthContext";
 import ProtectedRoute from "../src/components/Login/PrivateRoute";
+import ProfilePage from "./pages/ProfilePage";
 import WelcomePage from "./pages/WelcomePage";
 import Footer from "./components/Footer";
 
@@ -37,6 +38,10 @@ const App = () => {
             <Route
               path="/book/upload"
               element={<ProtectedRoute element={UploadBookPage} />}
+            />
+            <Route
+              path="/user/profile"
+              element={<ProtectedRoute element={ProfilePage} />}
             />
             <Route
               path="/tags"

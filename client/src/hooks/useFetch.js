@@ -44,6 +44,7 @@ const useFetch = (route, onReceived) => {
 
     const baseOptions = {
       method: "GET",
+      // credentials: "include",
       headers: {
         "content-type": "application/json",
       },

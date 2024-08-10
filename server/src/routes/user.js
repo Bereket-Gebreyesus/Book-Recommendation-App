@@ -10,6 +10,8 @@ import {
   removeFavorite,
   getUserById,
   setWeeklyEmail,
+  getUserProfile,
+  authMiddleware,
 } from "../controllers/user.js";
 
 const userRouter = express.Router();
@@ -24,5 +26,7 @@ userRouter.get("/id/:id", getUserById);
 userRouter.post("/favorites", addFavorite);
 userRouter.delete("/favorites", removeFavorite);
 userRouter.post("/weekly-email", setWeeklyEmail);
+
+userRouter.get("/profile", authMiddleware, getUserProfile);
 
 export default userRouter;

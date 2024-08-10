@@ -1,0 +1,9 @@
+.star-rating {
+  display: inline-block;
+  font-size: 1.5rem; /* Adjust as needed */
+  color: #ffd700; /* Gold color for stars */
+}
+
+.star-rating span {
+  cursor: pointer;
+}

@@ -1,5 +1,6 @@
+// AuthContext.js
+
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { initializeApp } from "firebase/app";
 import PropTypes from "prop-types";
 import axios from "axios";
 import {
@@ -9,6 +10,7 @@ import {
   GithubAuthProvider,
   signOut,
 } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -38,51 +40,51 @@ export const AuthProvider = ({ children }) => {
   const [photoURL, setPhotoURL] = useState(
     localStorage.getItem("photoURL") || "",
   );
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     localStorage.setItem("userEmail", userEmail);
     localStorage.setItem("isAuthenticated", isAuthenticated);
     localStorage.setItem("photoURL", photoURL);
-  }, [userEmail, isAuthenticated, photoURL]);
-
-  const login = (token, email) => {
     localStorage.setItem("token", token);
+  }, [userEmail, isAuthenticated, photoURL, token]);
 
+  const login = (newToken, email) => {
+    setToken(newToken);
     setUserEmail(email);
     setIsAuthenticated(true);
   };
 
-  const register = (token, email) => {
-    localStorage.setItem("token", token);
-
+  const register = (newToken, email) => {
+    setToken(newToken);
     setUserEmail(email);
     setIsAuthenticated(true);
   };
 
   const logout = async () => {
-    localStorage.removeItem("token");
     await signOut(auth);
     setUserEmail("");
     setPhotoURL("");
+    setToken("");
     setIsAuthenticated(false);
   };
 
   const googleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const token = await result.user.getIdToken();
+      const firebaseToken = await result.user.getIdToken();
 
       const response = await axios.post(
         `${process.env.BASE_SERVER_URL}/api/user/google-sign-in`,
-        { token },
+        { token: firebaseToken },
       );
       if (response.data.success) {
         const { token: jwtToken } = response.data;
         const email = result.user.email;
         const photoURL = result.user.photoURL;
 
-        localStorage.setItem("token", jwtToken);
+        setToken(jwtToken);
         setUserEmail(email);
         setIsAuthenticated(true);
         setPhotoURL(photoURL);
@@ -97,11 +99,11 @@ export const AuthProvider = ({ children }) => {
   const githubSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, githubProvider);
-      const token = await result.user.getIdToken();
+      const firebaseToken = await result.user.getIdToken();
 
       const response = await axios.post(
         `${process.env.BASE_SERVER_URL}/api/user/github-sign-in`,
-        { token },
+        { token: firebaseToken },
       );
 
       if (response.data.success) {
@@ -109,7 +111,7 @@ export const AuthProvider = ({ children }) => {
         const email = result.user.email;
         const photoURL = result.user.photoURL;
 
-        localStorage.setItem("token", jwtToken);
+        setToken(jwtToken);
         setUserEmail(email);
         setIsAuthenticated(true);
         setPhotoURL(photoURL);
@@ -127,12 +129,13 @@ export const AuthProvider = ({ children }) => {
         userEmail,
         isAuthenticated,
         photoURL,
+        token,
         login,
         register,
         logout,
         googleSignIn,
         githubSignIn,
-        message, // Add message to the context value
+        message,
       }}
     >
       {children}

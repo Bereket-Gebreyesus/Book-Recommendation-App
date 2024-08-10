@@ -67,7 +67,6 @@ const NavBar = () => {
             </Button>
           </Form>
         </Nav>
-
         <div className="user-panel-container">
           <UserActions />
           <div className="log-out-container">
