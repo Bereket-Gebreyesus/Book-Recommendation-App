@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import useFetch from "../../hooks/useFetch";
+import { Button } from "react-bootstrap";
 
 const FavoriteButton = ({ userId, bookId }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -56,12 +57,14 @@ const FavoriteButton = ({ userId, bookId }) => {
   };
 
   return (
-    <button
+    <Button
+      variant={isFavorite ? "danger" : "primary"}
+      className="mt-3"
       onClick={isFavorite ? handleRemoveFavorite : handleAddFavorite}
       disabled={isLoading}
     >
       {isFavorite ? "Remove from favorites" : "Add to favorites"}
-    </button>
+    </Button>
   );
 };
 
