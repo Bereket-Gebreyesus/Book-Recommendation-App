@@ -14,9 +14,8 @@ const FavoriteButton = ({ userId, bookId }) => {
     },
   );
 
-  const { performFetch: performAddFavoriteFetch } = useFetch("/user/favorites");
-  const { performFetch: performRemoveFavoriteFetch } =
-    useFetch("/user/favorites");
+  const { performFetch: performAddFavFetch } = useFetch("/user/favorites");
+  const { performFetch: performRemoveFavFetch } = useFetch("/user/favorites");
 
   useEffect(() => {
     performFetch();
@@ -25,8 +24,7 @@ const FavoriteButton = ({ userId, bookId }) => {
 
   const handleAddFavorite = (e) => {
     e.preventDefault();
-
-    performAddFavoriteFetch({
+    performAddFavFetch({
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -38,15 +36,13 @@ const FavoriteButton = ({ userId, bookId }) => {
 
   const handleRemoveFavorite = (e) => {
     e.preventDefault();
-
-    performRemoveFavoriteFetch({
+    performRemoveFavFetch({
       method: "DELETE",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({ userId, bookId }),
     });
-
     setIsFavorite((prev) => !prev);
   };
 
