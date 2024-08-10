@@ -8,9 +8,7 @@ const FavoriteButton = ({ userId, bookId }) => {
   const { isLoading, performFetch, cancelFetch } = useFetch(
     `/user/id/${userId}`,
     (res) => {
-      if (res.user.favorites.includes(bookId)) {
-        setIsFavorite(true);
-      }
+      if (res.user.favorites.includes(bookId)) setIsFavorite(true);
     },
   );
 
