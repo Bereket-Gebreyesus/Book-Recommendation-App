@@ -5,23 +5,22 @@ import useFetch from "../../hooks/useFetch";
 const FavoriteButton = ({ userId, bookId }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const onSuccess = () => {
-    return true;
+  const initialFavoriteState = (data) => {
+    if (data.includes(bookId)) {
+      setIsFavorite(true);
+    }
   };
 
   const { isLoading, performFetch, cancelFetch } = useFetch(
     `/user/id/${userId}`,
-    onSuccess,
+    (res) => {
+      initialFavoriteState(res.user.favorites);
+    },
   );
 
-  const { performFetch: performAddFavoriteFetch } = useFetch(
-    "/user/favorites",
-    onSuccess,
-  );
-  const { performFetch: performRemoveFavoriteFetch } = useFetch(
-    "/user/favorites",
-    onSuccess,
-  );
+  const { performFetch: performAddFavoriteFetch } = useFetch("/user/favorites");
+  const { performFetch: performRemoveFavoriteFetch } =
+    useFetch("/user/favorites");
 
   useEffect(() => {
     performFetch();
