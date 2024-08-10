@@ -5,16 +5,12 @@ import useFetch from "../../hooks/useFetch";
 const FavoriteButton = ({ userId, bookId }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const initialFavoriteState = (data) => {
-    if (data.includes(bookId)) {
-      setIsFavorite(true);
-    }
-  };
-
   const { isLoading, performFetch, cancelFetch } = useFetch(
     `/user/id/${userId}`,
     (res) => {
-      initialFavoriteState(res.user.favorites);
+      if (res.user.favorites.includes(bookId)) {
+        setIsFavorite(true);
+      }
     },
   );
 
