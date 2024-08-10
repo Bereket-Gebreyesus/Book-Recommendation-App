@@ -34,7 +34,7 @@
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 550px) {
   .nav-links-container {
     display: flex;
     gap: 10px;
