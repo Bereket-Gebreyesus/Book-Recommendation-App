@@ -24,7 +24,7 @@ const NavBar = () => {
     }
   };
 
-  const { isLoggedIn, logout, userEmail } = useAuth();
+  const { logout, userEmail } = useAuth();
 
   const handleLogout = () => {
     logout();
