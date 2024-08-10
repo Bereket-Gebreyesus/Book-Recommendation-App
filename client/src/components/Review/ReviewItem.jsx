@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { ListGroup, Image, Button } from "react-bootstrap";
 import StarRating from "../StarRating";
 import "./ReviewItem.css";
+import defaultProfileImage from "../../assets/default-profile.jpg";
 
 const ReviewItem = ({ review, reviewer }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,13 +21,11 @@ const ReviewItem = ({ review, reviewer }) => {
   return (
     <ListGroup.Item>
       <div className="review-header">
-        {reviewer?.profileImage && (
-          <Image
-            src={reviewer.profileImage}
-            roundedCircle
-            className="reviewer-img"
-          />
-        )}
+        <Image
+          src={reviewer?.profileImage || defaultProfileImage}
+          roundedCircle
+          className="reviewer-img"
+        />
         <div>
           <strong>{reviewer?.name || "Unknown"}</strong>
           <div>
