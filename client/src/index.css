@@ -15,11 +15,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Ensure content and footer are spaced correctly */
+  justify-content: space-between;
+  /* Ensure content and footer are spaced correctly */
 }
+
 .btn-primary {
   background-color: var(--bs-primary) !important;
   border-color: var(--bs-primary) !important;
+  color: #000 !important;
 }
 
 .btn-primary:hover {
@@ -177,6 +180,7 @@ body {
 
   z-index: 1000;
 }
+
 .footer-card {
   border: none;
   background-color: #e6ebf0;
