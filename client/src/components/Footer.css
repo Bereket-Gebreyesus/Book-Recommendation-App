@@ -1,0 +1,32 @@
+.footer {
+  background-color: #000000;
+}
+
+.footer-card {
+  border: none;
+  background-color: #000000;
+  box-shadow: 0 4px 8px rgba(197, 196, 196, 0.1);
+}
+
+.footer-card .card-body {
+  padding: 30px;
+}
+
+.footer-card p {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.footer-card .footer-icon {
+  margin-right: 8px;
+  color: #ffd700;
+}
+
+.footer-card .text-left {
+  text-align: left;
+  color: #ffffff;
+}
+
+.footer-right {
+  color: #ffffff;
+}

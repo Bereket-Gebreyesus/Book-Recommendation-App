@@ -3,6 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import defaultCover from "../assets/default-cover.jpeg";
 import handleShowMore from "../util/handleShowMore.js";
+import { Spinner } from "react-bootstrap";
 
 import "./Search.css";
 
@@ -18,13 +19,18 @@ const Search = () => {
   const onReceived = (data) => {
     setBooks((prevBooks) => {
       const updatedBooks = [...prevBooks, ...data.books];
+
+      // Returns only unique books by filtering out duplicates
       const uniqueBooks = Array.from(
         new Set(updatedBooks.map((book) => book._id)),
       ).map((id) => updatedBooks.find((book) => book._id === id));
+
       return uniqueBooks;
     });
+
     setTotalPages(data.totalPages);
 
+    // Fetching tags for books from the server
     const tagIds = data.books.flatMap((book) => book.tags);
     if (tagIds.length > 0) {
       performFetchTags(tagIds);
@@ -36,11 +42,14 @@ const Search = () => {
     onReceived,
   );
 
+  // Saving tags from server in the component state
   const { performFetch: performFetchTags } = useFetch("/tags", (response) => {
-    const tagMap = response.result.reduce((acc, tag) => {
-      acc[tag._id] = tag.name;
-      return acc;
-    }, {});
+    const tagMap = {};
+
+    response.result.forEach((tag) => {
+      tagMap[tag._id] = tag.name;
+    });
+
     setTags(tagMap);
   });
 
@@ -62,7 +71,7 @@ const Search = () => {
   if (isLoading && currentPage === 1) {
     return (
       <div className="container">
-        <p className="m-4">Loading...</p>
+        <Spinner className="spinner" animation="border" />
       </div>
     );
   }
@@ -130,7 +139,7 @@ const Search = () => {
       )}
 
       {isLoading && currentPage > 1 && (
-        <p className="text-center">Loading...</p>
+        <Spinner className="spinner" animation="border" />
       )}
 
       {currentPage < totalPages && (

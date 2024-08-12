@@ -5,6 +5,8 @@ import useFetch from "../../hooks/useFetch";
 import StarRating from "../StarRating";
 import defaultCover from "../../assets/default-cover.jpeg";
 import handleShowMore from "../../util/handleShowMore.js";
+import { Spinner } from "react-bootstrap";
+
 import "./BookList.css";
 
 const BookList = () => {
@@ -72,7 +74,11 @@ const BookList = () => {
         ))}
       </Row>
 
-      {isLoading && <p className="text-center">Loading...</p>}
+      {isLoading && (
+        <p className="text-center">
+          <Spinner className="spinner" animation="border" />
+        </p>
+      )}
 
       {error && (
         <p className="text-danger text-center">
