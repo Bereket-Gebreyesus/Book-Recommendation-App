@@ -17,43 +17,47 @@ const App = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       {isAuthenticated && <Nav />}
-      <Routes>
-        <Route
-          path="/welcome"
-          element={isAuthenticated ? <Navigate to="/" /> : <WelcomePage />}
-        />
-        {isAuthenticated ? (
-          <>
-            <Route path="/" element={<ProtectedRoute element={Home} />} />
-            <Route
-              path="/books/:id"
-              element={<ProtectedRoute element={BookDetail} />}
-            />
-            <Route
-              path="/search"
-              element={<ProtectedRoute element={Search} />}
-            />
-            <Route
-              path="/book/upload"
-              element={<ProtectedRoute element={UploadBookPage} />}
-            />
-            <Route
-              path="/user/profile"
-              element={<ProtectedRoute element={ProfilePage} />}
-            />
-            <Route
-              path="/tags"
-              element={<ProtectedRoute element={TagsPage} />}
-            />
-          </>
-        ) : (
-          <Route path="*" element={<Navigate to="/welcome" />} />
-        )}
-      </Routes>
+      <div style={{ flex: 1 }}>
+        <Routes>
+          <Route
+            path="/welcome"
+            element={isAuthenticated ? <Navigate to="/" /> : <WelcomePage />}
+          />
+          {isAuthenticated ? (
+            <>
+              <Route path="/" element={<ProtectedRoute element={Home} />} />
+              <Route
+                path="/books/:id"
+                element={<ProtectedRoute element={BookDetail} />}
+              />
+              <Route
+                path="/search"
+                element={<ProtectedRoute element={Search} />}
+              />
+              <Route
+                path="/book/upload"
+                element={<ProtectedRoute element={UploadBookPage} />}
+              />
+              <Route
+                path="/user/profile"
+                element={<ProtectedRoute element={ProfilePage} />}
+              />
+              <Route
+                path="/tags"
+                element={<ProtectedRoute element={TagsPage} />}
+              />
+            </>
+          ) : (
+            <Route path="*" element={<Navigate to="/welcome" />} />
+          )}
+        </Routes>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
