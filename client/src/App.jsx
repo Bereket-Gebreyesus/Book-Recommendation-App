@@ -17,11 +17,9 @@ const App = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-    >
+    <div className="d-flex flex-column min-vh-100">
       {isAuthenticated && <Nav />}
-      <div style={{ flex: 1 }}>
+      <div className="flex-grow-1">
         <Routes>
           <Route
             path="/welcome"

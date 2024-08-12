@@ -7,10 +7,10 @@ const Footer = () => {
   return (
     <footer className="footer">
       <Container>
-        <Card className="footer-card">
+        <Card className="footer-card h-100">
           <Card.Body>
             <Row>
-              <Col md={6} className="text-left py-3">
+              <Col md={6} className="text-left py-1">
                 <p>
                   <FaEnvelope className="footer-icon" /> info@c47groupa.com
                 </p>
@@ -22,7 +22,10 @@ const Footer = () => {
                   Future Street, Coding City, 12345
                 </p>
               </Col>
-              <Col md={6} className="text-md-right text-center py-3">
+              <Col
+                md={6}
+                className="text-md-right text-center py-1 footer-right"
+              >
                 <p>
                   &copy; {new Date().getFullYear()} Hack Your Future Cohort 47
                   Group A. All Rights Reserved.

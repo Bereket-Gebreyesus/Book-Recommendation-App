@@ -1,17 +1,11 @@
 .footer {
   background-color: #000000;
-  padding: 20px 0;
-  position: relative;
-  margin-top: auto;
-  bottom: 0;
-  width: 100%;
-  z-index: 1000;
 }
 
 .footer-card {
   border: none;
-  background-color: #e6ebf0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #000000;
+  box-shadow: 0 4px 8px rgba(197, 196, 196, 0.1);
 }
 
 .footer-card .card-body {
@@ -30,5 +24,9 @@
 
 .footer-card .text-left {
   text-align: left;
-  color: #0d0d0d;
+  color: #ffffff;
+}
+
+.footer-right {
+  color: #ffffff;
 }
