@@ -116,7 +116,7 @@ const BookDetail = () => {
   let content = null;
 
   if (isLoading) {
-    content = <Spinner animation="border" />;
+    content = <Spinner className="spinner" animation="border" />;
   } else if (error) {
     content = <Alert variant="danger">{error.toString()}</Alert>;
   } else if (!book) {
