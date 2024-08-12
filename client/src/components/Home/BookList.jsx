@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Row, Col, Card, Button, Spinner } from "react-bootstrap";
 import useFetch from "../../hooks/useFetch";
 import StarRating from "../StarRating";
 import defaultCover from "../../assets/default-cover.jpeg";
 import handleShowMore from "../../util/handleShowMore.js";
-import { Spinner } from "react-bootstrap";
-
 import "./BookList.css";
 
 const BookList = () => {
