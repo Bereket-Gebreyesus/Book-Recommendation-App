@@ -10,7 +10,11 @@ const UploadButton = () => {
 
   return (
     <div>
-      <Button variant="secondary-upload" onClick={handleUpload}>
+      <Button
+        className="upload-button"
+        variant="secondary-upload"
+        onClick={handleUpload}
+      >
         Upload a Book
       </Button>
     </div>
