@@ -14,8 +14,14 @@ const Reviews = ({
   onPageChange,
   onAddReviewClick,
   userId,
+  setReviews,
+  id,
 }) => {
   const hasUserReviewed = reviews.some((review) => review.ownerId === userId);
+
+  const onReviewDeleted = (reviewId) => {
+    setReviews(reviews.filter((review) => review._id !== reviewId));
+  };
 
   return (
     <div style={{ marginTop: "20px" }}>
@@ -25,8 +31,12 @@ const Reviews = ({
           paginatedReviews.map((review) => (
             <ReviewItem
               key={review._id}
+              reviewId={review._id}
               review={review}
               reviewer={reviewers[review.ownerId] || {}}
+              userId={userId}
+              id={id}
+              onReviewDeleted={onReviewDeleted}
             />
           ))
         ) : (
@@ -81,6 +91,8 @@ Reviews.propTypes = {
   onPageChange: PropTypes.func.isRequired,
   onAddReviewClick: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
+  setReviews: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default Reviews;

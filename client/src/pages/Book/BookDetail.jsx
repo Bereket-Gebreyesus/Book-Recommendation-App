@@ -86,11 +86,21 @@ const BookDetail = () => {
 
   // Sort reviews to place user's review at the top and newest reviews below
   const sortReviews = (reviews) => {
+    if (!reviews || !Array.isArray(reviews)) return [];
     return reviews.sort((a, b) => {
       if (a.ownerId === userId) return -1;
       if (b.ownerId === userId) return 1;
       return new Date(b.created_at) - new Date(a.created_at);
     });
+  };
+
+  // update reviews
+  const setReviews = (updatedReviews) => {
+    setBook((prevBook) => {
+      if (!prevBook) return prevBook;
+      return { ...prevBook, reviews: updatedReviews };
+    });
+    setTotalReviews(updatedReviews.length);
   };
 
   // Calculate pagination slice
@@ -157,6 +167,8 @@ const BookDetail = () => {
           onPageChange={handlePageChange}
           onAddReviewClick={() => setShowModal(true)}
           userId={userId}
+          setReviews={setReviews}
+          id={id}
         />
       </Container>
     );

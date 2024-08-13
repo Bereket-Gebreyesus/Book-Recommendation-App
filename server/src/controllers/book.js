@@ -145,6 +145,48 @@ export const addReview = async (req, res) => {
   }
 };
 
+// Delete Review
+export const deleteReview = async (req, res) => {
+  const { id, reviewId } = req.params;
+  const { ownerId } = req.body;
+
+  try {
+    const book = await Book.findById(id);
+    if (!book) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Book not found" });
+    }
+
+    const review = book.reviews.id(reviewId);
+    if (!review) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Review not found" });
+    }
+
+    if (review.ownerId.toString() !== ownerId) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to delete this review",
+      });
+    }
+
+    book.reviews = book.reviews.filter((r) => r._id.toString() !== reviewId);
+
+    await book.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Review deleted successfully" });
+  } catch (error) {
+    logError("Error deleting review:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 export const checkISBNUniqueness = async (req, res) => {
   const { isbn } = req.query;
   const isbnString = String(isbn);
