@@ -215,7 +215,7 @@ export async function getSortedBooks(req, res) {
     const books = await Book.aggregate([
       {
         $addFields: {
-          // Check if the book has enough ratings count
+          // Check if the book has enough number of reviews
           hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
 
           // Calculate the average rating of each book
@@ -229,7 +229,7 @@ export async function getSortedBooks(req, res) {
       },
       {
         $sort: {
-          // Sorting condition №1: Enough ratings count
+          // Sorting condition №1: Enough number of reviews
           hasEnoughRatings: -1,
           // Sorting condition №2: Average rating of each book
           averageRating: -1,
@@ -287,7 +287,7 @@ export async function searchBooks(req, res) {
       { $match: searchCondition },
       {
         $addFields: {
-          // Check if the book has enough ratings count
+          // Check if the book has enough number of reviews
           hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
 
           // Calculate the average rating of each book
@@ -301,7 +301,7 @@ export async function searchBooks(req, res) {
       },
       {
         $sort: {
-          // Sorting condition №1: Enough ratings count
+          // Sorting condition №1: Enough number of reviews
           hasEnoughRatings: -1,
           // Sorting condition №2: Average rating of each book
           averageRating: -1,
@@ -349,7 +349,7 @@ export const getBookListByTag = async (req, res) => {
       { $match: { tags: tag._id } },
       {
         $addFields: {
-          // Check if the book has enough ratings count
+          // Check if the book has enough number of reviews
           hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
 
           // Calculate the average rating of each book
@@ -363,7 +363,7 @@ export const getBookListByTag = async (req, res) => {
       },
       {
         $sort: {
-          // Sorting condition №1: Enough ratings count
+          // Sorting condition №1: Enough number of reviews
           hasEnoughRatings: -1,
           // Sorting condition №2: Average rating of each book
           averageRating: -1,
