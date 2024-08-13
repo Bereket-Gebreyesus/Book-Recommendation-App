@@ -113,6 +113,7 @@ const BookForm = ({
               <Form.Label>Tags</Form.Label>
               <Form.Control
                 type="text"
+                placeholder="Please enter tag you want to select"
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
