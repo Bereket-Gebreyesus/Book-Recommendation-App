@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import Input from "../Input";
 import TagSelection from "../TagSelection";
@@ -12,6 +12,8 @@ const BookForm = ({
   tagsOptions,
   handleTagClick,
 }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const modifiedHandleSubmit = async (event) => {
     event.preventDefault();
     handleSubmit();
@@ -19,6 +21,10 @@ const BookForm = ({
 
   const handleCancel = () => {
     window.location.href = "/";
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -104,14 +110,19 @@ const BookForm = ({
         <Row className="mb-3">
           <Col>
             <Form.Group controlId="tags" className="mb-4">
-              Tags
+              <Form.Label>Tags</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Please enter tag you want to select"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
               <TagSelection
                 id="tags"
-                options={tagsOptions.sort(
-                  (a, b) => (a.name || "").localeCompare(b.name || ""), //sorts the tags alphabetically
-                )}
+                options={tagsOptions}
                 selectedTags={bookData.tags}
                 onTagClick={handleTagClick}
+                searchQuery={searchQuery}
               />
             </Form.Group>
           </Col>
