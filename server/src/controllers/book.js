@@ -208,36 +208,39 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
 // Fetching sorted and paginated books for the main page
 export async function getSortedBooks(req, res) {
   const { page = 1, limit = 10 } = req.query;
-  //
-  const minRatingsCount = 20;
+  // Minimum number of reviews required to be considered for sorting
+  const minReviewsCount = 20;
 
   try {
     const books = await Book.aggregate([
       {
         $addFields: {
-          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minRatingsCount] },
+          // Check if the book has enough ratings count
+          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
 
+          // Calculate the average rating of each book
           averageRating: {
             $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
 
+          // Count the number of reviews
           reviewsCount: { $size: "$reviews" },
         },
       },
       {
         $sort: {
-          // Sorting condition №1: Check if the book has enough ratings count
+          // Sorting condition №1: Enough ratings count
           hasEnoughRatings: -1,
-          // Sorting condition №2: Calculate the average rating of each book
+          // Sorting condition №2: Average rating of each book
           averageRating: -1,
-          // Sorting condition №3: Count the number of reviews
+          // Sorting condition №3: Number of reviews
           reviewsCount: -1,
-          // Sorting condition №4: When a book was uploaded
+          // Sorting condition №4: Uploading date
           createdAt: -1,
         },
       },
       {
-        $skip: (page - 1) * limit,
+        $skip: (page - 1) * parseInt(limit, 10),
       },
       {
         $limit: parseInt(limit, 10),
@@ -262,6 +265,8 @@ export async function getSortedBooks(req, res) {
 // Search books by title, author or tag with pagination and sorting
 export async function searchBooks(req, res) {
   const { query, page = 1, limit = 10 } = req.query;
+  // Minimum number of reviews required to be considered for sorting
+  const minReviewsCount = 20;
 
   if (!query) {
     return res
@@ -282,16 +287,28 @@ export async function searchBooks(req, res) {
       { $match: searchCondition },
       {
         $addFields: {
+          // Check if the book has enough ratings count
+          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
+
           // Calculate the average rating of each book
           averageRating: {
             $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
+
+          // Count the number of reviews
+          reviewsCount: { $size: "$reviews" },
         },
       },
       {
         $sort: {
-          // Sort by average rating
+          // Sorting condition №1: Enough ratings count
+          hasEnoughRatings: -1,
+          // Sorting condition №2: Average rating of each book
           averageRating: -1,
+          // Sorting condition №3: Number of reviews
+          reviewsCount: -1,
+          // Sorting condition №4: Uploading date
+          createdAt: -1,
         },
       },
       {
@@ -320,6 +337,7 @@ export async function searchBooks(req, res) {
 // Gets sorting books by tags
 export const getBookListByTag = async (req, res) => {
   const { tagName } = req.params;
+  const minReviewsCount = 20;
 
   try {
     const tag = await Tag.findOne({ name: tagName });
@@ -331,12 +349,30 @@ export const getBookListByTag = async (req, res) => {
       { $match: { tags: tag._id } },
       {
         $addFields: {
+          // Check if the book has enough ratings count
+          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
+
+          // Calculate the average rating of each book
           averageRating: {
             $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
+
+          // Count the number of reviews
+          reviewsCount: { $size: "$reviews" },
         },
       },
-      { $sort: { averageRating: -1 } },
+      {
+        $sort: {
+          // Sorting condition №1: Enough ratings count
+          hasEnoughRatings: -1,
+          // Sorting condition №2: Average rating of each book
+          averageRating: -1,
+          // Sorting condition №3: Number of reviews
+          reviewsCount: -1,
+          // Sorting condition №4: Uploading date
+          createdAt: -1,
+        },
+      },
       {
         $lookup: {
           from: "tags",
