@@ -2,6 +2,7 @@ import Book from "../models/Book.js";
 import Tag from "../models/Tag.js";
 import upload from "../middleware/multerConfig.js";
 import { logError, logInfo } from "../util/logging.js";
+import { sortBooksPipeline } from "../util/sortBooksConditions.js";
 
 export const uploadBookAndImage = (req, res) => {
   upload(req, res, async (err) => {
@@ -207,28 +208,14 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
 
 // Fetching sorted and paginated books for the main page
 export async function getSortedBooks(req, res) {
-  // Query parameters: page number and limit (for pagination)
   const { page = 1, limit = 10 } = req.query;
 
   try {
     const books = await Book.aggregate([
+      // Calling the function that contains sorting conditions
+      ...sortBooksPipeline(),
       {
-        $addFields: {
-          // Calculate the average rating of each book
-          averageRating: {
-            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
-          },
-        },
-      },
-      {
-        $sort: {
-          // Sort by (top reviewed + date added)
-          averageRating: -1,
-          createdAt: -1,
-        },
-      },
-      {
-        $skip: (page - 1) * limit,
+        $skip: (page - 1) * parseInt(limit, 10),
       },
       {
         $limit: parseInt(limit, 10),
@@ -271,20 +258,9 @@ export async function searchBooks(req, res) {
   try {
     const books = await Book.aggregate([
       { $match: searchCondition },
-      {
-        $addFields: {
-          // Calculate the average rating of each book
-          averageRating: {
-            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
-          },
-        },
-      },
-      {
-        $sort: {
-          // Sort by average rating
-          averageRating: -1,
-        },
-      },
+
+      // Calling the function that contains sorting conditions
+      ...sortBooksPipeline(),
       {
         $skip: (page - 1) * parseInt(limit, 10),
       },
@@ -320,14 +296,10 @@ export const getBookListByTag = async (req, res) => {
 
     const books = await Book.aggregate([
       { $match: { tags: tag._id } },
-      {
-        $addFields: {
-          averageRating: {
-            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
-          },
-        },
-      },
-      { $sort: { averageRating: -1 } },
+
+      // Calling the function that contains sorting conditions
+      ...sortBooksPipeline(),
+
       {
         $lookup: {
           from: "tags",

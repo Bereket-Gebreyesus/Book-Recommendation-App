@@ -75,9 +75,9 @@ const TagsPage = () => {
         ) : // Loading bar
         isLoading ? (
           <div className="container">
-            <p className="m-4">
+            <div className="m-4">
               <Spinner className="spinner" animation="border" />
-            </p>
+            </div>
           </div>
         ) : books.length > 0 ? (
           <ul className="list-unstyled mt-4">

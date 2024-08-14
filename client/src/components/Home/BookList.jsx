@@ -69,15 +69,15 @@ const BookList = () => {
       </Row>
 
       {isLoading && (
-        <p className="text-center">
+        <div className="text-center">
           <Spinner className="spinner" animation="border" />
-        </p>
+        </div>
       )}
 
       {error && (
-        <p className="text-danger text-center">
+        <div className="text-danger text-center">
           Error: {error.message || "An unexpected error occurred"}
-        </p>
+        </div>
       )}
 
       {currentPage < totalPages && (
