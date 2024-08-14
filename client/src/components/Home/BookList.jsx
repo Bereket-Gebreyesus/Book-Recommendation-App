@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import defaultCover from "../../assets/default-cover.jpeg";
 import handleShowMore from "../../util/handleShowMore.js";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Dropdown, DropdownButton } from "react-bootstrap";
 
 import "./BookList.css";
 
@@ -11,10 +11,12 @@ const BookList = () => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortCriteria, setSortCriteria] = useState("rating");
+  const [dropdownTitle, setDropdownTitle] = useState("Sort By");
 
   // Fetching books from the server
   const { isLoading, error, performFetch } = useFetch(
-    `/books/all?page=${currentPage}`,
+    `/books/all?page=${currentPage}&sort=${sortCriteria}`,
     (data) => {
       setBooks((prevBooks) => {
         const updatedBooks = [...prevBooks, ...data.books];
@@ -31,11 +33,35 @@ const BookList = () => {
 
   useEffect(() => {
     performFetch();
-  }, [currentPage]);
+  }, [currentPage, sortCriteria]);
+
+  const handleSelect = (eventKey) => {
+    // If the selected sort criteria is the same as the current one, do nothing
+    if (eventKey === sortCriteria) return;
+
+    setSortCriteria(eventKey);
+    setBooks([]);
+    setCurrentPage(1);
+
+    // Update the dropdown title
+    setDropdownTitle(eventKey.charAt(0).toUpperCase() + eventKey.slice(1));
+  };
 
   return (
     <div className="container">
       <h4 className="mb-4">Recommendations list</h4>
+
+      <div className="d-flex justify-content-end mb-4">
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={dropdownTitle}
+          onSelect={handleSelect}
+        >
+          <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
+          <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>
+          <Dropdown.Item eventKey="author">Author</Dropdown.Item>
+        </DropdownButton>
+      </div>
 
       <ul className="list-unstyled">
         {books.map((book) => (

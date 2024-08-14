@@ -207,37 +207,41 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
 
 // Fetching sorted and paginated books for the main page
 export async function getSortedBooks(req, res) {
-  const { page = 1, limit = 10 } = req.query;
-  // Minimum number of reviews required to be considered for sorting
+  const { page = 1, limit = 10, sort = "rating" } = req.query;
   const minReviewsCount = 20;
+
+  let sortCriteria;
+  switch (sort) {
+    case "date":
+      sortCriteria = { createdAt: -1 };
+      break;
+    case "author":
+      sortCriteria = { "authors.0": 1 }; // Assuming authors is an array
+      break;
+    case "rating":
+    default:
+      sortCriteria = {
+        hasEnoughRatings: -1,
+        averageRating: -1,
+        reviewsCount: -1,
+        createdAt: -1,
+      };
+      break;
+  }
 
   try {
     const books = await Book.aggregate([
       {
         $addFields: {
-          // Check if the book has enough number of reviews
           hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
-
-          // Calculate the average rating of each book
           averageRating: {
             $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
           },
-
-          // Count the number of reviews
           reviewsCount: { $size: "$reviews" },
         },
       },
       {
-        $sort: {
-          // Sorting condition №1: Enough number of reviews
-          hasEnoughRatings: -1,
-          // Sorting condition №2: Average rating of each book
-          averageRating: -1,
-          // Sorting condition №3: Number of reviews
-          reviewsCount: -1,
-          // Sorting condition №4: Uploading date
-          createdAt: -1,
-        },
+        $sort: sortCriteria,
       },
       {
         $skip: (page - 1) * parseInt(limit, 10),
