@@ -46,11 +46,7 @@ const BookList = () => {
                 />
               </Link>
               <Card.Body className="d-flex flex-column h-100">
-                <Card.Title className="h6 text-dark fw-bold book-title">
-                  {book.title.length > 80
-                    ? `${book.title.substring(0, 77)}...`
-                    : book.title}
-                </Card.Title>
+                <Card.Title className="book-title">{book.title}</Card.Title>
                 <Card.Text className="text-muted book-authors">
                   Author:{" "}
                   {book.authors.length > 0
