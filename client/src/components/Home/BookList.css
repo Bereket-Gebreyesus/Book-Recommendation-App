@@ -35,16 +35,15 @@
   margin-bottom: 0.5rem;
 }
 
-.card {
+.book-card {
   transition:
     transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out,
     opacity 0.5s ease-in-out;
-  animation: rotateIn 0.6s ease-out;
 }
 
-.card:hover {
-  transform: scale(1.05);
+.book-card:hover {
+  transform: scale(1.02);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 100;
 }
@@ -63,24 +62,4 @@
 .book-card {
   border: 1px solid #ddd;
   border-radius: 0.25rem;
-}
-
-@keyframes rotateIn {
-  from {
-    opacity: 0;
-    transform: rotate(-30deg) translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: rotate(0) translateY(0);
-  }
-}
-
-.card:nth-child(odd) {
-  animation-delay: 0.1s;
-}
-
-.card:nth-child(even) {
-  animation-delay: 0.2s;
 }
