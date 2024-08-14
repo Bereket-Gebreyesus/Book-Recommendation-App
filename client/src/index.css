@@ -27,6 +27,7 @@ body {
 .btn-primary {
   background-color: var(--bs-primary) !important;
   border-color: var(--bs-primary) !important;
+  color: #000 !important;
 }
 
 .btn-primary:hover {
