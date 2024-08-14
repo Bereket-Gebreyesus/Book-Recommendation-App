@@ -3,7 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import defaultCover from "../assets/default-cover.jpeg";
 import handleShowMore from "../util/handleShowMore.js";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Dropdown, DropdownButton } from "react-bootstrap";
 
 import "./Search.css";
 
@@ -12,6 +12,8 @@ const Search = () => {
   const [tags, setTags] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortCriteria, setSortCriteria] = useState("rating");
+  const [dropdownTitle, setDropdownTitle] = useState("Sort By");
 
   const location = useLocation();
   const query = new URLSearchParams(location.search).get("query");
@@ -38,7 +40,7 @@ const Search = () => {
   };
 
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
-    `/books/search?query=${query}&page=${currentPage}`,
+    `/books/search?query=${query}&page=${currentPage}&sort=${sortCriteria}`,
     onReceived,
   );
 
@@ -60,13 +62,25 @@ const Search = () => {
     return () => {
       cancelFetch();
     };
-  }, [query]);
+  }, [query, sortCriteria]);
 
   useEffect(() => {
     if (currentPage > 1) {
       performFetch();
     }
   }, [currentPage]);
+
+  const handleSelect = (eventKey) => {
+    // If the selected sort criteria is the same as the current one, do nothing
+    if (eventKey === sortCriteria) return;
+
+    setSortCriteria(eventKey);
+    setBooks([]);
+    setCurrentPage(1);
+
+    // Update the dropdown title
+    setDropdownTitle(eventKey.charAt(0).toUpperCase() + eventKey.slice(1));
+  };
 
   if (isLoading && currentPage === 1) {
     return (
@@ -87,6 +101,19 @@ const Search = () => {
   return (
     <div className="container">
       <h4 className="mb-4 mt-3">{`Search Results: ${query}`}</h4>
+
+      <div className="d-flex justify-content-end mb-4">
+        {/* Dropdow menu for selecting sorting method */}
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={dropdownTitle}
+          onSelect={handleSelect}
+        >
+          <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
+          <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>
+          <Dropdown.Item eventKey="author">Author</Dropdown.Item>
+        </DropdownButton>
+      </div>
 
       {books.length > 0 ? (
         <ul className="list-unstyled">

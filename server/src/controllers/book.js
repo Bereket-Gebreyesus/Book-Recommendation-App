@@ -2,6 +2,7 @@ import Book from "../models/Book.js";
 import Tag from "../models/Tag.js";
 import upload from "../middleware/multerConfig.js";
 import { logError, logInfo } from "../util/logging.js";
+import { sortBooksPipeline } from "../util/sortBooksConditions.js";
 
 export const uploadBookAndImage = (req, res) => {
   upload(req, res, async (err) => {
@@ -208,41 +209,11 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
 // Fetching sorted and paginated books for the main page
 export async function getSortedBooks(req, res) {
   const { page = 1, limit = 10, sort = "rating" } = req.query;
-  const minReviewsCount = 20;
-
-  let sortCriteria;
-  switch (sort) {
-    case "date":
-      sortCriteria = { createdAt: -1 };
-      break;
-    case "author":
-      sortCriteria = { "authors.0": 1 }; // Assuming authors is an array
-      break;
-    case "rating":
-    default:
-      sortCriteria = {
-        hasEnoughRatings: -1,
-        averageRating: -1,
-        reviewsCount: -1,
-        createdAt: -1,
-      };
-      break;
-  }
 
   try {
     const books = await Book.aggregate([
-      {
-        $addFields: {
-          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
-          averageRating: {
-            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
-          },
-          reviewsCount: { $size: "$reviews" },
-        },
-      },
-      {
-        $sort: sortCriteria,
-      },
+      // Calling the function that contains sorting conditions
+      ...sortBooksPipeline(sort),
       {
         $skip: (page - 1) * parseInt(limit, 10),
       },
@@ -268,9 +239,7 @@ export async function getSortedBooks(req, res) {
 
 // Search books by title, author or tag with pagination and sorting
 export async function searchBooks(req, res) {
-  const { query, page = 1, limit = 10 } = req.query;
-  // Minimum number of reviews required to be considered for sorting
-  const minReviewsCount = 20;
+  const { query, page = 1, limit = 10, sort = "rating" } = req.query;
 
   if (!query) {
     return res
@@ -289,32 +258,9 @@ export async function searchBooks(req, res) {
   try {
     const books = await Book.aggregate([
       { $match: searchCondition },
-      {
-        $addFields: {
-          // Check if the book has enough number of reviews
-          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
 
-          // Calculate the average rating of each book
-          averageRating: {
-            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
-          },
-
-          // Count the number of reviews
-          reviewsCount: { $size: "$reviews" },
-        },
-      },
-      {
-        $sort: {
-          // Sorting condition №1: Enough number of reviews
-          hasEnoughRatings: -1,
-          // Sorting condition №2: Average rating of each book
-          averageRating: -1,
-          // Sorting condition №3: Number of reviews
-          reviewsCount: -1,
-          // Sorting condition №4: Uploading date
-          createdAt: -1,
-        },
-      },
+      // Calling the function that contains sorting conditions
+      ...sortBooksPipeline(sort),
       {
         $skip: (page - 1) * parseInt(limit, 10),
       },
@@ -340,8 +286,7 @@ export async function searchBooks(req, res) {
 
 // Gets sorting books by tags
 export const getBookListByTag = async (req, res) => {
-  const { tagName } = req.params;
-  const minReviewsCount = 20;
+  const { tagName, sort = "rating" } = req.params;
 
   try {
     const tag = await Tag.findOne({ name: tagName });
@@ -351,32 +296,10 @@ export const getBookListByTag = async (req, res) => {
 
     const books = await Book.aggregate([
       { $match: { tags: tag._id } },
-      {
-        $addFields: {
-          // Check if the book has enough number of reviews
-          hasEnoughRatings: { $gte: [{ $size: "$reviews" }, minReviewsCount] },
 
-          // Calculate the average rating of each book
-          averageRating: {
-            $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0],
-          },
+      // Calling the function that contains sorting conditions
+      ...sortBooksPipeline(sort),
 
-          // Count the number of reviews
-          reviewsCount: { $size: "$reviews" },
-        },
-      },
-      {
-        $sort: {
-          // Sorting condition №1: Enough number of reviews
-          hasEnoughRatings: -1,
-          // Sorting condition №2: Average rating of each book
-          averageRating: -1,
-          // Sorting condition №3: Number of reviews
-          reviewsCount: -1,
-          // Sorting condition №4: Uploading date
-          createdAt: -1,
-        },
-      },
       {
         $lookup: {
           from: "tags",
