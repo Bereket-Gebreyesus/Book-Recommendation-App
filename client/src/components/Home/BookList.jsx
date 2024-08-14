@@ -52,6 +52,7 @@ const BookList = () => {
       <h4 className="mb-4">Recommendations list</h4>
 
       <div className="d-flex justify-content-end mb-4">
+        {/* Dropdow menu for selecting sorting method */}
         <DropdownButton
           id="dropdown-basic-button"
           title={dropdownTitle}
