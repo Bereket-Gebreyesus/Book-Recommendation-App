@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Card, Button, Spinner } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Spinner,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
 import useFetch from "../../hooks/useFetch";
 import StarRating from "../StarRating";
 import defaultCover from "../../assets/default-cover.jpeg";
 import handleShowMore from "../../util/handleShowMore.js";
+import { selectSortingCriteria } from "../../util/selectSortingCriteria.js";
+
 import "./BookList.css";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortCriteria, setSortCriteria] = useState("rating");
+  const [dropdownTitle, setDropdownTitle] = useState("Sort By");
 
   const { isLoading, error, performFetch } = useFetch(
-    `/books/all?page=${currentPage}`,
+    `/books/all?page=${currentPage}&sort=${sortCriteria}`,
     (data) => {
       setBooks((prevBooks) => {
         const updatedBooks = [...prevBooks, ...data.books];
@@ -28,11 +40,33 @@ const BookList = () => {
 
   useEffect(() => {
     performFetch();
-  }, [currentPage]);
+  }, [currentPage, sortCriteria]);
 
   return (
     <div className="container">
       <h4 className="mb-4">Recommendations List</h4>
+
+      <div className="d-flex justify-content-end mb-4">
+        {/* Dropdow menu for selecting sorting method */}
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={dropdownTitle}
+          onSelect={(eventKey) =>
+            selectSortingCriteria(
+              eventKey,
+              sortCriteria,
+              setSortCriteria,
+              setBooks,
+              setDropdownTitle,
+            )
+          }
+        >
+          <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
+          <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>
+          <Dropdown.Item eventKey="author">Author</Dropdown.Item>
+        </DropdownButton>
+      </div>
+
       <Row>
         {books.map((book) => (
           <Col key={book._id} xs={12} sm={6} md={4} lg={3}>

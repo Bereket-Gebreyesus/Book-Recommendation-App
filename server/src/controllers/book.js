@@ -208,12 +208,12 @@ export const checkBookAndAuthorUniqueness = async (req, res) => {
 
 // Fetching sorted and paginated books for the main page
 export async function getSortedBooks(req, res) {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, sort = "rating" } = req.query;
 
   try {
     const books = await Book.aggregate([
       // Calling the function that contains sorting conditions
-      ...sortBooksPipeline(),
+      ...sortBooksPipeline(sort),
       {
         $skip: (page - 1) * parseInt(limit, 10),
       },
@@ -239,7 +239,7 @@ export async function getSortedBooks(req, res) {
 
 // Search books by title, author or tag with pagination and sorting
 export async function searchBooks(req, res) {
-  const { query, page = 1, limit = 10 } = req.query;
+  const { query, page = 1, limit = 10, sort = "rating" } = req.query;
 
   if (!query) {
     return res
@@ -260,7 +260,7 @@ export async function searchBooks(req, res) {
       { $match: searchCondition },
 
       // Calling the function that contains sorting conditions
-      ...sortBooksPipeline(),
+      ...sortBooksPipeline(sort),
       {
         $skip: (page - 1) * parseInt(limit, 10),
       },
@@ -287,6 +287,7 @@ export async function searchBooks(req, res) {
 // Gets sorting books by tags
 export const getBookListByTag = async (req, res) => {
   const { tagName } = req.params;
+  const { sort = "rating" } = req.query;
 
   try {
     const tag = await Tag.findOne({ name: tagName });
@@ -298,7 +299,7 @@ export const getBookListByTag = async (req, res) => {
       { $match: { tags: tag._id } },
 
       // Calling the function that contains sorting conditions
-      ...sortBooksPipeline(),
+      ...sortBooksPipeline(sort),
 
       {
         $lookup: {
