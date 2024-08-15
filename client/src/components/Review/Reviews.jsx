@@ -13,6 +13,7 @@ const Reviews = ({
   currentPage,
   onPageChange,
   onAddReviewClick,
+  onEditReviewClick,
   userId,
   setReviews,
   id,
@@ -34,6 +35,8 @@ const Reviews = ({
               reviewId={review._id}
               review={review}
               reviewer={reviewers[review.ownerId] || {}}
+              isEditable={review.ownerId === userId}
+              onEditReviewClick={onEditReviewClick}
               userId={userId}
               id={id}
               onReviewDeleted={onReviewDeleted}
@@ -90,6 +93,7 @@ Reviews.propTypes = {
   currentPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   onAddReviewClick: PropTypes.func.isRequired,
+  onEditReviewClick: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   setReviews: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,

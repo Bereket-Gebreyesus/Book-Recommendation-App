@@ -11,6 +11,8 @@ const ReviewItem = ({
   reviewer,
   userId,
   id,
+  isEditable,
+  onEditReviewClick,
   onReviewDeleted,
   reviewId,
 }) => {
@@ -61,25 +63,33 @@ const ReviewItem = ({
           </div>
           <small>{new Date(review.created_at).toLocaleDateString()}</small>
         </div>
-        {review.ownerId === userId && (
-          <Button
-            variant="danger"
-            onClick={handleDelete}
-            className="ml-auto"
-            disabled={isDeleting}
-          >
-            {isDeleting ? (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            ) : (
-              "Delete"
-            )}
-          </Button>
+        {isEditable && (
+          <div className="ml-auto">
+            <Button
+              variant="secondary"
+              onClick={() => onEditReviewClick(review)}
+              className="mr-2"
+            >
+              Edit
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </div>
         )}
       </div>
       {deleteError && <Alert variant="danger">{deleteError}</Alert>}
@@ -113,6 +123,8 @@ ReviewItem.propTypes = {
   userId: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   onReviewDeleted: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool.isRequired,
+  onEditReviewClick: PropTypes.func.isRequired,
 };
 
 export default ReviewItem;

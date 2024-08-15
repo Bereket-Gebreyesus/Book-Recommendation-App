@@ -5,32 +5,38 @@ import Input from "../Input";
 import useFetch from "../../hooks/useFetch";
 import StarRatingInput from "../StarRatingInput";
 
-const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
-  const [rating, setRating] = useState(1);
-  const [text, setText] = useState("");
+const ReviewForm = ({
+  id,
+  review,
+  onReviewSaved,
+  userId,
+  onClose,
+  isEditing = false,
+}) => {
+  const [rating, setRating] = useState(review?.rating || 0);
+  const [text, setText] = useState(review?.text || "");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const { performFetch, isLoading } = useFetch(
-    `/books/${id}/reviews/add`,
-    (response) => {
-      if (response.success) {
-        onReviewAdded(response.result.book);
-        setRating(1);
-        setText("");
-        setError("");
-        setSuccess(response.message);
+  const url = isEditing
+    ? `/books/${id}/reviews/${review._id}/edit`
+    : `/books/${id}/reviews/add`;
 
-        if (typeof onClose === "function") {
-          setTimeout(() => {
-            onClose();
-          }, 3000);
-        }
-      } else {
-        setError(response.message);
+  const { performFetch, isLoading } = useFetch(url, (response) => {
+    if (response.success) {
+      onReviewSaved(response.result.book);
+      setError("");
+      setSuccess(response.message);
+
+      if (typeof onClose === "function") {
+        setTimeout(() => {
+          onClose();
+        }, 3000);
       }
-    },
-  );
+    } else {
+      setError(response.message);
+    }
+  });
 
   useEffect(() => {
     if (error || success) {
@@ -45,17 +51,16 @@ const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const ownerId = userId;
 
     if (!text.trim()) {
-      setError("Review text cannot be empty. Please Write a review!");
+      setError("Review text cannot be empty. Please write a review!");
       return;
     }
 
     performFetch({
-      method: "POST",
+      method: isEditing ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, text, ownerId }),
+      body: JSON.stringify({ rating, text, ownerId: userId }),
     });
   };
 
@@ -85,6 +90,8 @@ const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
             role="status"
             aria-hidden="true"
           />
+        ) : isEditing ? (
+          "Update Review"
         ) : (
           "Submit Review"
         )}
@@ -92,11 +99,18 @@ const AddReviewForm = ({ id, onReviewAdded, userId, onClose }) => {
     </Form>
   );
 };
-AddReviewForm.propTypes = {
+
+ReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
-  onReviewAdded: PropTypes.func.isRequired,
+  review: PropTypes.shape({
+    _id: PropTypes.string,
+    text: PropTypes.string,
+    rating: PropTypes.number,
+  }),
+  onReviewSaved: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   onClose: PropTypes.func,
+  isEditing: PropTypes.bool,
 };
 
-export default AddReviewForm;
+export default ReviewForm;

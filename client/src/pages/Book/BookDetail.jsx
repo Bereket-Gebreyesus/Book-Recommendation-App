@@ -5,7 +5,7 @@ import { Container, Spinner, Alert, Row, Col, Modal } from "react-bootstrap";
 import BookImage from "../../components/Book/BookImage";
 import BookInfo from "../../components/Book/BookInfo";
 import Reviews from "../../components/Review/Reviews";
-import AddReviewForm from "../../components/Review/AddReviewForm";
+import ReviewForm from "../../components/Review/ReviewForm";
 import RatingStats from "../../components/RatingStats";
 import FavoriteButton from "../../components/favorite_button/FavoriteButton";
 import axios from "axios";
@@ -24,6 +24,7 @@ const BookDetail = () => {
   const [reviewsPerPage] = useState(5);
   const [totalReviews, setTotalReviews] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
 
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     `/books/${id}`,
@@ -118,9 +119,19 @@ const BookDetail = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleReviewAdded = () => {
-    // Fetch the updated reviews list from the server
-    performFetch();
+  const handleReviewSaved = (updatedBook) => {
+    setBook(updatedBook); // This sets the entire book, including updated reviews
+    performFetch(); // Refreshes the data from the server
+  };
+
+  const handleAddReviewClick = () => {
+    setEditingReview(null);
+    setShowModal(true);
+  };
+
+  const handleEditReviewClick = (review) => {
+    setEditingReview(review);
+    setShowModal(true);
   };
 
   let content = null;
@@ -165,7 +176,8 @@ const BookDetail = () => {
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
-          onAddReviewClick={() => setShowModal(true)}
+          onAddReviewClick={handleAddReviewClick}
+          onEditReviewClick={handleEditReviewClick}
           userId={userId}
           setReviews={setReviews}
           id={id}
@@ -192,10 +204,12 @@ const BookDetail = () => {
           <Modal.Title>Add Review</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <AddReviewForm
+          <ReviewForm
             id={id}
+            review={editingReview}
             userId={userId}
-            onReviewAdded={handleReviewAdded}
+            onReviewSaved={handleReviewSaved}
+            isEditing={!!editingReview}
             onClose={() => setShowModal(false)}
           />
         </Modal.Body>
