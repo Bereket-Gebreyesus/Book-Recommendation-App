@@ -13,6 +13,7 @@ import useFetch from "../../hooks/useFetch";
 import StarRating from "../StarRating";
 import defaultCover from "../../assets/default-cover.jpeg";
 import handleShowMore from "../../util/handleShowMore.js";
+import { selectSortingCriteria } from "../../util/selectSortingCriteria.js";
 
 import "./BookList.css";
 
@@ -41,18 +42,6 @@ const BookList = () => {
     performFetch();
   }, [currentPage, sortCriteria]);
 
-  const handleSelect = (eventKey) => {
-    // If the selected sort criteria is the same as the current one, do nothing
-    if (eventKey === sortCriteria) return;
-
-    setSortCriteria(eventKey);
-    setBooks([]);
-    setCurrentPage(1);
-
-    // Update the dropdown title
-    setDropdownTitle(eventKey.charAt(0).toUpperCase() + eventKey.slice(1));
-  };
-
   return (
     <div className="container">
       <h4 className="mb-4">Recommendations List</h4>
@@ -62,7 +51,15 @@ const BookList = () => {
         <DropdownButton
           id="dropdown-basic-button"
           title={dropdownTitle}
-          onSelect={handleSelect}
+          onSelect={(eventKey) =>
+            selectSortingCriteria(
+              eventKey,
+              sortCriteria,
+              setSortCriteria,
+              setBooks,
+              setDropdownTitle,
+            )
+          }
         >
           <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
           <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>

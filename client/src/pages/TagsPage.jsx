@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import defaultCover from "../assets/default-cover.jpeg";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Dropdown, DropdownButton } from "react-bootstrap";
+import { selectSortingCriteria } from "../util/selectSortingCriteria.js";
 
 const TagsPage = () => {
+  const [books, setBooks] = useState([]);
   const [tags, setTags] = useState([]);
   const [tagsMap, setTagsMap] = useState({});
   const [selectedTag, setSelectedTag] = useState("");
-  const [books, setBooks] = useState([]);
+  const [sortCriteria, setSortCriteria] = useState("rating");
+  const [dropdownTitle, setDropdownTitle] = useState("Sort By");
 
   // Fetching tags from the server
   const { performFetch: fetchTags } = useFetch("/tags", (response) => {
@@ -37,15 +40,18 @@ const TagsPage = () => {
     error,
     performFetch: fetchBooksByTag,
     // encodeURIComponent is for encode such symbols like "/" in the URL
-  } = useFetch(`/books/tag/${encodeURIComponent(selectedTag)}`, (response) => {
-    setBooks(response.books);
-  });
+  } = useFetch(
+    `/books/tag/${encodeURIComponent(selectedTag)}?sort=${sortCriteria}`,
+    (response) => {
+      setBooks(response.books);
+    },
+  );
 
   useEffect(() => {
     if (selectedTag) {
       fetchBooksByTag();
     }
-  }, [selectedTag]);
+  }, [selectedTag, sortCriteria]);
 
   // Update the selected tag when a user selects a tag
   const handleTagChange = (e) => {
@@ -65,6 +71,27 @@ const TagsPage = () => {
           </option>
         ))}
       </select>
+
+      <div className="d-flex justify-content-end mb-4">
+        {/* Dropdow menu for selecting sorting method */}
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={dropdownTitle}
+          onSelect={(eventKey) =>
+            selectSortingCriteria(
+              eventKey,
+              sortCriteria,
+              setSortCriteria,
+              setBooks,
+              setDropdownTitle,
+            )
+          }
+        >
+          <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
+          <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>
+          <Dropdown.Item eventKey="author">Author</Dropdown.Item>
+        </DropdownButton>
+      </div>
 
       {selectedTag ? (
         // Error message

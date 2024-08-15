@@ -286,7 +286,8 @@ export async function searchBooks(req, res) {
 
 // Gets sorting books by tags
 export const getBookListByTag = async (req, res) => {
-  const { tagName, sort = "rating" } = req.params;
+  const { tagName } = req.params;
+  const { sort = "rating" } = req.query;
 
   try {
     const tag = await Tag.findOne({ name: tagName });

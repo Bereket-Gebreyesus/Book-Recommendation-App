@@ -4,6 +4,7 @@ import useFetch from "../hooks/useFetch";
 import defaultCover from "../assets/default-cover.jpeg";
 import handleShowMore from "../util/handleShowMore.js";
 import { Spinner, Dropdown, DropdownButton } from "react-bootstrap";
+import { selectSortingCriteria } from "../util/selectSortingCriteria.js";
 
 import "./Search.css";
 
@@ -70,18 +71,6 @@ const Search = () => {
     }
   }, [currentPage]);
 
-  const handleSelect = (eventKey) => {
-    // If the selected sort criteria is the same as the current one, do nothing
-    if (eventKey === sortCriteria) return;
-
-    setSortCriteria(eventKey);
-    setBooks([]);
-    setCurrentPage(1);
-
-    // Update the dropdown title
-    setDropdownTitle(eventKey.charAt(0).toUpperCase() + eventKey.slice(1));
-  };
-
   if (isLoading && currentPage === 1) {
     return (
       <div className="container">
@@ -107,7 +96,15 @@ const Search = () => {
         <DropdownButton
           id="dropdown-basic-button"
           title={dropdownTitle}
-          onSelect={handleSelect}
+          onSelect={(eventKey) =>
+            selectSortingCriteria(
+              eventKey,
+              sortCriteria,
+              setSortCriteria,
+              setBooks,
+              setDropdownTitle,
+            )
+          }
         >
           <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
           <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>
