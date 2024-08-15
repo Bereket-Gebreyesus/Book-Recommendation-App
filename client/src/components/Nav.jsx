@@ -75,6 +75,7 @@ const NavBar = () => {
               data-testid={TEST_ID.logoutButton}
               onClick={handleLogout}
               className="log-out"
+              title="Logout"
             >
               <BsBoxArrowRight />
             </Button>
