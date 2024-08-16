@@ -13,3 +13,9 @@
 .read-more-btn {
   color: #00ff00;
 }
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}

@@ -202,7 +202,9 @@ const BookDetail = () => {
         }}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add Review</Modal.Title>
+          <Modal.Title>
+            {editingReview ? "Edit Review" : "Add Review"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ReviewForm

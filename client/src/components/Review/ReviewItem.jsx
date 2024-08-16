@@ -92,11 +92,10 @@ const ReviewItem = ({
             <small>{new Date(review.created_at).toLocaleDateString()}</small>
           </div>
           {isEditable && (
-            <div className="ml-auto">
+            <div className="button-container">
               <Button
-                variant="secondary"
+                variant="primary"
                 onClick={() => onEditReviewClick(review)}
-                className="mr-2"
               >
                 Edit
               </Button>
