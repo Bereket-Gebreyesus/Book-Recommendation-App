@@ -13,7 +13,7 @@ const ReviewForm = ({
   onClose,
   isEditing = false,
 }) => {
-  const [rating, setRating] = useState(review?.rating || 0);
+  const [rating, setRating] = useState(isEditing ? review?.rating || 0 : 1);
   const [text, setText] = useState(review?.text || "");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -31,7 +31,7 @@ const ReviewForm = ({
       if (typeof onClose === "function") {
         setTimeout(() => {
           onClose();
-        }, 3000);
+        }, 1500);
       }
     } else {
       setError(response.message);
@@ -43,7 +43,7 @@ const ReviewForm = ({
       const timer = setTimeout(() => {
         setError("");
         setSuccess("");
-      }, 3000);
+      }, 1500);
 
       return () => clearTimeout(timer);
     }

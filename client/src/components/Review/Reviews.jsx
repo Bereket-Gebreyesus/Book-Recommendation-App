@@ -14,15 +14,11 @@ const Reviews = ({
   onPageChange,
   onAddReviewClick,
   onEditReviewClick,
+  onReviewDeleted,
   userId,
-  setReviews,
   id,
 }) => {
   const hasUserReviewed = reviews.some((review) => review.ownerId === userId);
-
-  const onReviewDeleted = (reviewId) => {
-    setReviews(reviews.filter((review) => review._id !== reviewId));
-  };
 
   return (
     <div style={{ marginTop: "20px" }}>
@@ -94,6 +90,7 @@ Reviews.propTypes = {
   onPageChange: PropTypes.func.isRequired,
   onAddReviewClick: PropTypes.func.isRequired,
   onEditReviewClick: PropTypes.func.isRequired,
+  onReviewDeleted: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   setReviews: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,

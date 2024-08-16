@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { ListGroup, Image, Button, Alert, Spinner } from "react-bootstrap";
+import {
+  ListGroup,
+  Image,
+  Button,
+  Alert,
+  Spinner,
+  Modal,
+} from "react-bootstrap";
 import StarRating from "../StarRating";
 import "./ReviewItem.css";
 import defaultProfileImage from "../../assets/default-profile.jpg";
@@ -18,12 +25,21 @@ const ReviewItem = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { performFetch, isLoading: isDeleting } = useFetch(
+  const { performFetch } = useFetch(
     `/books/${id}/reviews/${reviewId}/delete`,
     (response) => {
       if (response.success) {
-        onReviewDeleted(reviewId);
+        setSuccessMessage("Review deleted successfully");
+        setDeleteError("");
+        // Close the modal after a short delay to show confrimation message
+        setTimeout(() => {
+          onReviewDeleted(reviewId);
+          setShowConfirm(false);
+        }, 1000);
       } else {
         setDeleteError("Failed to delete the review");
       }
@@ -35,11 +51,22 @@ const ReviewItem = ({
   };
 
   const handleDelete = () => {
+    setIsDeleting(true);
     performFetch({
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ownerId: userId }),
     });
+  };
+
+  const handleShowConfirm = () => {
+    setShowConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setShowConfirm(false);
+    setSuccessMessage("");
+    setDeleteError("");
   };
 
   const displayText = isExpanded
@@ -49,29 +76,90 @@ const ReviewItem = ({
       : review.text;
 
   return (
-    <ListGroup.Item>
-      <div className="review-header">
-        <Image
-          src={reviewer?.profileImage || defaultProfileImage}
-          roundedCircle
-          className="reviewer-img"
-        />
-        <div>
-          <strong>{reviewer?.name || "Unknown"}</strong>
+    <>
+      <ListGroup.Item>
+        <div className="review-header">
+          <Image
+            src={reviewer?.profileImage || defaultProfileImage}
+            roundedCircle
+            className="reviewer-img"
+          />
           <div>
-            <StarRating rating={review.rating} />
+            <strong>{reviewer?.name || "Unknown"}</strong>
+            <div>
+              <StarRating rating={review.rating} />
+            </div>
+            <small>{new Date(review.created_at).toLocaleDateString()}</small>
           </div>
-          <small>{new Date(review.created_at).toLocaleDateString()}</small>
+          {isEditable && (
+            <div className="ml-auto">
+              <Button
+                variant="secondary"
+                onClick={() => onEditReviewClick(review)}
+                className="mr-2"
+              >
+                Edit
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleShowConfirm}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  "Delete"
+                )}
+              </Button>
+            </div>
+          )}
         </div>
-        {isEditable && (
-          <div className="ml-auto">
-            <Button
-              variant="secondary"
-              onClick={() => onEditReviewClick(review)}
-              className="mr-2"
-            >
-              Edit
-            </Button>
+        <p>{displayText}</p>
+        {review.text && review.text.length > 500 && (
+          <Button
+            variant="link"
+            onClick={toggleReadMore}
+            className="read-more-btn"
+          >
+            {isExpanded ? "Read Less" : "Read More"}
+          </Button>
+        )}
+      </ListGroup.Item>
+
+      <Modal
+        show={showConfirm}
+        onHide={handleCloseConfirm}
+        backdropClassName="custom-modal-backdrop"
+        style={{
+          backdropFilter: "blur(2px)",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {successMessage ? (
+            <Alert variant="success">{successMessage}</Alert>
+          ) : (
+            <>
+              Are you sure you want to delete this review? This action cannot be
+              undone.
+              {deleteError && <Alert variant="danger">{deleteError}</Alert>}
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseConfirm}>
+            Cancel
+          </Button>
+          {!successMessage && (
             <Button
               variant="danger"
               onClick={handleDelete}
@@ -89,21 +177,10 @@ const ReviewItem = ({
                 "Delete"
               )}
             </Button>
-          </div>
-        )}
-      </div>
-      {deleteError && <Alert variant="danger">{deleteError}</Alert>}
-      <p>{displayText}</p>
-      {review.text && review.text.length > 500 && (
-        <Button
-          variant="link"
-          onClick={toggleReadMore}
-          className="read-more-btn"
-        >
-          {isExpanded ? "Read Less" : "Read More"}
-        </Button>
-      )}
-    </ListGroup.Item>
+          )}
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

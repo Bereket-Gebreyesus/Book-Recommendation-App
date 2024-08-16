@@ -120,8 +120,8 @@ const BookDetail = () => {
   };
 
   const handleReviewSaved = (updatedBook) => {
-    setBook(updatedBook); // This sets the entire book, including updated reviews
-    performFetch(); // Refreshes the data from the server
+    setBook(updatedBook);
+    performFetch();
   };
 
   const handleAddReviewClick = () => {
@@ -180,6 +180,7 @@ const BookDetail = () => {
           onEditReviewClick={handleEditReviewClick}
           userId={userId}
           setReviews={setReviews}
+          onReviewDeleted={handleReviewSaved}
           id={id}
         />
       </Container>
@@ -196,7 +197,7 @@ const BookDetail = () => {
         }}
         backdropClassName="custom-modal-backdrop"
         style={{
-          backdropFilter: "blur(5px)",
+          backdropFilter: "blur(2px)",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
