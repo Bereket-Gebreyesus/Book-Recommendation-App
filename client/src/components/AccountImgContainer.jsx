@@ -15,7 +15,6 @@ const AccountImgContainer = () => {
         roundedCircle
         className="account-img"
       />
-      .
     </div>
   );
 };

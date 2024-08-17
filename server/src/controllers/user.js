@@ -100,9 +100,7 @@ export const loginUser = async (req, res) => {
       return;
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
     res.status(200).json({ success: true, token: token });
   } catch (error) {
@@ -132,9 +130,7 @@ export const googleSignIn = async (req, res) => {
       await user.save();
     }
 
-    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
     res.status(200).json({ success: true, token: jwtToken });
   } catch (error) {
@@ -164,9 +160,7 @@ export const githubSignIn = async (req, res) => {
       await user.save();
     }
 
-    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
     res.status(200).json({ success: true, token: jwtToken });
   } catch (error) {

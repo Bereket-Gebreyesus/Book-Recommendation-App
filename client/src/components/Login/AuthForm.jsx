@@ -61,10 +61,7 @@ const AuthForm = ({ showName }) => {
       setPassword("");
       navigate("/");
     } catch (error) {
-      setMessage(
-        "Registration failed: " +
-          (error.response?.data?.message || error.message),
-      );
+      setMessage("Login failed: " + error.response.data.msg);
     } finally {
       setIsLoading(false);
     }
