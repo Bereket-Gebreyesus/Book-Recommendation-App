@@ -5,7 +5,7 @@ import { Container, Spinner, Alert, Row, Col, Modal } from "react-bootstrap";
 import BookImage from "../../components/Book/BookImage";
 import BookInfo from "../../components/Book/BookInfo";
 import Reviews from "../../components/Review/Reviews";
-import AddReviewForm from "../../components/Review/AddReviewForm";
+import ReviewForm from "../../components/Review/ReviewForm";
 import RatingStats from "../../components/RatingStats";
 import FavoriteButton from "../../components/favorite_button/FavoriteButton";
 import axios from "axios";
@@ -24,6 +24,7 @@ const BookDetail = () => {
   const [reviewsPerPage] = useState(5);
   const [totalReviews, setTotalReviews] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
 
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     `/books/${id}`,
@@ -86,11 +87,21 @@ const BookDetail = () => {
 
   // Sort reviews to place user's review at the top and newest reviews below
   const sortReviews = (reviews) => {
+    if (!reviews || !Array.isArray(reviews)) return [];
     return reviews.sort((a, b) => {
       if (a.ownerId === userId) return -1;
       if (b.ownerId === userId) return 1;
       return new Date(b.created_at) - new Date(a.created_at);
     });
+  };
+
+  // update reviews
+  const setReviews = (updatedReviews) => {
+    setBook((prevBook) => {
+      if (!prevBook) return prevBook;
+      return { ...prevBook, reviews: updatedReviews };
+    });
+    setTotalReviews(updatedReviews.length);
   };
 
   // Calculate pagination slice
@@ -108,9 +119,19 @@ const BookDetail = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleReviewAdded = () => {
-    // Fetch the updated reviews list from the server
+  const handleReviewSaved = (updatedBook) => {
+    setBook(updatedBook);
     performFetch();
+  };
+
+  const handleAddReviewClick = () => {
+    setEditingReview(null);
+    setShowModal(true);
+  };
+
+  const handleEditReviewClick = (review) => {
+    setEditingReview(review);
+    setShowModal(true);
   };
 
   let content = null;
@@ -155,8 +176,12 @@ const BookDetail = () => {
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
-          onAddReviewClick={() => setShowModal(true)}
+          onAddReviewClick={handleAddReviewClick}
+          onEditReviewClick={handleEditReviewClick}
           userId={userId}
+          setReviews={setReviews}
+          onReviewDeleted={handleReviewSaved}
+          id={id}
         />
       </Container>
     );
@@ -172,18 +197,22 @@ const BookDetail = () => {
         }}
         backdropClassName="custom-modal-backdrop"
         style={{
-          backdropFilter: "blur(5px)",
+          backdropFilter: "blur(2px)",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add Review</Modal.Title>
+          <Modal.Title>
+            {editingReview ? "Edit Review" : "Add Review"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <AddReviewForm
+          <ReviewForm
             id={id}
+            review={editingReview}
             userId={userId}
-            onReviewAdded={handleReviewAdded}
+            onReviewSaved={handleReviewSaved}
+            isEditing={!!editingReview}
             onClose={() => setShowModal(false)}
           />
         </Modal.Body>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, Button, Modal } from "react-bootstrap";
 import AuthForm from "../components/Login/AuthForm";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "../assets/logo.png";
+import logoBlack from "../assets/logoBlack.png";
 import backgroundImage from "../assets/backroundImage.png";
 
 const WelcomePage = () => {
@@ -41,7 +41,7 @@ const WelcomePage = () => {
                     className="d-flex align-items-center justify-content-center justify-content-md-start"
                   >
                     <img
-                      src={logo}
+                      src={logoBlack}
                       alt="Logo"
                       className="logo responsive-logo"
                     />
