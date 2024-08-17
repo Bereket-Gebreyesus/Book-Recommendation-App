@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Spinner,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
 import useFetch from "../../hooks/useFetch";
+import StarRating from "../StarRating";
 import defaultCover from "../../assets/default-cover.jpeg";
 import handleShowMore from "../../util/handleShowMore.js";
-import { Spinner } from "react-bootstrap";
+import { selectSortingCriteria } from "../../util/selectSortingCriteria.js";
 
 import "./BookList.css";
 
@@ -11,15 +21,14 @@ const BookList = () => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortCriteria, setSortCriteria] = useState("rating");
+  const [dropdownTitle, setDropdownTitle] = useState("Sort By");
 
-  // Fetching books from the server
   const { isLoading, error, performFetch } = useFetch(
-    `/books/all?page=${currentPage}`,
+    `/books/all?page=${currentPage}&sort=${sortCriteria}`,
     (data) => {
       setBooks((prevBooks) => {
         const updatedBooks = [...prevBooks, ...data.books];
-
-        // Returns only unique books by filtering out duplicates
         const uniqueBooks = Array.from(
           new Set(updatedBooks.map((book) => book._id)),
         ).map((id) => updatedBooks.find((book) => book._id === id));
@@ -31,68 +40,90 @@ const BookList = () => {
 
   useEffect(() => {
     performFetch();
-  }, [currentPage]);
+  }, [currentPage, sortCriteria]);
 
   return (
     <div className="container">
-      <h4 className="mb-4">Recommendations list</h4>
+      <h4 className="mb-4">Recommendations List</h4>
 
-      <ul className="list-unstyled">
+      <div className="d-flex justify-content-end mb-4">
+        {/* Dropdow menu for selecting sorting method */}
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={dropdownTitle}
+          onSelect={(eventKey) =>
+            selectSortingCriteria(
+              eventKey,
+              sortCriteria,
+              setSortCriteria,
+              setBooks,
+              setDropdownTitle,
+            )
+          }
+        >
+          <Dropdown.Item eventKey="rating">Rating (default)</Dropdown.Item>
+          <Dropdown.Item eventKey="date">Uploaded</Dropdown.Item>
+          <Dropdown.Item eventKey="author">Author</Dropdown.Item>
+        </DropdownButton>
+      </div>
+
+      <Row>
         {books.map((book) => (
-          <li key={book._id} className="border rounded p-3 mb-4 shadow-sm">
-            <Link to={`/books/${book._id}`} className="text-decoration-none">
-              <h3 className="h5 text-dark fw-bold">{book.title}</h3>
-            </Link>
-
-            <img
-              className="d-block my-3 rounded book-cover-img"
-              src={book.image || defaultCover}
-              alt={book.title}
-            />
-
-            <p className="text-muted mb-1">
-              by {book.authors.join(", ") || "Author is unknown"}
-            </p>
-
-            <p className="text-muted mb-1">
-              ISBN: {book.isbn || "ISBN is unknown"}
-            </p>
-
-            <p className="text-muted mb-1">
-              Publisher: {book.publisher || "Publisher is unknown"}
-            </p>
-
-            <p className="text-muted mb-1">
-              Description: {book.description || "No description"}
-            </p>
-
-            <p className="text-muted mb-1">
-              Rating: {book.averageRating || "No rating"}
-            </p>
-          </li>
+          <Col key={book._id} xs={12} sm={6} md={4} lg={3}>
+            <Card className="mb-3 shadow-md h-90 book-card">
+              <Link to={`/books/${book._id}`}>
+                <Card.Img
+                  variant="top"
+                  src={book.image || defaultCover}
+                  alt={book.title}
+                  className="book-cover-img"
+                />
+              </Link>
+              <Card.Body className="d-flex flex-column h-100">
+                <Card.Title className="book-title">{book.title}</Card.Title>
+                <Card.Text className="text-muted book-authors">
+                  Author:{" "}
+                  {book.authors.length > 0
+                    ? book.authors.join(", ")
+                    : "Unknown"}
+                </Card.Text>
+                <Card.Text className="text-muted book-publisher">
+                  Publisher: {book.publisher || "Unknown"}
+                </Card.Text>
+                <div className="d-flex align-items-center">
+                  <StarRating rating={book.averageRating || 0} />
+                  <span className="ms-2 rating-number">
+                    {book.averageRating ? book.averageRating.toFixed(1) : "N/A"}
+                  </span>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
-      </ul>
+      </Row>
 
       {isLoading && (
-        <p className="text-center">
+        <div className="text-center">
           <Spinner className="spinner" animation="border" />
-        </p>
+        </div>
       )}
 
       {error && (
-        <p className="text-danger text-center">
+        <div className="text-danger text-center">
           Error: {error.message || "An unexpected error occurred"}
-        </p>
+        </div>
       )}
 
       {currentPage < totalPages && (
-        <div
-          className="text-center cursor-pointer"
-          onClick={() =>
-            handleShowMore(currentPage, totalPages, setCurrentPage)
-          }
-        >
-          Show more...
+        <div className="text-center mt-4">
+          <Button
+            variant="primary"
+            onClick={() =>
+              handleShowMore(currentPage, totalPages, setCurrentPage)
+            }
+          >
+            Show more...
+          </Button>
         </div>
       )}
     </div>

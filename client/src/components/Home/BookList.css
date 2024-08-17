@@ -3,5 +3,63 @@
 }
 
 .book-cover-img {
-  width: 150px;
+  height: 250px;
+  object-fit: contain;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+.book-title {
+  font-size: 1rem;
+}
+
+.book-authors,
+.book-publisher {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  min-height: 3.6em;
+  max-height: 3.6em;
+  -webkit-box-orient: vertical;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.card-text {
+  margin-bottom: 0.5rem;
+}
+
+.book-card {
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    opacity 0.5s ease-in-out;
+}
+
+.book-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.book-authors,
+.card-text {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating-number {
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.book-card {
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
 }
