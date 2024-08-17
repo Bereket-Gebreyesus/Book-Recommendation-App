@@ -5,6 +5,7 @@ const reviewSchema = new mongoose.Schema({
   rating: { type: Number, min: 1, max: 5 },
   text: String,
   created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
 const bookSchema = new mongoose.Schema(

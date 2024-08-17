@@ -10,6 +10,8 @@ import {
   getBookReviews,
   addReview,
   getBookListByTag,
+  deleteReview,
+  editReview,
 } from "../controllers/book.js";
 
 // Now you can use these functions here
@@ -26,6 +28,8 @@ bookRouter.get("/tag/:tagName", getBookListByTag);
 bookRouter.get("/:id", getBookById);
 bookRouter.get("/:id/reviews", getBookReviews);
 bookRouter.post("/:id/reviews/add", addReview);
+bookRouter.delete("/:id/reviews/:reviewId/delete", deleteReview);
+bookRouter.put("/:id/reviews/:reviewId/edit", editReview);
 bookRouter.get("/find/isbn", checkISBNUniqueness);
 
 export default bookRouter;

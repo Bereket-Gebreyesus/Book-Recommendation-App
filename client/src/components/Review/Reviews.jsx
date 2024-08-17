@@ -13,7 +13,10 @@ const Reviews = ({
   currentPage,
   onPageChange,
   onAddReviewClick,
+  onEditReviewClick,
+  onReviewDeleted,
   userId,
+  id,
 }) => {
   const hasUserReviewed = reviews.some((review) => review.ownerId === userId);
 
@@ -25,8 +28,14 @@ const Reviews = ({
           paginatedReviews.map((review) => (
             <ReviewItem
               key={review._id}
+              reviewId={review._id}
               review={review}
               reviewer={reviewers[review.ownerId] || {}}
+              isEditable={review.ownerId === userId}
+              onEditReviewClick={onEditReviewClick}
+              userId={userId}
+              id={id}
+              onReviewDeleted={onReviewDeleted}
             />
           ))
         ) : (
@@ -80,7 +89,11 @@ Reviews.propTypes = {
   currentPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   onAddReviewClick: PropTypes.func.isRequired,
+  onEditReviewClick: PropTypes.func.isRequired,
+  onReviewDeleted: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
+  setReviews: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default Reviews;
