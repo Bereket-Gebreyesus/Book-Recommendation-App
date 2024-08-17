@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { BsBoxArrowUp } from "react-icons/bs";
+import { HiArrowUpTray } from "react-icons/hi2";
 
 const UploadButton = () => {
   const navigate = useNavigate();
@@ -30,15 +30,17 @@ const UploadButton = () => {
           onClick={handleUpload}
           title="Upload a Book"
         >
-          <BsBoxArrowUp />
+          <HiArrowUpTray />
         </Button>
       ) : (
         <Button
-          className="upload-button"
-          variant="secondary-upload"
+          variant="outline-light"
           onClick={handleUpload}
+          title="Upload a Book"
         >
-          Upload a Book
+          <span>
+            <HiArrowUpTray /> Upload
+          </span>
         </Button>
       )}
     </div>

@@ -17,7 +17,14 @@
 
 .user-panel-container {
   display: flex;
+
   align-items: center;
+
+  margin-left: 15px;
+
+  gap: 10px;
+
+  padding: 10px 0px 10px 0px;
 }
 
 @media (max-width: 1024px) {
@@ -55,14 +62,5 @@
 
   .form-control {
     margin-bottom: 10px;
-  }
-
-  .user-panel-container {
-    flex-direction: column;
-  }
-
-  .user-actions-container {
-    display: flex;
-    flex-direction: column;
   }
 }
