@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UserActions from "../components/UserActions";
 import { useAuth } from "../hooks/AuthContext";
 import { BsBoxArrowRight } from "react-icons/bs";
+import logo from "../assets/logo.png";
 
 import TEST_ID from "./Nav.testid";
 import "./Nav.css";
@@ -35,7 +36,9 @@ const NavBar = () => {
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
-      <Navbar.Brand className="navbar-brand m-3">BookRecs</Navbar.Brand>
+      <Navbar.Brand className="navbar-brand m-3">
+        <img src={logo} alt="BookRecs Logo" style={{ height: "60px" }} />
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
@@ -82,7 +85,7 @@ const NavBar = () => {
 
           {userName && (
             <Navbar.Text className="welcome-element me-3">
-              Welcome: <span data-testid={TEST_ID.userName}>{userName}</span>
+              <span data-testid={TEST_ID.userName}>{userName}</span>
             </Navbar.Text>
           )}
         </div>
