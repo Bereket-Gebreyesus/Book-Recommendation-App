@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { HiArrowUpTray } from "react-icons/hi2";
 
 const UploadButton = () => {
+  const tabletWidth = 1024;
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 550);
+
+  const [isTablet, setIsTablet] = useState(window.innerWidth < tabletWidth);
 
   const handleUpload = () => {
     navigate("/book/upload");
@@ -13,7 +15,7 @@ const UploadButton = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsTablet(window.innerWidth < tabletWidth);
     };
 
     window.addEventListener("resize", handleResize);
@@ -24,7 +26,7 @@ const UploadButton = () => {
 
   return (
     <div>
-      {isMobile ? (
+      {isTablet ? (
         <Button
           variant="outline-light"
           onClick={handleUpload}
@@ -39,7 +41,7 @@ const UploadButton = () => {
           title="Upload a Book"
         >
           <span>
-            <HiArrowUpTray /> Upload
+            <HiArrowUpTray /> Upload book
           </span>
         </Button>
       )}

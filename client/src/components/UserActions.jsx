@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import UploadButton from "./UploadButton";
 import AccountImgContainer from "./AccountImgContainer";
 import { LinkContainer } from "react-router-bootstrap";
-import { Nav } from "react-bootstrap";
-import { TbUserSquare } from "react-icons/tb";
+import { Nav, Button } from "react-bootstrap";
+import { FaRegUser } from "react-icons/fa";
 
 const UserActions = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+  const tabletWidth = 1024;
+
+  const [isTablet, setIsTablet] = useState(window.innerWidth <= tabletWidth);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
+      setIsTablet(window.innerWidth <= tabletWidth);
     };
 
     window.addEventListener("resize", handleResize);
@@ -25,8 +27,10 @@ const UserActions = () => {
       <div className="account-image-container">
         <LinkContainer to="/user/profile">
           <Nav.Link>
-            {isMobile ? (
-              <TbUserSquare className="user-icon-mobile" />
+            {isTablet ? (
+              <Button variant="outline-light" title="You account">
+                <FaRegUser className="user-icon-mobile" />
+              </Button>
             ) : (
               <AccountImgContainer />
             )}
