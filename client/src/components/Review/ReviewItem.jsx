@@ -69,6 +69,10 @@ const ReviewItem = ({
     setDeleteError("");
   };
 
+  const displayDate = new Date(
+    review.updated_at || review.created_at,
+  ).toLocaleDateString();
+
   const displayText = isExpanded
     ? review.text
     : review.text && review.text.length > 500
@@ -89,7 +93,7 @@ const ReviewItem = ({
             <div>
               <StarRating rating={review.rating} />
             </div>
-            <small>{new Date(review.created_at).toLocaleDateString()}</small>
+            <small>{displayDate}</small>
           </div>
           {isEditable && (
             <div className="button-container">
@@ -190,6 +194,7 @@ ReviewItem.propTypes = {
     text: PropTypes.string,
     rating: PropTypes.number.isRequired,
     created_at: PropTypes.string.isRequired,
+    updated_at: PropTypes.string,
     ownerId: PropTypes.string.isRequired,
   }).isRequired,
   reviewer: PropTypes.shape({
