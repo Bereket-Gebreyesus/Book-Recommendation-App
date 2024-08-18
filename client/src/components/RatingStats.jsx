@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import StarRating from "./StarRating";
+import "./RatingStats.css";
 
 const RatingStats = ({ averageRating, distribution, totalReviews }) => {
   const renderProgressBar = (star) => {
@@ -24,10 +25,17 @@ const RatingStats = ({ averageRating, distribution, totalReviews }) => {
   };
 
   return (
-    <div className="mb-4 mt-4" style={{ width: "70%" }}>
-      <h4>Rating Stats</h4>
-      <div className="mb-2">
-        <strong>Overall Rating:</strong> {averageRating}{" "}
+    <div className="rating-stats-container mb-4 mt-4">
+      <div className="header-container">
+        <div className="header-content d-flex align-items-center justify-content-between">
+          <h3>Rating Stats</h3>
+          <div className="total-reviews">{totalReviews} Reviews</div>
+        </div>
+      </div>
+      <div className="overall-rating-container mb-2">
+        <div className="overall-rating">
+          <h5>Overall Rating </h5>
+        </div>
         <StarRating rating={parseFloat(averageRating)} />
       </div>
       {Array.from({ length: 5 }, (_, i) => 5 - i).map(renderProgressBar)}

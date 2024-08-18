@@ -1,0 +1,40 @@
+.rating-stats-container {
+  width: 70%;
+}
+
+.header-container {
+  margin-bottom: 20px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-reviews {
+  font-size: 1.5em;
+  /* Adjust font size as needed */
+  text-align: right;
+}
+
+.overall-rating-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.overall-rating {
+  margin-right: 10px;
+}
+
+.star-rating {
+  font-size: 1.5em;
+  /* Adjust the size of stars */
+}
+
+@media (max-width: 768px) {
+  .rating-stats-container {
+    width: 100%;
+  }
+}
