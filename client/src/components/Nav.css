@@ -64,3 +64,20 @@
     margin-right: 15px;
   }
 }
+
+.search-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #495057;
+}
+
+.search-form .form-control {
+  padding-right: 30px;
+}

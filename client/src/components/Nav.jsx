@@ -4,7 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import UserActions from "../components/UserActions";
 import { useAuth } from "../hooks/AuthContext";
-import { BsBoxArrowRight } from "react-icons/bs";
+import { BsBoxArrowRight, BsSearch } from "react-icons/bs";
 import logo from "../assets/logo.png";
 
 import TEST_ID from "./Nav.testid";
@@ -53,21 +53,20 @@ const NavBar = () => {
           </div>
 
           <Form className="search-form d-flex" onSubmit={handleSearchSubmit}>
-            <FormControl
-              type="search"
-              placeholder="Enter title, author or genre"
-              className="me-2"
-              aria-label="Search"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            <Button
-              className="search-button"
-              variant="outline-success"
-              type="submit"
-            >
-              Search
-            </Button>
+            <div className="search-input-container position-relative">
+              <FormControl
+                type="search"
+                placeholder="Enter title, author or genre"
+                className="me-2"
+                aria-label="Search"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              <BsSearch
+                className="search-icon position-absolute"
+                onClick={handleSearchSubmit}
+              />
+            </div>
           </Form>
         </Nav>
         <div className="user-panel-container">
