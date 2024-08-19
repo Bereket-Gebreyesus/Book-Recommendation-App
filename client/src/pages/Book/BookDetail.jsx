@@ -162,6 +162,7 @@ const BookDetail = () => {
             <FavoriteButton userId={userId} bookId={book._id} />
           </Col>
         </Row>
+        <div className="border-top my-4"></div>
         {averageRating !== "N/A" && (
           <RatingStats
             averageRating={averageRating}

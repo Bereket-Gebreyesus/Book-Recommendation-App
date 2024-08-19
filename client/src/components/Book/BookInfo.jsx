@@ -8,6 +8,14 @@ const BookInfo = ({ book, tags }) => {
     : "N/A";
 
   const authors = book.authors.length > 0 ? book.authors.join(", ") : "Unknown";
+  const publisher = book.publisher || "Unknown";
+  const publishedDate = book.publishedDate
+    ? new Date(book.publishedDate).toDateString()
+    : "N/A";
+  const bookTags =
+    book.tags.length > 0
+      ? book.tags.map((tagId) => tags[tagId] || "N/A").join(", ")
+      : "N/A";
 
   return (
     <div>
@@ -16,8 +24,9 @@ const BookInfo = ({ book, tags }) => {
       </h1>
       <h4 style={{ color: "#888" }}>{authors}</h4>
       {averageRating !== "N/A" && (
-        <div style={{ marginBottom: "1.0rem" }}>
-          <strong>Average Rating:</strong> {averageRating}{" "}
+        <div style={{ marginBottom: "1rem" }}>
+          <strong>Average Rating: </strong>
+          <span>{averageRating}</span>
           <div style={{ marginTop: "0.5rem" }}>
             <StarRating rating={parseFloat(averageRating)} />
           </div>
@@ -28,15 +37,13 @@ const BookInfo = ({ book, tags }) => {
         <strong>ISBN:</strong> {book.isbn}
       </p>
       <p>
-        <strong>Published Date:</strong>{" "}
-        {new Date(book.publishedDate).toDateString()}
+        <strong>Published Date:</strong> {publishedDate}
       </p>
       <p>
-        <strong>Publisher:</strong> {book.publisher}
+        <strong>Publisher:</strong> {publisher}
       </p>
       <div>
-        <strong>Tags:</strong>{" "}
-        {book.tags.map((tagId) => tags[tagId] || "No tags").join(", ")}
+        <strong>Tags:</strong> {bookTags}
       </div>
     </div>
   );
@@ -49,8 +56,8 @@ BookInfo.propTypes = {
     averageRating: PropTypes.number,
     description: PropTypes.string.isRequired,
     isbn: PropTypes.string.isRequired,
-    publishedDate: PropTypes.string.isRequired,
-    publisher: PropTypes.string.isRequired,
+    publishedDate: PropTypes.string,
+    publisher: PropTypes.string,
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   tags: PropTypes.objectOf(PropTypes.string).isRequired,
