@@ -42,8 +42,7 @@
 .icon-container {
   display: flex;
   align-items: center;
-  margin: 0 20px;
-  padding: 15px 0;
+  padding: 5px 0;
 }
 
 .icon-container:not(:last-child) {
@@ -55,8 +54,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.8rem;
-  height: 3.8rem;
+  width: 2.8rem;
+  height: 2.8rem;
   margin-right: 18px;
   border-radius: 6px;
   padding: 10px;
@@ -91,9 +90,14 @@
 }
 
 .icon-text .number {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: bold;
   margin: 0;
+}
+
+.card-body {
+  height: 200px;
+  padding: 10px 20px !important;
 }
 
 @media (max-width: 768px) {
@@ -108,6 +112,9 @@
   }
   .card {
     margin-bottom: 10px !important;
+  }
+  .card-body {
+    height: auto;
   }
 }
 
