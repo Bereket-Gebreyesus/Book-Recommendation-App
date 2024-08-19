@@ -1,4 +1,4 @@
-.carousel-control-next,
+/* .carousel-control-next,
 .carousel-control-prev {
   position: absolute;
   top: 0;
@@ -16,21 +16,54 @@
   opacity: 0.5;
   transition: opacity 0.15s ease;
 }
+*/
+.react-multi-carousel-list {
+  overflow: visible !important;
+}
+
+.react-multi-carousel-track {
+  gap: 10px;
+}
+
+.book-card {
+  cursor: pointer;
+  width: 100%;
+  height: 400px;
+}
+
+.react-multiple-carousel__arrow--left {
+  left: calc(-5% + 1px) !important;
+}
+
+.react-multiple-carousel__arrow--right {
+  right: calc(-5% + 1px) !important;
+}
+
+.truncate-text {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* For small screens */
 @media (max-width: 767px) {
-  .custom-carousel .card {
-    width: 100%;
-    height: auto;
-    margin: 10px 0;
+  .book-card {
+    height: 350px !important;
   }
-
-  .custom-carousel .carousel-item {
-    flex-direction: column;
+  .book-card img {
+    height: 170px !important;
   }
-
-  .carousel-control-next,
-  .carousel-control-prev {
-    width: 5%;
+  .truncate-text {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .react-multiple-carousel__arrow--right {
+    right: calc(2% + 1px) !important;
+  }
+  .react-multiple-carousel__arrow--left {
+    left: calc(2% + 1px) !important;
   }
 }

@@ -1,36 +1,41 @@
 import React from "react";
-import { Carousel, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./CustomCarousel.css";
 
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+
 const CustomCarousel = ({ items, renderCard }) => {
-  // Split items (cards) into chunks of 3
-  const chunkedItems = [];
-
-  const isMobile = window.innerWidth < 768;
-
-  if (isMobile) {
-    items.forEach((item) => {
-      chunkedItems.push([item]);
-    });
-  } else {
-    for (let i = 0; i < items.length; i += 3) {
-      chunkedItems.push(items.slice(i, i + 3));
-    }
-  }
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 3,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
 
   return (
-    <Carousel indicators={false} controls={true} interval={null}>
-      {chunkedItems.map((chunk, index) => (
-        <Carousel.Item key={index}>
-          <Row>
-            {chunk.map((item) => (
-              <Col key={item._id} style={{ padding: "0 10px" }}>
-                {renderCard(item)}
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
+    <Carousel
+      indicators={false}
+      controls={true}
+      interval={null}
+      responsive={responsive}
+    >
+      {items.map((item, index) => (
+        <div key={index}>
+          <div className="carousel-card">{renderCard(item)}</div>
+        </div>
       ))}
     </Carousel>
   );

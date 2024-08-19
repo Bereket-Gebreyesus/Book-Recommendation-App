@@ -38,3 +38,86 @@
   font-size: 32px !important;
   color: #4d4c53 !important;
 }
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.icon-container:not(:last-child) {
+  border-bottom: 0.2px solid #f3f3f3;
+}
+
+.icon {
+  border: 1px solid #dedede;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin-right: 18px;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.icon.upload {
+  color: rgb(55, 104, 230);
+}
+.icon.review {
+  color: rgb(89, 89, 89);
+}
+.icon.favorite {
+  color: rgb(244, 65, 68);
+}
+
+.icon svg {
+  width: 100%;
+  height: auto;
+}
+
+.icon-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.icon-text h6,
+.icon-text .number {
+  margin: 0;
+}
+
+.icon-text .number {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-card {
+  height: 200px;
+  padding: 10px 20px !important;
+}
+
+@media (max-width: 768px) {
+  .icon {
+    width: 4rem;
+    height: 4rem;
+    padding: 10px;
+  }
+
+  .icon-text h6 {
+    font-size: 1.3rem;
+  }
+  .card {
+    margin-bottom: 10px !important;
+  }
+  .profile-card {
+    height: auto;
+  }
+}
+
+.img-container {
+  width: 70%;
+}
