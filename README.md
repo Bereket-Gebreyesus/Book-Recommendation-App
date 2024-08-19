@@ -1,4 +1,4 @@
-`TODO: Add a nice screenshot of the app!`
+![Screenshot of the app](./client/src/assets/screenshot.png)
 
 # Cohort 47 Group A final project
 
