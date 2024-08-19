@@ -54,7 +54,11 @@ export const createUser = async (req, res) => {
     // Create the user
     const newUser = await User.create(user);
 
-    res.status(201).json({ success: true, user: newUser });
+    const token = jwt.sign(
+      { userId: newUser._id, email: newUser.email },
+      process.env.JWT_SECRET,
+    );
+    res.status(201).json({ success: true, token, user: newUser });
   } catch (error) {
     logError(error);
     res
@@ -198,6 +202,9 @@ export const addFavorite = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, msg: "User not found" });
+    }
+    if (!user.favorites) {
+      user.favorites = [];
     }
     if (user.favorites.includes(bookId)) {
       return res

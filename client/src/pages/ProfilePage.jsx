@@ -5,6 +5,13 @@ import BookCard from "../components/Book/BookCard";
 import { useAuth } from "../hooks/AuthContext";
 import CustomCarousel from "../components/CustomCarousel";
 import "./ProfilePage.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faHeart,
+  faCloudArrowUp,
+  faComment,
+} from "@fortawesome/free-solid-svg-icons";
 
 const ProfilePage = () => {
   const { token, userEmail, photoURL } = useAuth();
@@ -89,31 +96,68 @@ const ProfilePage = () => {
       <Row className="mb-5">
         <Col md="8">
           <Card>
-            <Card.Header>
-              <h3>User Profile</h3>
-            </Card.Header>
-            <Card.Body>
+            <Card.Body className="profile-card">
               <Row>
                 <Col md="4">
-                  <img
-                    src={userPhoto}
-                    alt="Profile"
-                    className="img-fluid rounded-circle mb-3"
-                    style={{ width: "100%" }}
-                  />
+                  <div className="img-container">
+                    <img
+                      src={userPhoto}
+                      alt="Profile"
+                      className="img-fluid rounded-circle mb-3"
+                      style={{ width: "100%" }}
+                    />
+                  </div>
                 </Col>
                 <Col md="8">
                   <h4>{user?.name}</h4>
-                  <p>Email: {userEmail}</p>
-                  <p>Favorited Books: {favorites?.length}</p>
-                  <p>Uploaded Books: {uploadedBooks?.length}</p>
-                  <p>Reviewed Books: {reviews?.length}</p>
+                  <p>
+                    <FontAwesomeIcon icon={faEnvelope} /> {userEmail}
+                  </p>
                   <Form.Check
                     type="checkbox"
                     label="Receive Weekly Emails"
                     checked={weeklyEmail}
                     onChange={handleToggleWeeklyEmail}
                   />
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md="4">
+          <Card>
+            <Card.Body className="profile-card">
+              <Row>
+                <Col md="12 ">
+                  <div className="icon-container">
+                    <div className="icon upload">
+                      <FontAwesomeIcon icon={faCloudArrowUp} />
+                    </div>
+                    <div className="icon-text">
+                      <h6>Uploaded Books</h6>
+                      <span className="number">{uploadedBooks?.length}</span>
+                    </div>
+                  </div>
+
+                  <div className="icon-container">
+                    <div className="icon review">
+                      <FontAwesomeIcon icon={faComment} />
+                    </div>
+                    <div className="icon-text">
+                      <h6>Reviewed Books</h6>
+                      <span className="number">{reviews?.length}</span>
+                    </div>
+                  </div>
+
+                  <div className="icon-container">
+                    <div className="icon favorite">
+                      <FontAwesomeIcon icon={faHeart} />
+                    </div>
+                    <div className="icon-text">
+                      <h6>Favorited Books</h6>
+                      <span className="number">{favorites?.length}</span>
+                    </div>
+                  </div>
                 </Col>
               </Row>
             </Card.Body>
