@@ -1,12 +1,12 @@
 `TODO: Add a nice screenshot of the app!`
 
-# Cohort XX final project
+# Cohort 47 Group A final project
 
 This is the final project for the HackYourFuture curriculum we did as a cohort using the [MERN stack](https://www.mongodb.com/resources/languages/mern-stack) by following the agile methodology with our team and a group of mentors. A quick guide to what we built:
 
-> TODO: Add short description of the app
+Book Recommandations application allows you to explore a wide range of books, add them to your collection, and mark your favorites. You can also add reviews, give ratings, and see the most popular and latest books. Based on your favorite books, we will send you personalized recommendations via email to help you discover new books that match your interests.
 
-`[Click here for the Demo version](TODO: add link)`
+[Project URL](https://c47-group-a.hackyourfuture.tech/)
 
 ## 1. Setup
 
@@ -39,11 +39,6 @@ client
 |       └── components
 |   └── util
 |   index.jsx
-cypress
-|   └── fixtures
-|   └── integration
-|   └── plugins
-|   └── support
 server
 └── src
     └── __tests__
@@ -107,6 +102,18 @@ For more information on how these work together including the automatic deployme
 - `jest` || To run our tests and coverage. See [docs](https://jestjs.io/)
 - `jest-fetch-mock` || To mock out the backend for our testing purposes. See [docs](https://github.com/jefflau/jest-fetch-mock#readme)
 - `prop-types` || To type-check our components. See [docs](https://github.com/facebook/prop-types)
+- `axios` || To make HTTP requests. See [docs](https://axios-http.com/docs/intro)
+- `bootstrap` || For styling and responsive design. See [docs](https://getbootstrap.com/)
+- `firebase` || For backend services like authentication and database. See [docs](https://firebase.google.com/docs)
+- `react` || A JavaScript library for building user interfaces. See [docs](https://reactjs.org/)
+- `react-bootstrap` || Bootstrap components built with React. See [docs](https://react-bootstrap.github.io/)
+- `react-dom` || Serves as the entry point to the DOM and server renderers for React. See [docs](https://reactjs.org/docs/react-dom.html)
+- `react-icons` || Include popular icons in your React projects easily. See [docs](https://react-icons.github.io/react-icons/)
+- `react-multi-carousel` || A flexible carousel component for React. See [docs](https://www.npmjs.com/package/react-multi-carousel)
+- `react-router-bootstrap` || Integration between React Router and React Bootstrap. See [docs](https://github.com/react-bootstrap/react-router-bootstrap)
+- `react-router-dom` || DOM bindings for React Router. See [docs](https://reactrouter.com/web/guides/quick-start)
+- `react-slick` || Carousel component built with React. See [docs](https://react-slick.neostack.com/)
+- `slick-carousel` || Carousel library. See [docs](https://kenwheeler.github.io/slick/)
 
 ### 3.3 Server-side libraries
 
@@ -116,3 +123,13 @@ For more information on how these work together including the automatic deployme
 - `mongodb-memory-server` || To mock out our database in our backend tests. See [docs](https://github.com/nodkz/mongodb-memory-server)
 - `cors` || To open up our API. See [docs](https://github.com/expressjs/cors#readme)
 - `mongoose` || To add schemas to our database. See [docs](https://mongoosejs.com/)
+- `bcrypt` || To hash passwords. See [docs](https://github.com/kelektiv/node.bcrypt.js#readme)
+- `cloudinary` || For image and video management in the cloud. See [docs](https://cloudinary.com/documentation)
+- `dotenv` || To load environment variables from a .env file. See [docs](https://github.com/motdotla/dotenv#readme)
+- `express` || A web framework for Node.js. See [docs](https://expressjs.com/)
+- `firebase-admin` || Firebase Admin SDK for server-side Firebase integration. See [docs](https://firebase.google.com/docs/admin/setup)
+- `jsonwebtoken` || To create and verify JSON Web Tokens. See [docs](https://github.com/auth0/node-jsonwebtoken#readme)
+- `multer` || Middleware for handling multipart/form-data, which is primarily used for uploading files. See [docs](https://github.com/expressjs/multer#readme)
+- `multer-storage-cloudinary` || Cloudinary storage engine for Multer. See [docs](https://github.com/affanshahid/multer-storage-cloudinary#readme)
+- `node-cron` || To schedule tasks in Node.js. See [docs](https://github.com/node-cron/node-cron#readme)
+- `nodemailer` || To send emails with Node.js. See [docs](https://nodemailer.com/about/)
