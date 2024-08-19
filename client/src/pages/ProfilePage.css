@@ -95,7 +95,7 @@
   margin: 0;
 }
 
-.card-body {
+.profile-card {
   height: 200px;
   padding: 10px 20px !important;
 }
@@ -113,7 +113,7 @@
   .card {
     margin-bottom: 10px !important;
   }
-  .card-body {
+  .profile-card {
     height: auto;
   }
 }

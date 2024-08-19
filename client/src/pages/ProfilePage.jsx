@@ -96,7 +96,7 @@ const ProfilePage = () => {
       <Row className="mb-5">
         <Col md="8">
           <Card>
-            <Card.Body>
+            <Card.Body className="profile-card">
               <Row>
                 <Col md="4">
                   <div className="img-container">
@@ -126,7 +126,7 @@ const ProfilePage = () => {
         </Col>
         <Col md="4">
           <Card>
-            <Card.Body>
+            <Card.Body className="profile-card">
               <Row>
                 <Col md="12 ">
                   <div className="icon-container">
